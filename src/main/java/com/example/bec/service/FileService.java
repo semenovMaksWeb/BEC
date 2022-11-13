@@ -1,9 +1,13 @@
-package src.File;
+package com.example.bec.service;
+
+
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+
+
 
 public class FileService {
 
@@ -26,7 +30,8 @@ public class FileService {
         return this.file;
     }
     public String readFile() throws IOException {
-        return  new String(Files.readAllBytes(this.file.toPath()));
+        System.out.println(this.file.toPath());
+        return new String(Files.readAllBytes(this.file.toPath()));
     }
 
     public void createFile() throws IOException {

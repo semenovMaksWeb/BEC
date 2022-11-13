@@ -1,4 +1,4 @@
-package src.Postgresql;
+package com.example.bec.service;
 
 import java.io.FileInputStream;
 import java.io.IOException;

@@ -1,10 +1,10 @@
-package src.Command;
+package com.example.bec.service;
 
-import src.File.FileService;
-import src.Postgresql.PostgresqlService;
+import com.example.bec.enums.CommandTypeEnum;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -13,18 +13,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@Service
 public class CommandService {
     FileService fileService;
-    public CommandService(String url) {
-        this.fileService = new FileService(url);
-    }
     private List<JsonNode> convertConfig() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         TypeFactory typeFactory = objectMapper.getTypeFactory();
         return objectMapper.readValue(this.fileService.readFile(), typeFactory.constructCollectionType(List.class, JsonNode.class));
     }
 
-    public Object runCommand() throws IOException, SQLException {
+    public Object runCommand(String  url) throws IOException, SQLException {
+        this.fileService = new FileService(url);
         /* Хранения результатов команд */
         Map<String, Object> dataset = new HashMap<>();
         /* Конфиг команд */
@@ -57,7 +56,7 @@ public class CommandService {
 
     private Object checkTypeCommand(JsonNode element, String type) throws SQLException, IOException {
         if (type.equals(CommandTypeEnum.postgresql.getTitle())) {
-           return this.runPostgresqlService(element);
+            return this.runPostgresqlService(element);
         }
         return null;
     }

@@ -1,6 +1,6 @@
-package src.Command;
+package com.example.bec.enums;
 
-public enum CommandTypeEnum {
+ public enum CommandTypeEnum {
     postgresql("postgresql"),
     returns("return");
 
