@@ -1,5 +1,7 @@
 package com.example.bec.service;
 
+import com.example.bec.PropertiesCustom;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.*;
@@ -8,9 +10,7 @@ import java.util.*;
 public class PostgresqlService {
     private final Connection conn;
     public PostgresqlService() throws SQLException, IOException {
-        Properties property = new Properties();
-        FileInputStream fis = new FileInputStream(".properties");
-        property.load(fis);
+        Properties property = PropertiesCustom.getProperties();
         String  url = "jdbc:postgresql://" + property.getProperty("db.host");
         Properties props = new Properties();
         props.setProperty("user", property.getProperty("db.user"));

@@ -5,10 +5,12 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 
 @RestController
 @RequestMapping("command")
@@ -20,12 +22,15 @@ public class CommandController {
     }
     @RequestMapping(
             value = "",
-            method = RequestMethod.GET
+            method = RequestMethod.POST
     )
     public Object commandRun(
             @ApiParam(required = true, value = "id скрина")
-            @RequestParam String url
+            @RequestParam String url,
+            @ApiParam(required = true, value = "параметры для команды")
+            @RequestBody Map<String, Object> params
+
     ) throws SQLException, IOException {
-        return this.commandService.runCommand(url);
+        return this.commandService.runCommand(url, params);
     }
 }
