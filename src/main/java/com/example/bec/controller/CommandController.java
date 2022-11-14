@@ -26,6 +26,6 @@ public class CommandController {
             @ApiParam(required = true, value = "id скрина")
             @RequestParam String url
     ) throws SQLException, IOException {
-        return this.commandService.runCommand("C:/Users/maks/Desktop/test/1.json");
+        return this.commandService.runCommand(url);
     }
 }

@@ -25,12 +25,12 @@ public class PostgresqlService {
     private List<Object> convertRsInJson(ResultSet rs) throws SQLException {
         List<Object> result = new ArrayList<>();
         while (rs.next()) {
+            Map<String, Object> map = new HashMap<>();
             ResultSetMetaData metaData = rs.getMetaData();
             for (int i = 1; i <= metaData.getColumnCount(); i++){
-                Map<String, Object> map = new HashMap<>();
                 map.put(metaData.getColumnName(i), rs.getObject(i));
-                result.add(map);
             }
+            result.add(map);
         }
         return  result;
     }

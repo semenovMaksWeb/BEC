@@ -47,7 +47,7 @@ public class CommandService {
     }
 
     private List<Object> runPostgresqlService(JsonNode element) throws SQLException, IOException {
-        String sql = String.valueOf(element.get("sql").textValue());
+        String sql = element.get("sql").textValue();
         PostgresqlService postgresqlService = new PostgresqlService();
         List<Object> res = postgresqlService.runSql(sql);
         postgresqlService.closeConn();
