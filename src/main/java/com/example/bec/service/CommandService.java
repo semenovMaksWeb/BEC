@@ -14,6 +14,7 @@ import java.util.*;
 @Service
 public class CommandService {
     FileService fileService;
+    RegularService regularService;
     private List<JsonNode> convertConfig() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         TypeFactory typeFactory = objectMapper.getTypeFactory();
@@ -27,10 +28,8 @@ public class CommandService {
         /* Конфиг команд */
         List<JsonNode> config = convertConfig();
         /* Анализ конфига*/
-        RegularService regularService  = new RegularService(params);
+        this.regularService  = new RegularService(params);
         for (JsonNode element : config) {
-            JsonNode regular = element.get("key").get("regular");
-            System.out.println(regular);
             String key = element.get("key").textValue();
             String type = element.get("type").textValue();
             /* проверка что это return */
@@ -46,9 +45,19 @@ public class CommandService {
         }
         return  null;
     }
+    private String checkRegular(JsonNode regular, String text){
+        String res = text;
+        if (regular.isArray()){
+            Iterator<JsonNode> itr = regular.elements();
+            while (itr.hasNext()){
+                res = this.regularService.startRegular(itr.next().asText(), res);
+            }
+        }
+        return res;
+    }
 
     private List<Object> runPostgresqlService(JsonNode element) throws SQLException, IOException {
-        String sql = element.get("sql").textValue();
+        String sql = checkRegular(element.get("regular"), element.get("sql").textValue());
         PostgresqlService postgresqlService = new PostgresqlService();
         List<Object> res = postgresqlService.runSql(sql);
         postgresqlService.closeConn();

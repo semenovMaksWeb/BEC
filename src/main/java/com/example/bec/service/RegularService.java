@@ -13,6 +13,12 @@ public class RegularService {
         this.params = params;
     }
 
+    public String  startRegular(String name, String  text){
+        if ("var".equals(name)) {
+            return regularVar(text);
+        }
+        return  text;
+    }
     public String regularVar(String text){
 
         Matcher matcher = Pattern.compile("%\\w+%").matcher(text);
