@@ -27,6 +27,7 @@ public class CommandService {
         /* Конфиг команд */
         List<JsonNode> config = convertConfig();
         /* Анализ конфига*/
+        RegularService regularService  = new RegularService(params);
         for (JsonNode element : config) {
             JsonNode regular = element.get("key").get("regular");
             System.out.println(regular);
