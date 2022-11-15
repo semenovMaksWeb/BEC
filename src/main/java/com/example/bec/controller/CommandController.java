@@ -25,12 +25,12 @@ public class CommandController {
             method = RequestMethod.POST
     )
     public Object commandRun(
-            @ApiParam(required = true, value = "id скрина")
-            @RequestParam String url,
+            @ApiParam(required = true, value = "name файла")
+            @RequestParam String name,
             @ApiParam(required = true, value = "параметры для команды")
             @RequestBody Map<String, Object> params
 
     ) throws SQLException, IOException {
-        return this.commandService.runCommand(url, params);
+        return this.commandService.runCommand(name, params);
     }
 }
