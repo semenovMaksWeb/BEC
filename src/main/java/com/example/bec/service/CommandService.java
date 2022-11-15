@@ -45,7 +45,7 @@ public class CommandService {
         }
         return  null;
     }
-    private String checkRegular(JsonNode regular, String text){
+    private String regularString(JsonNode regular, String text){
         String res = text;
         if (regular.isArray()){
             Iterator<JsonNode> itr = regular.elements();
@@ -57,7 +57,7 @@ public class CommandService {
     }
 
     private List<Object> runPostgresqlService(JsonNode element) throws SQLException, IOException {
-        String sql = checkRegular(element.get("regular"), element.get("sql").textValue());
+        String sql = regularString(element.get("regular"), element.get("sql").textValue());
         PostgresqlService postgresqlService = new PostgresqlService();
         List<Object> res = postgresqlService.runSql(sql);
         postgresqlService.closeConn();
