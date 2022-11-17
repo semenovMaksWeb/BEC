@@ -14,7 +14,7 @@ import java.util.*;
 @Service
 public class CommandService {
     FileService fileService;
-    RegularService regularService;
+    Map<String, Object> params;
     private List<JsonNode> convertConfig() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         TypeFactory typeFactory = objectMapper.getTypeFactory();
@@ -22,13 +22,14 @@ public class CommandService {
     }
 
     public Object runCommand(String  url, Map<String, Object> params) throws IOException, SQLException {
+        this.params = params;
         this.fileService = new FileService(PropertiesCustom.getName("url.config.back") + "\\" + url);
         /* Хранения результатов команд */
         Map<String, Object> dataset = new HashMap<>();
         /* Конфиг команд */
         List<JsonNode> config = convertConfig();
         /* Анализ конфига*/
-        this.regularService  = new RegularService(params);
+
         for (JsonNode element : config) {
             String key = element.get("key").textValue();
             String type = element.get("type").textValue();
@@ -37,7 +38,7 @@ public class CommandService {
                 return dataset.get(key);
             }
 
-            /* Выполнение какой либо команты */
+            /* Выполнение какой либо команды */
             else {
                 Object result = this.checkTypeCommand(element, type);
                 dataset.put(key, result);
@@ -46,20 +47,24 @@ public class CommandService {
         return  null;
     }
     private String regularString(JsonNode regular, String text){
+        RegularService regularService  = new RegularService(this.params);
         String res = text;
         if (regular.isArray()){
             Iterator<JsonNode> itr = regular.elements();
             while (itr.hasNext()){
-                res = this.regularService.startRegular(itr.next().asText(), res);
+                res = regularService.startRegular(itr.next().asText(), res);
             }
         }
         return res;
     }
 
     private List<Object> runPostgresqlService(JsonNode element) throws SQLException, IOException {
-        String sql = regularString(element.get("regular"), element.get("sql").textValue());
         PostgresqlService postgresqlService = new PostgresqlService();
-        List<Object> res = postgresqlService.runSql(sql);
+        List<Object> res = postgresqlService.runSql(
+                element.get("sql").get("text").textValue(),
+                element.get("sql").get("params"),
+                this.params
+        );
         postgresqlService.closeConn();
         return res;
     }
