@@ -20,20 +20,18 @@ public class PostgresqlService {
         this.conn = DriverManager.getConnection(url, props);
     }
     private void StatementSave(PreparedStatement statement, List<SqlParams> config, Map<String, Object> params) throws SQLException {
-        int index = 0;
         if (config == null){
             return;
         }
+        System.out.println(config);
         for (SqlParams element : config) {
-            index++;
             if (Objects.equals(element.getType(), VarTypeEnum.string.getTitle())) {
-                statement.setString(index, params.get(element.getKey()).toString());
+                statement.setString(element.getIndex(), params.get(element.getKey()).toString());
             } else if (Objects.equals(element.getType(), VarTypeEnum.integer.getTitle())) {
-                statement.setInt(index, (Integer) params.get(element.getKey()));
+                statement.setInt(element.getIndex(), (Integer) params.get(element.getKey()));
             }
         }
     }
-
 
     public List<Object> runSql(
             CommandSql commandSql,
@@ -59,6 +57,7 @@ public class PostgresqlService {
         }
         return  result;
     }
+
     public void closeConn() throws SQLException {
         this.conn.close();
     }

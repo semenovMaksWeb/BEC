@@ -12,4 +12,5 @@ import lombok.Setter;
 public class SqlParams {
     private String type;
     private String key;
+    private Integer index;
 }
