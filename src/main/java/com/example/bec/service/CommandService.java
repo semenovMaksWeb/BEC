@@ -4,10 +4,12 @@ import com.example.bec.PropertiesCustom;
 import com.example.bec.enums.CommandTypeEnum;
 import com.example.bec.model.command.Command;
 import com.example.bec.model.command.CommandSql;
+import com.example.bec.model.command.validateParams.ValidateParams;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.TypeFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -39,8 +41,14 @@ public class CommandService {
             if (Objects.equals(command.getType(), CommandTypeEnum.postgresql.getTitle()) ) {
                  dataset.put(command.getKey(), runPostgresqlService(command.getSql()));
             }
+            /*Вызов валидации параметров */
+            if (Objects.equals(command.getType(), CommandTypeEnum.validate.getTitle()) ) {
+               if (ValidateParams(command.getValidate()) != null){
+                   return ValidateParams(command.getValidate());
+               }
+            }
         }
-        return 1;
+        return null;
     }
 
     /* old */
@@ -54,6 +62,15 @@ public class CommandService {
             }
         }
         return res;
+    }
+
+    private ResponseEntity<Map<String, List<String>>> ValidateParams(List<ValidateParams> validate){
+        ValidateService validateService = new ValidateService(this.params, validate);
+        validateService.validateStart();
+        if (!validateService.getResult().isEmpty()){
+            return new ResponseEntity<>(validateService.getResult(), HttpStatus.BAD_REQUEST);
+        };
+        return null;
     }
 
     private List<Object> runPostgresqlService(CommandSql commandSql) throws SQLException, IOException {
