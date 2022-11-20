@@ -23,7 +23,6 @@ public class PostgresqlService {
         if (config == null){
             return;
         }
-        System.out.println(config);
         for (SqlParams element : config) {
             if (Objects.equals(element.getType(), VarTypeEnum.string.getTitle())) {
                 statement.setString(element.getIndex(), params.get(element.getKey()).toString());
@@ -51,7 +50,11 @@ public class PostgresqlService {
             Map<String, Object> map = new HashMap<>();
             ResultSetMetaData metaData = rs.getMetaData();
             for (int i = 1; i <= metaData.getColumnCount(); i++){
-                map.put(metaData.getColumnName(i), rs.getObject(i));
+                if (Objects.equals(metaData.getColumnClassName(i), "java.sql.Array")){
+                    map.put(metaData.getColumnName(i), rs.getArray(i).getArray());
+                }else {
+                    map.put(metaData.getColumnName(i), rs.getObject(i));
+                }
             }
             result.add(map);
         }
