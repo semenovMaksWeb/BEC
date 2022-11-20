@@ -15,6 +15,5 @@ import lombok.Setter;
 public class CommandSql{
     private String  text;
     private List<SqlParams> params;
-
     private List<SqlParams> dataset;
 }
