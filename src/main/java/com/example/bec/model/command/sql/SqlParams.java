@@ -1,23 +1,15 @@
 package com.example.bec.model.command.sql;
 
-import com.example.bec.enums.VarTypeEnum;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SqlParams {
-    private final VarTypeEnum type;
-    private final String key;
-
-    public SqlParams(VarTypeEnum type, String key) {
-        this.type = type;
-        this.key = key;
-    }
-
-
-    public VarTypeEnum getType() {
-        return type;
-    }
-
-    public String getKey() {
-        return key;
-    }
+    private String type;
+    private String key;
 }
