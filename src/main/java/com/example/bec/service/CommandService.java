@@ -20,8 +20,9 @@ import java.util.*;
 
 @Service
 public class CommandService {
-    FileService fileService;
-    Map<String, Object> params;
+    private FileService fileService;
+    private  Map<String, Object> params;
+   private final Map<String, Object> dataset = new HashMap<>();
 
     private  List<Command> convertConfig() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -31,17 +32,16 @@ public class CommandService {
     public Object runCommand(String  url, Map<String, Object> params) throws IOException, SQLException {
         this.params = params;
         this.fileService = new FileService(PropertiesCustom.getName("url.config.back") + "\\" + url);
-        Map<String, Object> dataset = new HashMap<>();
         List<Command> config = convertConfig();
 
         for (Command command : config) {
             /*Return команды */
             if (Objects.equals(command.getType(), CommandTypeEnum.returns.getTitle()) ) {
-                return  dataset.get(command.getKey());
+                return this.dataset.get(command.getKey());
             }
             /*Вызов sql postgresql */
             if (Objects.equals(command.getType(), CommandTypeEnum.postgresql.getTitle()) ) {
-                 dataset.put(command.getKey(), runPostgresqlService(command.getSql()));
+                this.dataset.put(command.getKey(), runPostgresqlService(command.getSql()));
             }
             /*Вызов валидации параметров */
             if (Objects.equals(command.getType(), CommandTypeEnum.validate.getTitle()) ) {
@@ -78,9 +78,9 @@ public class CommandService {
     private List<Object> runPostgresqlService(CommandSql commandSql) throws SQLException, IOException {
         PostgresqlService postgresqlService = new PostgresqlService();
         List<Object> res = postgresqlService.runSql(
-                commandSql.getText(),
-                commandSql.getParams(),
-                this.params
+                commandSql,
+                this.params,
+                this.dataset
         );
         postgresqlService.closeConn();
         return res;

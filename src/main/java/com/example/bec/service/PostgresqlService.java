@@ -2,6 +2,7 @@ package com.example.bec.service;
 
 import com.example.bec.PropertiesCustom;
 import com.example.bec.enums.VarTypeEnum;
+import com.example.bec.model.command.CommandSql;
 import com.example.bec.model.command.sql.SqlParams;
 
 import java.io.IOException;
@@ -18,9 +19,11 @@ public class PostgresqlService {
         props.setProperty("password", property.getProperty("db.password"));
         this.conn = DriverManager.getConnection(url, props);
     }
-    public List<Object> runSql(String sql, List<SqlParams> config, Map<String, Object> params) throws SQLException {
-        PreparedStatement statement = this.conn.prepareStatement(sql);
+    private void StatementSave(PreparedStatement statement, List<SqlParams> config, Map<String, Object> params) throws SQLException {
         int index = 0;
+        if (config == null){
+            return;
+        }
         for (SqlParams element : config) {
             index++;
             if (Objects.equals(element.getType(), VarTypeEnum.string.getTitle())) {
@@ -29,6 +32,17 @@ public class PostgresqlService {
                 statement.setInt(index, (Integer) params.get(element.getKey()));
             }
         }
+    }
+
+
+    public List<Object> runSql(
+            CommandSql commandSql,
+            Map<String, Object> params,
+            Map<String, Object> dataset
+    ) throws SQLException {
+        PreparedStatement statement = this.conn.prepareStatement(commandSql.getText());
+        StatementSave(statement, commandSql.getParams(), params);
+        StatementSave(statement, commandSql.getDataset(), dataset);
         ResultSet rs = statement.executeQuery();
         return convertRsInJson(rs);
     }
