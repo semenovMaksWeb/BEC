@@ -20,6 +20,7 @@ public class ValidateService {
         this.params = params;
         this.validateParams = validateParams;
     }
+
     private Boolean checkNull(String key){
         return this.getParams().get(key) == null || this.getParams().get(key) == "";
     }
