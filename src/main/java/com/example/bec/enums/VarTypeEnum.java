@@ -1,14 +1,13 @@
 package com.example.bec.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
  public enum VarTypeEnum {
-    string("string"),
-    integer("integer");
+    string("String"),
+    integer("Integer");
 
     private final String title;
-    VarTypeEnum(String title) {
-        this.title = title;
-    }
-    public String getTitle() {
-        return title;
-    }
 }
