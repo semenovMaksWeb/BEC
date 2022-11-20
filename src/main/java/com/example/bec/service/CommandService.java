@@ -2,6 +2,9 @@ package com.example.bec.service;
 
 import com.example.bec.PropertiesCustom;
 import com.example.bec.enums.CommandTypeEnum;
+import com.example.bec.model.command.Command;
+import com.example.bec.model.command.CommandSql;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -15,37 +18,32 @@ import java.util.*;
 public class CommandService {
     FileService fileService;
     Map<String, Object> params;
-    private List<JsonNode> convertConfig() throws IOException {
+
+    private  List<Command> convertConfig() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        TypeFactory typeFactory = objectMapper.getTypeFactory();
-        return objectMapper.readValue(this.fileService.readFile(), typeFactory.constructCollectionType(List.class, JsonNode.class));
+        return objectMapper.readValue(this.fileService.readFile(), new TypeReference<List<Command>>(){});
     }
 
     public Object runCommand(String  url, Map<String, Object> params) throws IOException, SQLException {
         this.params = params;
         this.fileService = new FileService(PropertiesCustom.getName("url.config.back") + "\\" + url);
-        /* Хранения результатов команд */
         Map<String, Object> dataset = new HashMap<>();
-        /* Конфиг команд */
-        List<JsonNode> config = convertConfig();
-        /* Анализ конфига*/
+        List<Command> config = convertConfig();
 
-        for (JsonNode element : config) {
-            String key = element.get("key").textValue();
-            String type = element.get("type").textValue();
-            /* проверка что это return */
-            if (Objects.equals(type, CommandTypeEnum.returns.getTitle()) ) {
-                return dataset.get(key);
+        for (Command command : config) {
+            /*Return команды */
+            if (Objects.equals(command.getType(), CommandTypeEnum.returns.getTitle()) ) {
+                return  dataset.get(command.getKey());
             }
-
-            /* Выполнение какой либо команды */
-            else {
-                Object result = this.checkTypeCommand(element, type);
-                dataset.put(key, result);
+            /*Вызов sql postgresql */
+            if (Objects.equals(command.getType(), CommandTypeEnum.postgresql.getTitle()) ) {
+                 dataset.put(command.getKey(), runPostgresqlService(command.getSql()));
             }
         }
-        return  null;
+        return 1;
     }
+
+    /* old */
     private String regularString(JsonNode regular, String text){
         RegularService regularService  = new RegularService(this.params);
         String res = text;
@@ -58,21 +56,14 @@ public class CommandService {
         return res;
     }
 
-    private List<Object> runPostgresqlService(JsonNode element) throws SQLException, IOException {
+    private List<Object> runPostgresqlService(CommandSql commandSql) throws SQLException, IOException {
         PostgresqlService postgresqlService = new PostgresqlService();
         List<Object> res = postgresqlService.runSql(
-                element.get("sql").get("text").textValue(),
-                element.get("sql").get("params"),
+                commandSql.getText(),
+                commandSql.getParams(),
                 this.params
         );
         postgresqlService.closeConn();
         return res;
-    }
-
-    private Object checkTypeCommand(JsonNode element, String type) throws SQLException, IOException {
-        if (type.equals(CommandTypeEnum.postgresql.getTitle())) {
-            return this.runPostgresqlService(element);
-        }
-        return null;
     }
 }
