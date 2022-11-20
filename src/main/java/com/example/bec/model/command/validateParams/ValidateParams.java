@@ -12,5 +12,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ValidateParams {
     private String key;
-    private List<ValidateParamsRules> validate;
+    private List<ValidateParamsRules> riles;
 }
