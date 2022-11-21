@@ -1,4 +1,4 @@
-package com.example.bec.model.command.validateParams;
+package com.example.bec.model.command;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ValidateParams {
-    private String key;
-    private List<ValidateParamsRules> riles;
+public class CommandSqlModel{
+    private String  text;
+    private List<SqlParamsModel> params;
+    private List<SqlParamsModel> dataset;
 }

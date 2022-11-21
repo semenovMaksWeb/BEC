@@ -1,7 +1,5 @@
 package com.example.bec.model.command;
 
-import com.example.bec.model.command.validateParams.ValidateParams;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +11,11 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Command {
+public class CommandModel {
     private String key;
     private String type;
-    private CommandSql sql;
-    private List<ValidateParams> validate;
+    private CommandSqlModel sql;
+    private List<ValidateParamsModel> validate;
+    private List<CommandModel> children;
+    private IfsModel ifs;
 }

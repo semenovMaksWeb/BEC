@@ -1,4 +1,4 @@
-package com.example.bec.model.command.validateParams;
+package com.example.bec.model.command;
 
 import java.util.Map;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ValidateParamsRules {
+public class ValidateParamsRulesModel {
     private String type;
     private String error;
     private Map<String, Object> params;

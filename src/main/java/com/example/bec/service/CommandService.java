@@ -2,9 +2,9 @@ package com.example.bec.service;
 
 import com.example.bec.PropertiesCustom;
 import com.example.bec.enums.CommandTypeEnum;
-import com.example.bec.model.command.Command;
-import com.example.bec.model.command.CommandSql;
-import com.example.bec.model.command.validateParams.ValidateParams;
+import com.example.bec.model.command.CommandModel;
+import com.example.bec.model.command.CommandSqlModel;
+import com.example.bec.model.command.ValidateParamsModel;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,29 +24,29 @@ public class CommandService {
     private  Map<String, Object> params;
    private final Map<String, Object> dataset = new HashMap<>();
 
-    private  List<Command> convertConfig() throws IOException {
+    private  List<CommandModel> convertConfig() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(this.fileService.readFile(), new TypeReference<List<Command>>(){});
+        return objectMapper.readValue(this.fileService.readFile(), new TypeReference<List<CommandModel>>(){});
     }
 
     public Object runCommand(String  url, Map<String, Object> params) throws IOException, SQLException {
         this.params = params;
         this.fileService = new FileService(PropertiesCustom.getName("url.config.back") + "\\" + url);
-        List<Command> config = convertConfig();
+        List<CommandModel> config = convertConfig();
 
-        for (Command command : config) {
+        for (CommandModel commandModel : config) {
             /*Return команды */
-            if (Objects.equals(command.getType(), CommandTypeEnum.returns.getTitle()) ) {
-                return this.dataset.get(command.getKey());
+            if (Objects.equals(commandModel.getType(), CommandTypeEnum.returns.getTitle()) ) {
+                return this.dataset.get(commandModel.getKey());
             }
             /*Вызов sql postgresql */
-            if (Objects.equals(command.getType(), CommandTypeEnum.postgresql.getTitle()) ) {
-                this.dataset.put(command.getKey(), runPostgresqlService(command.getSql()));
+            if (Objects.equals(commandModel.getType(), CommandTypeEnum.postgresql.getTitle()) ) {
+                this.dataset.put(commandModel.getKey(), runPostgresqlService(commandModel.getSql()));
             }
             /*Вызов валидации параметров */
-            if (Objects.equals(command.getType(), CommandTypeEnum.validate.getTitle()) ) {
-               if (ValidateParams(command.getValidate()) != null){
-                   return ValidateParams(command.getValidate());
+            if (Objects.equals(commandModel.getType(), CommandTypeEnum.validate.getTitle()) ) {
+               if (ValidateParams(commandModel.getValidate()) != null){
+                   return ValidateParams(commandModel.getValidate());
                }
             }
         }
@@ -66,7 +66,7 @@ public class CommandService {
         return res;
     }
 
-    private ResponseEntity<Map<String, List<String>>> ValidateParams(List<ValidateParams> validate){
+    private ResponseEntity<Map<String, List<String>>> ValidateParams(List<ValidateParamsModel> validate){
         ValidateService validateService = new ValidateService(this.params, validate);
         validateService.validateStart();
         if (!validateService.getResult().isEmpty()){
@@ -75,7 +75,7 @@ public class CommandService {
         return null;
     }
 
-    private List<Object> runPostgresqlService(CommandSql commandSql) throws SQLException, IOException {
+    private List<Object> runPostgresqlService(CommandSqlModel commandSql) throws SQLException, IOException {
         PostgresqlService postgresqlService = new PostgresqlService();
         List<Object> res = postgresqlService.runSql(
                 commandSql,

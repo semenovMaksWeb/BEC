@@ -2,8 +2,8 @@ package com.example.bec.service;
 
 import com.example.bec.PropertiesCustom;
 import com.example.bec.enums.VarTypeEnum;
-import com.example.bec.model.command.CommandSql;
-import com.example.bec.model.command.sql.SqlParams;
+import com.example.bec.model.command.CommandSqlModel;
+import com.example.bec.model.command.SqlParamsModel;
 
 import java.io.IOException;
 import java.sql.*;
@@ -19,11 +19,11 @@ public class PostgresqlService {
         props.setProperty("password", property.getProperty("db.password"));
         this.conn = DriverManager.getConnection(url, props);
     }
-    private void StatementSave(PreparedStatement statement, List<SqlParams> config, Map<String, Object> params) throws SQLException {
+    private void StatementSave(PreparedStatement statement, List<SqlParamsModel> config, Map<String, Object> params) throws SQLException {
         if (config == null){
             return;
         }
-        for (SqlParams element : config) {
+        for (SqlParamsModel element : config) {
             if (Objects.equals(element.getType(), VarTypeEnum.string.getTitle())) {
                 statement.setString(element.getIndex(), params.get(element.getKey()).toString());
             } else if (Objects.equals(element.getType(), VarTypeEnum.integer.getTitle())) {
@@ -33,7 +33,7 @@ public class PostgresqlService {
     }
 
     public List<Object> runSql(
-            CommandSql commandSql,
+            CommandSqlModel commandSql,
             Map<String, Object> params,
             Map<String, Object> dataset
     ) throws SQLException {
