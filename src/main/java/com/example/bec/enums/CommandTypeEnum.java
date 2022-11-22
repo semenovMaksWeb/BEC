@@ -8,7 +8,8 @@ import lombok.Getter;
  public enum CommandTypeEnum {
     postgresql("postgresql"),
     returns("return"),
-    validate("validate");
+    validate("validate"),
+    block("block");
 
     private final String title;
 }

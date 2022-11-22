@@ -29,16 +29,20 @@ public class CommandService {
         return objectMapper.readValue(this.fileService.readFile(), new TypeReference<List<CommandModel>>(){});
     }
 
-    public Object runCommand(String  url, Map<String, Object> params) throws IOException, SQLException {
-        this.params = params;
-        this.fileService = new FileService(PropertiesCustom.getName("url.config.back") + "\\" + url);
-        List<CommandModel> config = convertConfig();
-
+    private Object startCommand(List<CommandModel> config) throws SQLException, IOException {
         for (CommandModel commandModel : config) {
             /* есть обработка ifs */
             if (commandModel.getIfs() != null){
                 IfsService ifsService = new IfsService(commandModel.getIfs(), this.dataset, this.params);
                 ifsService.eval();
+            }
+            /* Прогон children */
+            if (Objects.equals(commandModel.getType(), CommandTypeEnum.block.getTitle()) ) {
+                Object res = startCommand(commandModel.getChildren());
+                /* Прогон children вызвал return  и нужно вернуть выше */
+                if (res != null){
+                    return  res;
+                }
             }
             /*Return команды */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.returns.getTitle()) ) {
@@ -50,12 +54,18 @@ public class CommandService {
             }
             /*Вызов валидации параметров */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.validate.getTitle()) ) {
-               if (ValidateParams(commandModel.getValidate()) != null){
-                   return ValidateParams(commandModel.getValidate());
-               }
+                if (ValidateParams(commandModel.getValidate()) != null){
+                    return ValidateParams(commandModel.getValidate());
+                }
             }
         }
         return null;
+    }
+    public Object runCommand(String  url, Map<String, Object> params) throws IOException, SQLException {
+        this.params = params;
+        this.fileService = new FileService(PropertiesCustom.getName("url.config.back") + "\\" + url);
+        List<CommandModel> config = convertConfig();
+        return  startCommand(config);
     }
 
     /* old */
