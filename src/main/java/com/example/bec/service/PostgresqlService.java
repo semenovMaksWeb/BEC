@@ -32,7 +32,7 @@ public class PostgresqlService {
         }
     }
 
-    public List<Object> runSql(
+    public Object runSql(
             CommandSqlModel commandSql,
             Map<String, Object> params,
             Map<String, Object> dataset
@@ -41,10 +41,10 @@ public class PostgresqlService {
         StatementSave(statement, commandSql.getParams(), params);
         StatementSave(statement, commandSql.getDataset(), dataset);
         ResultSet rs = statement.executeQuery();
-        return convertRsInJson(rs);
+        return convertRsInJson(rs, commandSql);
     }
 
-    private List<Object> convertRsInJson(ResultSet rs) throws SQLException {
+    private Object convertRsInJson(ResultSet rs, CommandSqlModel commandSqlModel) throws SQLException {
         List<Object> result = new ArrayList<>();
         while (rs.next()) {
             Map<String, Object> map = new HashMap<>();
@@ -57,6 +57,9 @@ public class PostgresqlService {
                 }
             }
             result.add(map);
+        }
+        if (Objects.equals(commandSqlModel.getConvert(), "object")){
+            return result.get(0);
         }
         return  result;
     }

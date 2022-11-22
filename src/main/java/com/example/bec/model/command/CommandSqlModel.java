@@ -14,4 +14,5 @@ public class CommandSqlModel{
     private String  text;
     private List<SqlParamsModel> params;
     private List<SqlParamsModel> dataset;
+    private  String convert;
 }
