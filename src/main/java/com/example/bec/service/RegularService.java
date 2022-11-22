@@ -28,4 +28,8 @@ public class RegularService {
         });
         return result.get();
     }
+    static public String regularIfs(String text, Integer index, Object values){
+        return text.replaceAll("%" + index, values.toString());
+
+    }
 }
