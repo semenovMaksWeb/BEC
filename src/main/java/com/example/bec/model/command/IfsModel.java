@@ -5,15 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class IfsModel {
-    private String  text;
-    private List<IfsParamsModel> dataset;
-    private  List<IfsParamsModel> params;
+    private IfsParamsModel dataset;
+    private IfsParamsModel params;
+    private Object value;
+    private String operator;
+
+
 }

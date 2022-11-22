@@ -17,5 +17,5 @@ public class CommandModel {
     private CommandSqlModel sql;
     private List<ValidateParamsModel> validate;
     private List<CommandModel> children;
-    private IfsModel ifs;
+    private List<IfsModel> ifs;
 }

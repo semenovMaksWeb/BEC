@@ -35,6 +35,11 @@ public class CommandService {
         List<CommandModel> config = convertConfig();
 
         for (CommandModel commandModel : config) {
+            /* есть обработка ifs */
+            if (commandModel.getIfs() != null){
+                IfsService ifsService = new IfsService(commandModel.getIfs(), this.dataset, this.params);
+                ifsService.eval();
+            }
             /*Return команды */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.returns.getTitle()) ) {
                 return this.dataset.get(commandModel.getKey());
@@ -75,9 +80,9 @@ public class CommandService {
         return null;
     }
 
-    private List<Object> runPostgresqlService(CommandSqlModel commandSql) throws SQLException, IOException {
+    private Object runPostgresqlService(CommandSqlModel commandSql) throws SQLException, IOException {
         PostgresqlService postgresqlService = new PostgresqlService();
-        List<Object> res = postgresqlService.runSql(
+        Object res = postgresqlService.runSql(
                 commandSql,
                 this.params,
                 this.dataset

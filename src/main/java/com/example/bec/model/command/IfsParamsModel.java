@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IfsParamsModel {
-    private Integer index;
     private String key;
-    private List<IfsParamsModel> children;
+    private IfsParamsModel children;
 }
