@@ -34,7 +34,9 @@ public class CommandService {
             /* есть обработка ifs */
             if (commandModel.getIfs() != null){
                 IfsService ifsService = new IfsService(commandModel.getIfs(), this.dataset, this.params);
-                ifsService.eval();
+                if (!ifsService.checkIfs()){
+                    continue;
+                }
             }
             /* Прогон children */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.block.getTitle()) ) {
