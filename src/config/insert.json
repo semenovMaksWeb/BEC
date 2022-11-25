@@ -1,0 +1,208 @@
+[
+    {
+        "key": null,
+        "type": "validate",
+        "validate": [
+            {
+                "key": "name",
+                "riles": [
+                    {
+                        "type": "req",
+                        "error": "Имя пользователя обязательно поле"
+                    },
+                    {
+                        "type": "var",
+                        "error": "id пользователя является числом",
+                        "params": {
+                            "type": "String"
+                        }
+                    }
+                ]
+            },
+            {
+                "key": "email",
+                "riles": [
+                    {
+                        "type": "req",
+                        "error": "Почта пользователя обязательно поле"
+                    },
+                    {
+                        "type": "var",
+                        "error": "Почта пользователя является строкой",
+                        "params": {
+                            "type": "String"
+                        }
+                    }
+                ]
+            },
+            {
+                "key": "nik",
+                "riles": [
+                    {
+                        "type": "req",
+                        "error": "Ник пользователя обязательно поле"
+                    },
+                    {
+                        "type": "var",
+                        "error": "Ник пользователя является строкой",
+                        "params": {
+                            "type": "String"
+                        }
+                    }
+                ]
+            },
+            {
+                "key": "password",
+                "riles": [
+                    {
+                        "type": "req",
+                        "error": "Пароль пользователя обязательно поле"
+                    },
+                    {
+                        "type": "var",
+                        "error": "Пароль пользователя является строкой",
+                        "params": {
+                            "type": "String"
+                        }
+                    }
+                ]
+            },
+            {
+                "key": "patronymic",
+                "riles": [
+                    {
+                        "type": "req",
+                        "error": "Отчество пользователя обязательно поле"
+                    },
+                    {
+                        "type": "var",
+                        "error": "Отчество пользователя является строкой",
+                        "params": {
+                            "type": "String"
+                        }
+                    }
+                ]
+            },
+            {
+                "key": "surname",
+                "riles": [
+                    {
+                        "type": "req",
+                        "error": "Фамилия пользователя обязательно поле"
+                    },
+                    {
+                        "type": "var",
+                        "error": "Фамилия пользователя является строкой",
+                        "params": {
+                            "type": "String"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "key": "check_user",
+        "type": "postgresql",
+        "sql": {
+            "convert": "object",
+            "text": "select * from tec.user_check_unique(_nik => ?, _email => ?)",
+            "params": [
+                {
+                    "type": "String",
+                    "key": "nik",
+                    "index": 1
+                },
+                {
+                    "type": "String",
+                    "key": "email",
+                    "index": 2
+                }
+            ]
+        }
+    },
+    {
+        "ifs": [
+            {
+                "dataset": {
+                    "key": "check_user",
+                    "children": {
+                        "key": "status"
+                    }
+                }
+            },
+            {
+                "operator": "=="
+            },
+            {
+                "value": 1
+            }
+        ],
+        "type": "block",
+        "children": [
+            {
+                "key": "user",
+                "type": "postgresql",
+                "sql": {
+                    "text": "select * from tec.user_insert(_nik =>?, _email =>?, _password=>?, _surname=>?, _name=>?, _patronymic=>?);",
+                    "params": [
+                        {
+                            "type": "String",
+                            "key": "nik",
+                            "index": 1
+                        },
+                        {
+                            "type": "String",
+                            "key": "email",
+                            "index": 2
+                        },
+                        {
+                            "type": "String",
+                            "key": "password",
+                            "index": 3
+                        },
+                        {
+                            "type": "String",
+                            "key": "surname",
+                            "index": 4
+                        },
+                        {
+                            "type": "String",
+                            "key": "name",
+                            "index": 5
+                        },
+                        {
+                            "type": "String",
+                            "key": "patronymic",
+                            "index": 6
+                        }
+                    ]
+                }
+            },
+            {
+                "key": "user",
+                "type": "return"
+            }
+        ]
+    },
+    {
+        "ifs": [
+            {
+                "dataset": {
+                    "key": "check_user",
+                    "children": {
+                        "key": "status"
+                    }
+                }
+            },
+            {
+                "operator": "=="
+            },
+            {
+                "value": 0
+            }
+        ],
+        "key": "check_user",
+        "type": "return"
+    }
+]
