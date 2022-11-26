@@ -141,6 +141,17 @@
         "type": "block",
         "children": [
             {
+                "type": "convert",
+                "convert": {
+                    "params": [
+                        {
+                            "key": "password",
+                            "type": "hashPassword"
+                        }
+                    ]
+                }
+            },
+            {
                 "key": "user",
                 "type": "postgresql",
                 "sql": {
