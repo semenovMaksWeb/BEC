@@ -9,7 +9,8 @@ import lombok.Getter;
     postgresql("postgresql"),
     returns("return"),
     validate("validate"),
-    block("block");
+    block("block"),
+    convert("convert");
 
     private final String title;
 }

@@ -2,8 +2,10 @@ package com.example.bec.service;
 
 import com.example.bec.PropertiesCustom;
 import com.example.bec.enums.CommandTypeEnum;
+import com.example.bec.enums.ConvertTypeEnum;
 import com.example.bec.model.command.CommandModel;
 import com.example.bec.model.command.CommandSqlModel;
+import com.example.bec.model.command.ConvertModel;
 import com.example.bec.model.command.ValidateParamsModel;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -60,6 +62,10 @@ public class CommandService {
                     return ValidateParams(commandModel.getValidate());
                 }
             }
+            if (Objects.equals(commandModel.getType(), CommandTypeEnum.convert.getTitle()) ) {
+                convertDataset(commandModel.getConvert().getDataset(), this.dataset);
+                convertDataset(commandModel.getConvert().getParams(), this.params);
+            }
         }
         return null;
     }
@@ -67,7 +73,7 @@ public class CommandService {
         this.params = params;
         this.fileService = new FileService(PropertiesCustom.getName("url.config.back") + "\\" + url);
         List<CommandModel> config = convertConfig();
-        return  startCommand(config);
+        return startCommand(config);
     }
 
     /* old */
@@ -82,6 +88,22 @@ public class CommandService {
         }
         return res;
     }
+
+    private void convertDataset(List<ConvertModel> listConvertModel, Map<String, Object> dataset) {
+        ConvertService convertService = new ConvertService();
+        if (listConvertModel != null){
+            for (ConvertModel convertModel:listConvertModel){
+                if (convertModel.getType().equals(ConvertTypeEnum.hashPassword.getTitle())){
+                    dataset.put(
+                        convertModel.getKey(),
+                        convertService.hashPassword((String) dataset.get(convertModel.getKey()))
+                    );
+                }
+            }
+        }
+
+    }
+
 
     private ResponseEntity<Map<String, List<String>>> ValidateParams(List<ValidateParamsModel> validate){
         ValidateService validateService = new ValidateService(this.params, validate);
