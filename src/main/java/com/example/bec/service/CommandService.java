@@ -89,7 +89,7 @@ public class CommandService {
         return res;
     }
 
-    private void convertDataset(List<ConvertModel> listConvertModel, Map<String, Object> dataset) {
+    private void convertDataset(List<ConvertModel> listConvertModel, Map<String, Object> dataset) throws IOException {
         ConvertService convertService = new ConvertService();
         if (listConvertModel != null){
             for (ConvertModel convertModel:listConvertModel){
@@ -97,6 +97,13 @@ public class CommandService {
                     dataset.put(
                         convertModel.getKey(),
                         convertService.hashPassword((String) dataset.get(convertModel.getKey()))
+                    );
+                }
+
+                if (convertModel.getType().equals(ConvertTypeEnum.createToken.getTitle())) {
+                    dataset.put(
+                            convertModel.getKey(),
+                            convertService.createToken(this.params)
                     );
                 }
             }
