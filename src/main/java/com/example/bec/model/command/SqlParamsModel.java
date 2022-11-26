@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SqlParamsModel {
+public class SqlParamsModel extends ChildrenDatasetModel {
     private String type;
-    private String key;
     private Integer index;
 }

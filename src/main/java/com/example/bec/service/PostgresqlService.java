@@ -11,6 +11,7 @@ import java.util.*;
 
 public class PostgresqlService {
     private final Connection conn;
+    private ChildrenDataService childrenDataService = new ChildrenDataService();
     public PostgresqlService() throws SQLException, IOException {
         Properties property = PropertiesCustom.getProperties();
         String  url = "jdbc:postgresql://" + property.getProperty("db.host");
@@ -24,10 +25,11 @@ public class PostgresqlService {
             return;
         }
         for (SqlParamsModel element : config) {
+            Object data = childrenDataService.searchData(params, element);
             if (Objects.equals(element.getType(), VarTypeEnum.string.getTitle())) {
-                statement.setString(element.getIndex(), params.get(element.getKey()).toString());
+                statement.setString(element.getIndex(), data.toString());
             } else if (Objects.equals(element.getType(), VarTypeEnum.integer.getTitle())) {
-                statement.setInt(element.getIndex(), (Integer) params.get(element.getKey()));
+                statement.setInt(element.getIndex(), (Integer) data);
             }
         }
     }

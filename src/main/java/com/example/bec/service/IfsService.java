@@ -1,6 +1,7 @@
 package com.example.bec.service;
 
 import com.example.bec.enums.OperatorTypeEnum;
+import com.example.bec.model.command.ChildrenDatasetModel;
 import com.example.bec.model.command.IfsModel;
 import com.example.bec.model.command.IfsParamsModel;
 
@@ -15,19 +16,27 @@ import java.util.Objects;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class IfsService {
     private List<IfsModel> ListIfsModel;
     private Map<String , Object> dataset;
     private Map<String , Object> params;
+    private ChildrenDataService childrenDataService = new ChildrenDataService();
+
+    public IfsService(List<IfsModel> listIfsModel, Map<String, Object> dataset, Map<String, Object> params) {
+        this.ListIfsModel = listIfsModel;
+        this.dataset = dataset;
+        this.params = params;
+    }
+
     public boolean checkIfs(){
         for(IfsModel ifsModel: ListIfsModel){
             if (ifsModel.getDataset() != null){
-                ifsModel.setValue(convertText(this.dataset, ifsModel.getDataset()));
+                ifsModel.setValue(childrenDataService.searchData(this.dataset, ifsModel.getDataset()));
             }
             else if (ifsModel.getParams() != null){
-                ifsModel.setValue(convertText(this.params, ifsModel.getDataset()));
+                ifsModel.setValue(childrenDataService.searchData(this.params, ifsModel.getParams()));
             }
         }
         return convertIfs();
@@ -75,17 +84,5 @@ public class IfsService {
             }
         }
         return false;
-    }
-
-
-    private Object convertText(Map<String , Object> data, IfsParamsModel ifsParamsModel){
-        if (ifsParamsModel.getChildren() == null) {
-            return data.get(ifsParamsModel.getKey());
-        }else {
-            return  convertText(
-                (Map<String, Object>) data.get(ifsParamsModel.getKey()),
-                ifsParamsModel.getChildren()
-            );
-        }
     }
 }
