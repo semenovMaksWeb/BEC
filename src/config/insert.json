@@ -143,6 +143,12 @@
             {
                 "type": "convert",
                 "convert": {
+                    "dataset": [
+                        {
+                            "key": "token",
+                            "type": "createToken"
+                        }
+                    ],
                     "params": [
                         {
                             "key": "password",
@@ -155,6 +161,7 @@
                 "key": "user",
                 "type": "postgresql",
                 "sql": {
+                    "convert": "object",
                     "text": "select * from tec.user_insert(_nik =>?, _email =>?, _password=>?, _surname=>?, _name=>?, _patronymic=>?);",
                     "params": [
                         {
@@ -191,7 +198,30 @@
                 }
             },
             {
-                "key": "user",
+                "key": null,
+                "type": "postgresql",
+                "sql": {
+                    "text": "select * from  tec.token_insert(_id_user => ?, _token => ?);",
+                    "dataset": [
+                        {
+                            "type": "Integer",
+                            "key": "user",
+                            "children": {
+                                "key": "id_"
+                            },
+                            "index": 1
+                        },
+                        {
+                            "type": "String",
+                            "key": "token",
+                            "index": 2
+                        }
+                    ]
+                }
+            },
+
+            {
+                "key": "token",
                 "type": "return"
             }
         ]
