@@ -1,0 +1,43 @@
+[
+  {
+    "key": null,
+    "type": "validate",
+    "validate": [
+      {
+        "key": "token",
+        "riles": [
+          {
+            "type": "req",
+            "error": "Токен обязательно поле"
+          },
+          {
+            "type": "var",
+            "error": "Токен пользователя является строкой",
+            "params": {
+              "type": "String"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "profile",
+    "type": "postgresql",
+    "sql": {
+      "convert": "object",
+      "text": "select * from tec.profile(_token => ?)",
+      "params": [
+        {
+          "type": "String",
+          "key": "token",
+          "index": 1
+        }
+      ]
+    }
+  },
+  {
+    "key": "profile",
+    "type": "return"
+  }
+]
