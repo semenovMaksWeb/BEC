@@ -43,7 +43,7 @@ public class CommandService {
             /* Прогон children */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.block.getTitle()) ) {
                 Object res = startCommand(commandModel.getChildren());
-                /* Прогон children вызвал return  и нужно вернуть выше */
+                /* Прогон children вызвал return и нужно вернуть выше */
                 if (res != null){
                     return  res;
                 }
@@ -93,24 +93,18 @@ public class CommandService {
         ConvertService convertService = new ConvertService();
         if (listConvertModel != null){
             for (ConvertModel convertModel:listConvertModel){
+                Object res = null;
                 if (convertModel.getType().equals(ConvertTypeEnum.hashPassword.getTitle())){
-                    dataset.put(
-                        convertModel.getKey(),
-                        convertService.hashPassword((String) dataset.get(convertModel.getKey()))
-                    );
+                    res = convertService.hashPassword((String) dataset.get(convertModel.getKey()));
                 }
-
                 if (convertModel.getType().equals(ConvertTypeEnum.createToken.getTitle())) {
-                    dataset.put(
-                            convertModel.getKey(),
-                            convertService.createToken(this.params)
-                    );
+                    res = convertService.createToken(this.params);
                 }
+                dataset.put(convertModel.getKey(), res);
             }
         }
 
     }
-
 
     private ResponseEntity<Map<String, List<String>>> ValidateParams(List<ValidateParamsModel> validate){
         ValidateService validateService = new ValidateService(this.params, validate);
