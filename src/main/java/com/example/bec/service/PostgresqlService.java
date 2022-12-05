@@ -3,8 +3,12 @@ package com.example.bec.service;
 import com.example.bec.PropertiesCustom;
 import com.example.bec.enums.VarTypeEnum;
 import com.example.bec.model.command.CommandSqlModel;
-import com.example.bec.model.command.SqlOutModel;
 import com.example.bec.model.command.SqlParamsModel;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.postgresql.util.PGobject;
+
 
 import java.io.IOException;
 import java.sql.*;
@@ -39,7 +43,7 @@ public class PostgresqlService {
             CommandSqlModel commandSql,
             Map<String, Object> params,
             Map<String, Object> dataset
-    ) throws SQLException {
+    ) throws SQLException, JsonProcessingException {
         PreparedStatement statement = this.conn.prepareStatement(commandSql.getText());
         StatementSave(statement, commandSql.getParams(), params);
         StatementSave(statement, commandSql.getDataset(), dataset);
@@ -47,19 +51,23 @@ public class PostgresqlService {
         return convertRsInJson(rs, commandSql.getConvert());
     }
 
-    private Object convertRsInJson(ResultSet rs, String typeConvert) throws SQLException {
+    private Object convertRsInJson(ResultSet rs, String typeConvert) throws SQLException, JsonProcessingException {
         List<Object> result = new ArrayList<>();
         while (rs.next()) {
             Map<String, Object> map = new HashMap<>();
             ResultSetMetaData metaData = rs.getMetaData();
             for (int i = 1; i <= metaData.getColumnCount(); i++){
-                /** TODO временное решения для теста */
-                if (metaData.getColumnTypeName(i).equals("result_type")){
-                    this.convertOutInJson(metaData, rs, i);
-                }
                 if (Objects.equals(metaData.getColumnClassName(i), "java.sql.Array")){
                     map.put(metaData.getColumnName(i), rs.getArray(i).getArray());
-                }else {
+                }
+                if (rs.getObject(i) != null && rs.getObject(i).getClass().getSimpleName().equals("PGobject")){
+                    PGobject pGobject = (PGobject) rs.getObject(i);
+                    map.put(metaData.getColumnName(i),new ObjectMapper().readValue(pGobject.getValue(), Object.class));
+                }
+                else {
+                    System.out.println(metaData.getColumnClassName(i));
+                    System.out.println(metaData.getColumnName(i));
+                    System.out.println(rs.getObject(i));
                     map.put(metaData.getColumnName(i), rs.getObject(i));
                 }
             }
@@ -69,35 +77,6 @@ public class PostgresqlService {
             return result.get(0);
         }
         return  result;
-    }
-    private void convertOutInJson(ResultSetMetaData metaData, ResultSet rs , Integer i) throws SQLException {
-        List<SqlOutModel> outModelList = generationOutModel(metaData.getColumnTypeName(i));
-        for (SqlOutModel outModel: outModelList){
-            System.out.println(rs.getObject(i));
-
-//            ResultSet rsObject = rs.getArray(i).getResultSet();
-//            while (rsObject.next()) {
-//                System.out.println(rsObject.getObject(0));
-//                System.out.println(rsObject.getObject(1));
-//            }
-        }
-    }
-    private List<SqlOutModel> generationOutModel(String type) throws SQLException {
-        List<SqlOutModel> outModelList = new ArrayList<>();
-        ResultSet typeOut = getType(type);
-        while (typeOut.next()) {
-            SqlOutModel outModel = new SqlOutModel();
-            outModel.setName(typeOut.getString(1));
-            outModel.setName(typeOut.getString(2));
-            outModelList.add(outModel);
-        }
-        return outModelList;
-    }
-
-    private ResultSet getType(String type) throws SQLException {
-        PreparedStatement statement = this.conn.prepareStatement("select att.attname as name, pg_catalog.format_type(atttypid, NULL) as type from pg_attribute att join pg_class tbl on tbl.oid = att.attrelid join pg_namespace ns on tbl.relnamespace = ns.oid where tbl.relname = ?");
-        statement.setString(1, type);
-        return statement.executeQuery();
     }
 
     public void closeConn() throws SQLException {
