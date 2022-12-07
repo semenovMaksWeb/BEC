@@ -1,0 +1,64 @@
+[
+  {
+    "key": null,
+    "type": "validate",
+    "validate": [
+      {
+        "key": "token",
+        "riles": [
+          {
+            "type": "req",
+            "error": "Токен обязательно поле"
+          },
+          {
+            "type": "var",
+            "error": "Токен пользователя является строкой",
+            "params": {
+              "type": "String"
+            }
+          }
+        ]
+      },
+      {
+        "key": "right_const_name",
+        "riles": [
+          {
+            "type": "req",
+            "error": "Право обязательно поле"
+          },
+          {
+            "type": "var",
+            "error": "Право является строкой",
+            "params": {
+              "type": "String"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "check",
+    "type": "postgresql",
+    "sql": {
+      "convert": "object",
+      "text": "select * from tec.check_right(_token => ?, _right_const_name => ?)",
+      "params": [
+        {
+          "type": "String",
+          "key": "token",
+          "index": 1
+        },
+        {
+          "type": "String",
+          "key": "right_const_name",
+          "index": 2
+        }
+      ]
+    }
+  },
+  {
+    "type": "return",
+    "key": "check"
+  }
+]

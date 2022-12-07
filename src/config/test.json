@@ -1,0 +1,14 @@
+[
+  {
+  "key": "profile",
+  "type": "postgresql",
+  "sql": {
+    "convert": "object",
+    "text": "select * from public.test();"
+    }
+  },
+  {
+  "key": "profile",
+  "type": "return"
+  }
+]
