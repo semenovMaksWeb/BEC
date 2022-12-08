@@ -110,12 +110,12 @@
             "params": [
                 {
                     "type": "String",
-                    "key": "nik",
+                    "key": ["nik"],
                     "index": 1
                 },
                 {
                     "type": "String",
-                    "key": "email",
+                    "key": ["email"],
                     "index": 2
                 }
             ]
@@ -125,10 +125,7 @@
         "ifs": [
             {
                 "dataset": {
-                    "key": "check_user",
-                    "children": {
-                        "key": "status"
-                    }
+                    "key": ["check_user", "status"]
                 }
             },
             {
@@ -166,32 +163,32 @@
                     "params": [
                         {
                             "type": "String",
-                            "key": "nik",
+                            "key": ["nik"],
                             "index": 1
                         },
                         {
                             "type": "String",
-                            "key": "email",
+                            "key": ["email"],
                             "index": 2
                         },
                         {
                             "type": "String",
-                            "key": "password",
+                            "key": ["password"],
                             "index": 3
                         },
                         {
                             "type": "String",
-                            "key": "surname",
+                            "key": ["surname"],
                             "index": 4
                         },
                         {
                             "type": "String",
-                            "key": "name",
+                            "key": ["name"],
                             "index": 5
                         },
                         {
                             "type": "String",
-                            "key": "patronymic",
+                            "key": ["patronymic"],
                             "index": 6
                         }
                     ]
@@ -205,15 +202,12 @@
                     "dataset": [
                         {
                             "type": "Integer",
-                            "key": "user",
-                            "children": {
-                                "key": "id_"
-                            },
+                            "key": ["user", "id_"],
                             "index": 1
                         },
                         {
                             "type": "String",
-                            "key": "token",
+                            "key": ["token"],
                             "index": 2
                         }
                     ]
@@ -230,10 +224,7 @@
         "ifs": [
             {
                 "dataset": {
-                    "key": "check_user",
-                    "children": {
-                        "key": "status"
-                    }
+                    "key": ["check_user", "status"]
                 }
             },
             {

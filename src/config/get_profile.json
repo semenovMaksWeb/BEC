@@ -30,7 +30,7 @@
       "params": [
         {
           "type": "String",
-          "key": "token",
+          "key": ["token"],
           "index": 1
         }
       ]
