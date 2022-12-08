@@ -1,18 +1,14 @@
 package com.example.bec.service;
 
 import com.example.bec.enums.OperatorTypeEnum;
-import com.example.bec.model.command.ChildrenDatasetModel;
 import com.example.bec.model.command.IfsModel;
-import com.example.bec.model.command.IfsParamsModel;
 
-import io.swagger.models.auth.In;
-import lombok.AllArgsConstructor;
+
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @Getter
 @Setter

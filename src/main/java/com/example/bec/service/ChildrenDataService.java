@@ -6,13 +6,11 @@ import java.util.Map;
 
 public class ChildrenDataService {
     public Object searchData(Map<String , Object> data, ChildrenDatasetModel childrenDatasetModel){
-        if (childrenDatasetModel.getChildren() == null) {
-            return data.get(childrenDatasetModel.getKey());
-        }else {
-            return searchData(
-                    (Map<String, Object>) data.get(childrenDatasetModel.getKey()),
-                    childrenDatasetModel.getChildren()
-            );
+        Object link = data;
+        for (String key: childrenDatasetModel.getKey()){
+            System.out.println(link);
+            link = ((Map<?, ?>) link).get(key);
         }
+        return link;
     }
 }

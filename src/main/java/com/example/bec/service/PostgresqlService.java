@@ -57,17 +57,17 @@ public class PostgresqlService {
             Map<String, Object> map = new HashMap<>();
             ResultSetMetaData metaData = rs.getMetaData();
             for (int i = 1; i <= metaData.getColumnCount(); i++){
+                /** это массив */
                 if (Objects.equals(metaData.getColumnClassName(i), "java.sql.Array")){
                     map.put(metaData.getColumnName(i), rs.getArray(i).getArray());
                 }
-                if (rs.getObject(i) != null && rs.getObject(i).getClass().getSimpleName().equals("PGobject")){
-                    PGobject pGobject = (PGobject) rs.getObject(i);
-                    map.put(metaData.getColumnName(i),new ObjectMapper().readValue(pGobject.getValue(), Object.class));
+                /** это json */
+                else if (rs.getObject(i) != null && rs.getObject(i).getClass().getSimpleName().equals("PGobject")){
+                   PGobject pGobject = (PGobject) rs.getObject(i);
+                   map.put(metaData.getColumnName(i),new ObjectMapper().readValue(pGobject.getValue(), Object.class));
                 }
+                /** это примитив */
                 else {
-                    System.out.println(metaData.getColumnClassName(i));
-                    System.out.println(metaData.getColumnName(i));
-                    System.out.println(rs.getObject(i));
                     map.put(metaData.getColumnName(i), rs.getObject(i));
                 }
             }
