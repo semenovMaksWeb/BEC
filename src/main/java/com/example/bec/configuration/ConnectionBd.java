@@ -19,7 +19,7 @@ public class ConnectionBd {
 
     @Bean
     public Connection postgresqlConnection() throws IOException, SQLException {
-        String  url = "jdbc:postgresql://" + propertiesCustom.getProperties().getProperty("db.host");
+        String url = "jdbc:postgresql://" + propertiesCustom.getProperties().getProperty("db.host");
         Properties props = new Properties();
         props.setProperty("user", propertiesCustom.getProperties().getProperty("db.user"));
         props.setProperty("password", propertiesCustom.getProperties().getProperty("db.password"));
