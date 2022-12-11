@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -23,7 +24,11 @@ public class ConvertService {
     public String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
-    public String createToken(Map<String, Object> params, ConvertModel convertModel) throws IOException {
+   /* todo попытатся из класса ConvertParamsLinkModel создать метод который будет принимать data и возвращать элемент key:value  */
+    public String createToken(Map<String, Object> params, Map<String, Object> dataset, ConvertModel convertModel) throws IOException {
+//        Map<String, Object> data = new HashMap<>();
+//       convertModel.getParams().getLink().getObjectParams(data,params);
+//        convertModel.getParams().getLink().getObjectDataset(data,dataset);
         return JWT.create()
                 .withSubject("User Details")
                 .withClaim("email", params.get("email").toString())
@@ -33,6 +38,6 @@ public class ConvertService {
     }
 
     public Object saveValue(ConvertModel convertModel){
-        return convertModel.getParams().get("value");
+        return convertModel.getParams().getValue();
     }
 }

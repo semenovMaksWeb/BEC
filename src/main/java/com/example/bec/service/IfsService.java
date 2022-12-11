@@ -3,8 +3,6 @@ package com.example.bec.service;
 import com.example.bec.enums.OperatorTypeEnum;
 import com.example.bec.model.command.ifs.IfsModel;
 
-
-
 import lombok.Getter;
 import lombok.Setter;
 import java.util.List;

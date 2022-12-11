@@ -4,11 +4,12 @@ import com.example.bec.configuration.ConnectionBd;
 import com.example.bec.enums.VarTypeEnum;
 import com.example.bec.model.command.sql.CommandSqlModel;
 import com.example.bec.model.command.sql.SqlParamsModel;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Service;
-
 
 import java.io.IOException;
 import java.sql.*;

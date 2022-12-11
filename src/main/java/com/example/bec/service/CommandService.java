@@ -102,8 +102,8 @@ public class CommandService {
             }
             /*Вызов конвертации данных */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.convert.getTitle()) ) {
-                convertDataset(commandModel.getConvert().getDataset(), this.dataset);
-                convertDataset(commandModel.getConvert().getParams(), params);
+                convertDataset(commandModel.getConvert().getDataset(), dataset, params, dataset);
+                convertDataset(commandModel.getConvert().getParams(), params, params, dataset);
             }
         }
         return Optional.empty();
@@ -129,21 +129,20 @@ public class CommandService {
     }
 
     /* Todo пересмотреть метод ибо нужно прокидывать и куда сохранять и куда смотреть и тд */
-    private void convertDataset(List<ConvertModel> listConvertModel, Map<String, Object> dataset) throws IOException {
+    private void convertDataset(List<ConvertModel> listConvertModel, Map<String, Object> result, Map<String, Object> params, Map<String, Object> dataset) throws IOException {
         if (listConvertModel != null){
             for (ConvertModel convertModel:listConvertModel){
                 Object res = null;
                 if (convertModel.getType().equals(ConvertTypeEnum.hashPassword.getTitle())){
-                    res = this.convertService.hashPassword((String) dataset.get(convertModel.getKey()));
+                    res = this.convertService.hashPassword((String) result.get(convertModel.getKey()));
                 }
                 if (convertModel.getType().equals(ConvertTypeEnum.createToken.getTitle())) {
-                    res = null;
-//                  res = this.convertService.createToken(convertModel);
+                    res = this.convertService.createToken(params, dataset, convertModel);
                 }
                 if (convertModel.getType().equals(ConvertTypeEnum.saveValue.getTitle())){
                     res = this.convertService.saveValue(convertModel);
                 }
-                dataset.put(convertModel.getKey(), res);
+                result.put(convertModel.getKey(), res);
             }
         }
 

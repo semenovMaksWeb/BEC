@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.Map;
 
 @Getter
 @Setter
@@ -13,5 +12,5 @@ import java.util.Map;
 public class ConvertModel {
     private String key;
     private  String type;
-    private Map<String, Object> params;
+    private ConvertParamsModel params;
 }
