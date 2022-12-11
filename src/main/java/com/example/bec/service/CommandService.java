@@ -27,9 +27,6 @@ public class CommandService {
     private  final  PostgresqlService postgresqlService;
     private final PropertiesCustom propertiesCustom;
 
-    /* todo удалять и писать в runCommand  */
-    private final Map<String, Object> dataset = new HashMap<>();
-
     public CommandService(@Lazy ConvertService convertService, @Lazy CommandService commandService, @Lazy PostgresqlService postgresqlService, PropertiesCustom propertiesCustom) {
         this.convertService = convertService;
         this.commandService = commandService;
@@ -45,10 +42,11 @@ public class CommandService {
 
     /* TODO Optional и везде где может передаваться null */
     private Optional<Object> startCommand(List<CommandModel> config, Map<String, Object> params) throws SQLException, IOException {
+        Map<String, Object> dataset = new HashMap<>();
         for (CommandModel commandModel : config) {
             /* есть обработка ifs */
             if (commandModel.getIfs() != null){
-                IfsService ifsService = new IfsService(commandModel.getIfs(), this.dataset, params);
+                IfsService ifsService = new IfsService(commandModel.getIfs(), dataset, params);
                 if (!ifsService.checkIfs()){
                     continue;
                 }
@@ -72,22 +70,22 @@ public class CommandService {
                 {
                     return result;
                 } else {
-                    this.dataset.put(commandModel.getKey(),result);
+                    dataset.put(commandModel.getKey(),result);
                 }
             }
             /*Return команды */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.returns.getTitle()) ) {
-                return Optional.of(this.dataset.get(commandModel.getKey()));
+                return Optional.of(dataset.get(commandModel.getKey()));
 
             }
             /*Вызов sql postgresql */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.postgresql.getTitle()) ) {
-                this.dataset.put(
+                dataset.put(
                     commandModel.getKey(),
                     this.postgresqlService.runSql(
                         commandModel.getSql(),
                         params,
-                        this.dataset
+                        dataset
                     )
                 );
             }

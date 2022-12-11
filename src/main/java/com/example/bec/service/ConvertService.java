@@ -24,7 +24,7 @@ public class ConvertService {
     public String hashPassword(String password) {
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
-   /* todo попытатся из класса ConvertParamsLinkModel создать метод который будет принимать data и возвращать элемент key:value  */
+
     public String createToken(Map<String, Object> params, Map<String, Object> dataset, ConvertModel convertModel) throws IOException {
         Map<String, Object> data = new HashMap<>();
        convertModel.getParams().getLink().getObjectParams(data,params);

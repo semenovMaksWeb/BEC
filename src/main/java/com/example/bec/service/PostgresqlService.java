@@ -20,11 +20,9 @@ public class PostgresqlService {
 
     private final ConnectionBd connectionBd;
 
-    /* todo перенести в конфигурацию */
     public PostgresqlService(ConnectionBd connectionBd) {
        this.connectionBd = connectionBd;
     }
-    /* todo перенести в конфигурацию */
     private void StatementSave(PreparedStatement statement, List<SqlParamsModel> config, Map<String, Object> params) throws SQLException {
         if (config == null){
             return;
