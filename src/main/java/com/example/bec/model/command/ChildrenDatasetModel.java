@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -14,4 +15,12 @@ import java.util.List;
 @AllArgsConstructor
 public class ChildrenDatasetModel {
     List<String> key;
+    public Object searchData(Map<String , Object> data){
+        Object link = data;
+        for (String key: this.key){
+            System.out.println(link);
+            link = ((Map<?, ?>) link).get(key);
+        }
+        return link;
+    }
 }

@@ -4,7 +4,6 @@ import com.example.bec.PropertiesCustom;
 import com.example.bec.enums.VarTypeEnum;
 import com.example.bec.model.command.CommandSqlModel;
 import com.example.bec.model.command.SqlParamsModel;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.postgresql.util.PGobject;
@@ -16,7 +15,6 @@ import java.util.*;
 
 public class PostgresqlService {
     public final Connection conn;
-    private final ChildrenDataService childrenDataService = new ChildrenDataService();
     public PostgresqlService() throws SQLException, IOException {
         Properties property = PropertiesCustom.getProperties();
         String  url = "jdbc:postgresql://" + property.getProperty("db.host");
@@ -30,7 +28,7 @@ public class PostgresqlService {
             return;
         }
         for (SqlParamsModel element : config) {
-            Object data = childrenDataService.searchData(params, element);
+            Object data = element.searchData(params);
             if (Objects.equals(element.getType(), VarTypeEnum.string.getTitle())) {
                 statement.setString(element.getIndex(), data.toString());
             } else if (Objects.equals(element.getType(), VarTypeEnum.integer.getTitle())) {

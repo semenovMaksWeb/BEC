@@ -12,13 +12,10 @@ import java.util.Map;
 
 @Getter
 @Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
 public class IfsService {
     private List<IfsModel> ListIfsModel;
     private Map<String , Object> dataset;
     private Map<String , Object> params;
-    private ChildrenDataService childrenDataService = new ChildrenDataService();
 
     public IfsService(List<IfsModel> listIfsModel, Map<String, Object> dataset, Map<String, Object> params) {
         this.ListIfsModel = listIfsModel;
@@ -29,10 +26,10 @@ public class IfsService {
     public boolean checkIfs(){
         for(IfsModel ifsModel: ListIfsModel){
             if (ifsModel.getDataset() != null){
-                ifsModel.setValue(childrenDataService.searchData(this.dataset, ifsModel.getDataset()));
+                ifsModel.setValue(ifsModel.getDataset().searchData(this.dataset));
             }
             else if (ifsModel.getParams() != null){
-                ifsModel.setValue(childrenDataService.searchData(this.params, ifsModel.getParams()));
+                ifsModel.setValue(ifsModel.getParams().searchData(this.params));
             }
         }
         return convertIfs();
