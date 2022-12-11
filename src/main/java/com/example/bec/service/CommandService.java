@@ -48,9 +48,21 @@ public class CommandService {
                     return  res;
                 }
             }
+            /* вызвать другой файл с конфигом и получить от него ответ */
+            if (Objects.equals(commandModel.getType(), CommandTypeEnum.config_link.getTitle())){
+                CommandService commandService = new CommandService();
+                Object result = commandService.runCommand(commandModel.getLink(), this.params);
+                /* исключить ошибки валидации 400 */
+                if (result != null && result.getClass().getSimpleName().equals("ResponseEntity")){
+                    return result;
+                }else {
+                    this.dataset.put(commandModel.getKey(),result);
+                }
+            }
             /*Return команды */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.returns.getTitle()) ) {
                 return this.dataset.get(commandModel.getKey());
+
             }
             /*Вызов sql postgresql */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.postgresql.getTitle()) ) {
@@ -62,6 +74,7 @@ public class CommandService {
                     return ValidateParams(commandModel.getValidate());
                 }
             }
+            /*Вызов конвертации данных */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.convert.getTitle()) ) {
                 convertDataset(commandModel.getConvert().getDataset(), this.dataset);
                 convertDataset(commandModel.getConvert().getParams(), this.params);
@@ -99,6 +112,9 @@ public class CommandService {
                 }
                 if (convertModel.getType().equals(ConvertTypeEnum.createToken.getTitle())) {
                     res = convertService.createToken(this.params);
+                }
+                if (convertModel.getType().equals(ConvertTypeEnum.saveValue.getTitle())){
+                    res = convertService.saveValue(convertModel);
                 }
                 dataset.put(convertModel.getKey(), res);
             }

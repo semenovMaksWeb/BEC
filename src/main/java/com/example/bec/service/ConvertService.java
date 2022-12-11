@@ -4,6 +4,7 @@ package com.example.bec.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.bec.PropertiesCustom;
+import com.example.bec.model.command.ConvertModel;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
@@ -21,5 +22,9 @@ public class ConvertService {
                 .withClaim("nik", params.get("nik").toString())
                 .withIssuedAt(new Date())
                 .sign(Algorithm.HMAC256(PropertiesCustom.getName("token.secret")));
+    }
+
+    public Object saveValue(ConvertModel convertModel){
+        return convertModel.getParams().get("value");
     }
 }

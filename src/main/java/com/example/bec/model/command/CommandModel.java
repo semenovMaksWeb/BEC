@@ -18,5 +18,6 @@ public class CommandModel {
     private List<ValidateParamsModel> validate;
     private List<CommandModel> children;
     private  CommandConvertModel convert;
+    private  String link;
     private List<IfsModel> ifs;
 }

@@ -10,7 +10,8 @@ import lombok.Getter;
     returns("return"),
     validate("validate"),
     block("block"),
-    convert("convert");
+    convert("convert"),
+    config_link("config_link");
 
     private final String title;
 }
