@@ -28,9 +28,7 @@ public class CommandService {
     private final PropertiesCustom propertiesCustom;
 
     /* todo удалять и писать в runCommand  */
-//    private  Map<String, Object> params;
     private final Map<String, Object> dataset = new HashMap<>();
-    /* todo удалять и писать в runCommand */
 
     public CommandService(@Lazy ConvertService convertService, @Lazy CommandService commandService, @Lazy PostgresqlService postgresqlService, PropertiesCustom propertiesCustom) {
         this.convertService = convertService;
@@ -109,9 +107,7 @@ public class CommandService {
         return Optional.empty();
     }
     public Optional<Object> runCommand(String  url, Map<String, Object> params) throws IOException, SQLException {
-        /* TODO убрать такое! this проблема сингл тон */
-       FileService fileService = new FileService(this.propertiesCustom.getProperties().getProperty("url.config.back") + "\\" + url);
-        /* TODO убрать такое! this проблема сингл тон */
+        FileService fileService = new FileService(this.propertiesCustom.getProperties().getProperty("url.config.back") + "\\" + url);
         return startCommand(convertConfig(fileService), params);
     }
 
@@ -128,7 +124,6 @@ public class CommandService {
         return res;
     }
 
-    /* Todo пересмотреть метод ибо нужно прокидывать и куда сохранять и куда смотреть и тд */
     private void convertDataset(List<ConvertModel> listConvertModel, Map<String, Object> result, Map<String, Object> params, Map<String, Object> dataset) throws IOException {
         if (listConvertModel != null){
             for (ConvertModel convertModel:listConvertModel){
