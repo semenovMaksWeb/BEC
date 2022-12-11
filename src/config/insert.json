@@ -143,7 +143,15 @@
                     "dataset": [
                         {
                             "key": "token",
-                            "type": "createToken"
+                            "type": "createToken",
+                            "params": {
+                                "link": {
+                                    "params": {
+                                        "email": { "key": ["email"] },
+                                        "nik": {"key": ["nik"] }
+                                    }
+                                }
+                            }
                         }
                     ],
                     "params": [
