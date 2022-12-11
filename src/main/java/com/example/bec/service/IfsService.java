@@ -1,7 +1,7 @@
 package com.example.bec.service;
 
 import com.example.bec.enums.OperatorTypeEnum;
-import com.example.bec.model.command.IfsModel;
+import com.example.bec.model.command.ifs.IfsModel;
 
 
 

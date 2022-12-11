@@ -15,7 +15,7 @@ public class RegularService {
         if ("var".equals(name)) {
             return regularVar(text);
         }
-        return  text;
+        return text;
     }
     public String regularVar(String text){
 
@@ -27,9 +27,5 @@ public class RegularService {
            result.set(text.replaceAll(name, params.get(key).toString()));
         });
         return result.get();
-    }
-    static public String regularIfs(String text, Integer index, Object values){
-        return text.replaceAll("%" + index, values.toString());
-
     }
 }

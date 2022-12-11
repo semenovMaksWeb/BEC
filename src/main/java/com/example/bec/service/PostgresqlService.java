@@ -1,9 +1,9 @@
 package com.example.bec.service;
 
-import com.example.bec.configuration.PropertiesCustom;
+import com.example.bec.configuration.ConnectionBd;
 import com.example.bec.enums.VarTypeEnum;
-import com.example.bec.model.command.CommandSqlModel;
-import com.example.bec.model.command.SqlParamsModel;
+import com.example.bec.model.command.sql.CommandSqlModel;
+import com.example.bec.model.command.sql.SqlParamsModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.postgresql.util.PGobject;
@@ -17,16 +17,11 @@ import java.util.*;
 @Service
 public class PostgresqlService {
 
-    /* todo попытаться сделать сервисом */
-    public final Connection conn;
+    private final ConnectionBd connectionBd;
 
     /* todo перенести в конфигурацию */
-    public PostgresqlService(PropertiesCustom propertiesCustom) throws SQLException, IOException {
-        String  url = "jdbc:postgresql://" + propertiesCustom.getProperties().getProperty("db.host");
-        Properties props = new Properties();
-        props.setProperty("user", propertiesCustom.getProperties().getProperty("db.user"));
-        props.setProperty("password", propertiesCustom.getProperties().getProperty("db.password"));
-        this.conn = DriverManager.getConnection(url, props);
+    public PostgresqlService(ConnectionBd connectionBd) {
+       this.connectionBd = connectionBd;
     }
     /* todo перенести в конфигурацию */
     private void StatementSave(PreparedStatement statement, List<SqlParamsModel> config, Map<String, Object> params) throws SQLException {
@@ -47,8 +42,8 @@ public class PostgresqlService {
             CommandSqlModel commandSql,
             Map<String, Object> params,
             Map<String, Object> dataset
-    ) throws SQLException, JsonProcessingException {
-        PreparedStatement statement = this.conn.prepareStatement(commandSql.getText());
+    ) throws SQLException, IOException {
+        PreparedStatement statement = this.connectionBd.postgresqlConnection().prepareStatement(commandSql.getText());
         StatementSave(statement, commandSql.getParams(), params);
         StatementSave(statement, commandSql.getDataset(), dataset);
         ResultSet rs = statement.executeQuery();
@@ -81,9 +76,5 @@ public class PostgresqlService {
             return result.get(0);
         }
         return  result;
-    }
-
-    public void closeConn() throws SQLException {
-        this.conn.close();
     }
 }

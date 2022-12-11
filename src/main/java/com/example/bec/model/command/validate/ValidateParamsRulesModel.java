@@ -1,5 +1,6 @@
-package com.example.bec.model.command;
+package com.example.bec.model.command.validate;
 
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SqlParamsModel extends ChildrenDatasetModel {
+public class ValidateParamsRulesModel {
     private String type;
-    private Integer index;
+    private String error;
+    private Map<String, Object> params;
+
 }

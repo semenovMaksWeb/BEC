@@ -1,5 +1,9 @@
 package com.example.bec.model.command;
 
+import com.example.bec.model.command.convert.CommandConvertModel;
+import com.example.bec.model.command.ifs.IfsModel;
+import com.example.bec.model.command.sql.CommandSqlModel;
+import com.example.bec.model.command.validate.ValidateParamsModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +21,7 @@ public class CommandModel {
     private CommandSqlModel sql;
     private List<ValidateParamsModel> validate;
     private List<CommandModel> children;
-    private  CommandConvertModel convert;
+    private CommandConvertModel convert;
     private  String link;
     private List<IfsModel> ifs;
 }

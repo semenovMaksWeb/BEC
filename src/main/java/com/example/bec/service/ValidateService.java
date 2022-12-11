@@ -2,8 +2,8 @@ package com.example.bec.service;
 
 
 import com.example.bec.enums.ValidateParamsEnum;
-import com.example.bec.model.command.ValidateParamsModel;
-import com.example.bec.model.command.ValidateParamsRulesModel;
+import com.example.bec.model.command.validate.ValidateParamsModel;
+import com.example.bec.model.command.validate.ValidateParamsRulesModel;
 
 import lombok.Getter;
 import lombok.Setter;

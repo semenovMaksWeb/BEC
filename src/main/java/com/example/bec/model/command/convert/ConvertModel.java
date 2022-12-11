@@ -1,4 +1,4 @@
-package com.example.bec.model.command;
+package com.example.bec.model.command.convert;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.example.bec.model.command;
+package com.example.bec.model.command.validate;
 
 import java.util.List;
 

@@ -18,7 +18,6 @@ public class ChildrenDatasetModel {
     public Object searchData(Map<String , Object> data){
         Object link = data;
         for (String key: this.key){
-            System.out.println(link);
             link = ((Map<?, ?>) link).get(key);
         }
         return link;

@@ -9,7 +9,6 @@ import java.util.Properties;
 
 @Configuration
 public class PropertiesCustom {
-
     @Bean
     public Properties getProperties() throws IOException {
         Properties property = new Properties();

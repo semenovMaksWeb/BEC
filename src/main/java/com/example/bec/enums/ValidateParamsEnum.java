@@ -9,5 +9,6 @@ import lombok.Getter;
 public enum ValidateParamsEnum {
     req("req"),
     var("var");
+
     private final String title;
 }

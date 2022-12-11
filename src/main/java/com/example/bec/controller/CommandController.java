@@ -32,6 +32,6 @@ public class CommandController {
             @RequestBody Map<String, Object> params
 
     ) throws SQLException, IOException {
-        return this.commandService.runCommand(name, params).get();
+        return this.commandService.runCommand(name, params).orElseGet(Optional::empty);
     }
 }

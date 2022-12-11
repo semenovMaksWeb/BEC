@@ -1,4 +1,4 @@
-package com.example.bec.model.command;
+package com.example.bec.model.command.sql;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
