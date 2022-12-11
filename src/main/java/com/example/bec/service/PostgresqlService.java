@@ -14,7 +14,10 @@ import java.sql.*;
 import java.util.*;
 
 public class PostgresqlService {
+    /* todo попытаться сделать сервисом */
     public final Connection conn;
+
+    /* todo перенести в конфигурацию */
     public PostgresqlService() throws SQLException, IOException {
         Properties property = PropertiesCustom.getProperties();
         String  url = "jdbc:postgresql://" + property.getProperty("db.host");
@@ -23,6 +26,7 @@ public class PostgresqlService {
         props.setProperty("password", property.getProperty("db.password"));
         this.conn = DriverManager.getConnection(url, props);
     }
+    /* todo перенести в конфигурацию */
     private void StatementSave(PreparedStatement statement, List<SqlParamsModel> config, Map<String, Object> params) throws SQLException {
         if (config == null){
             return;

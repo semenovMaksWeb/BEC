@@ -22,15 +22,17 @@ import java.util.*;
 
 @Service
 public class CommandService {
+    /* todo удалять и писать в runCommand  */
     private FileService fileService;
     private  Map<String, Object> params;
-   private final Map<String, Object> dataset = new HashMap<>();
-
+    private final Map<String, Object> dataset = new HashMap<>();
+    /* todo удалять и писать в runCommand */
     private  List<CommandModel> convertConfig() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(this.fileService.readFile(), new TypeReference<List<CommandModel>>(){});
     }
 
+    /* TODO Optional и везде где может передаваться null */
     private Object startCommand(List<CommandModel> config) throws SQLException, IOException {
         for (CommandModel commandModel : config) {
             /* есть обработка ifs */
@@ -53,6 +55,7 @@ public class CommandService {
                 CommandService commandService = new CommandService();
                 Object result = commandService.runCommand(commandModel.getLink(), this.params);
                 /* исключить ошибки валидации 400 */
+                /* todo  ResponseEntity result instanceof */
                 if (result != null && result.getClass().getSimpleName().equals("ResponseEntity")){
                     return result;
                 }else {
@@ -83,8 +86,10 @@ public class CommandService {
         return null;
     }
     public Object runCommand(String  url, Map<String, Object> params) throws IOException, SQLException {
+        /* TODO убрать такое! this проблема сингл тон */
         this.params = params;
         this.fileService = new FileService(PropertiesCustom.getName("url.config.back") + "\\" + url);
+        /* TODO убрать такое! this проблема сингл тон */
         List<CommandModel> config = convertConfig();
         return startCommand(config);
     }
