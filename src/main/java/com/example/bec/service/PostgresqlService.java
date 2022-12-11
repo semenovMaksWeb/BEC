@@ -1,29 +1,31 @@
 package com.example.bec.service;
 
-import com.example.bec.PropertiesCustom;
+import com.example.bec.configuration.PropertiesCustom;
 import com.example.bec.enums.VarTypeEnum;
 import com.example.bec.model.command.CommandSqlModel;
 import com.example.bec.model.command.SqlParamsModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.postgresql.util.PGobject;
+import org.springframework.stereotype.Service;
 
 
 import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 
+@Service
 public class PostgresqlService {
+
     /* todo попытаться сделать сервисом */
     public final Connection conn;
 
     /* todo перенести в конфигурацию */
-    public PostgresqlService() throws SQLException, IOException {
-        Properties property = PropertiesCustom.getProperties();
-        String  url = "jdbc:postgresql://" + property.getProperty("db.host");
+    public PostgresqlService(PropertiesCustom propertiesCustom) throws SQLException, IOException {
+        String  url = "jdbc:postgresql://" + propertiesCustom.getProperties().getProperty("db.host");
         Properties props = new Properties();
-        props.setProperty("user", property.getProperty("db.user"));
-        props.setProperty("password", property.getProperty("db.password"));
+        props.setProperty("user", propertiesCustom.getProperties().getProperty("db.user"));
+        props.setProperty("password", propertiesCustom.getProperties().getProperty("db.password"));
         this.conn = DriverManager.getConnection(url, props);
     }
     /* todo перенести в конфигурацию */

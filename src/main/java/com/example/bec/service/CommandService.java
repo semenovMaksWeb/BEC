@@ -1,6 +1,6 @@
 package com.example.bec.service;
 
-import com.example.bec.PropertiesCustom;
+import com.example.bec.configuration.PropertiesCustom;
 import com.example.bec.enums.CommandTypeEnum;
 import com.example.bec.enums.ConvertTypeEnum;
 import com.example.bec.model.command.CommandModel;
@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,18 +23,32 @@ import java.util.*;
 
 @Service
 public class CommandService {
+    private final ConvertService convertService;
+    private final CommandService commandService;
+    private  final  PostgresqlService postgresqlService;
+    private final PropertiesCustom propertiesCustom;
+
     /* todo удалять и писать в runCommand  */
     private FileService fileService;
     private  Map<String, Object> params;
     private final Map<String, Object> dataset = new HashMap<>();
     /* todo удалять и писать в runCommand */
+
+    public CommandService(@Lazy ConvertService convertService, @Lazy CommandService commandService, @Lazy PostgresqlService postgresqlService, PropertiesCustom propertiesCustom) {
+        this.convertService = convertService;
+        this.commandService = commandService;
+        this.postgresqlService = postgresqlService;
+        this.propertiesCustom = propertiesCustom;
+    }
+
+
     private  List<CommandModel> convertConfig() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(this.fileService.readFile(), new TypeReference<List<CommandModel>>(){});
     }
 
     /* TODO Optional и везде где может передаваться null */
-    private Object startCommand(List<CommandModel> config) throws SQLException, IOException {
+    private Optional<Object> startCommand(List<CommandModel> config) throws SQLException, IOException {
         for (CommandModel commandModel : config) {
             /* есть обработка ifs */
             if (commandModel.getIfs() != null){
@@ -47,24 +62,26 @@ public class CommandService {
                 Object res = startCommand(commandModel.getChildren());
                 /* Прогон children вызвал return и нужно вернуть выше */
                 if (res != null){
-                    return  res;
+                    return Optional.of(res);
                 }
             }
             /* вызвать другой файл с конфигом и получить от него ответ */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.config_link.getTitle())){
-                CommandService commandService = new CommandService();
-                Object result = commandService.runCommand(commandModel.getLink(), this.params);
-                /* исключить ошибки валидации 400 */
-                /* todo  ResponseEntity result instanceof */
-                if (result != null && result.getClass().getSimpleName().equals("ResponseEntity")){
+                Optional<Object> result = this.commandService.runCommand(commandModel.getLink(), this.params);
+                /* исключить ошибки валидации если статус не 200 */
+                if (
+                    result.isPresent() &&
+                    result.get() instanceof ResponseEntity &&
+                    !((ResponseEntity<?>) result.get()).getStatusCode().equals(HttpStatus.OK))
+                {
                     return result;
-                }else {
+                } else {
                     this.dataset.put(commandModel.getKey(),result);
                 }
             }
             /*Return команды */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.returns.getTitle()) ) {
-                return this.dataset.get(commandModel.getKey());
+                return Optional.of(this.dataset.get(commandModel.getKey()));
 
             }
             /*Вызов sql postgresql */
@@ -73,8 +90,9 @@ public class CommandService {
             }
             /*Вызов валидации параметров */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.validate.getTitle()) ) {
-                if (ValidateParams(commandModel.getValidate()) != null){
-                    return ValidateParams(commandModel.getValidate());
+                ResponseEntity<Map<String, List<String>>> mapResponseEntity = ValidateParams(commandModel.getValidate());
+                if (!mapResponseEntity.getStatusCode().equals(HttpStatus.OK) ){
+                    return Optional.of(mapResponseEntity);
                 }
             }
             /*Вызов конвертации данных */
@@ -83,12 +101,12 @@ public class CommandService {
                 convertDataset(commandModel.getConvert().getParams(), this.params);
             }
         }
-        return null;
+        return Optional.empty();
     }
-    public Object runCommand(String  url, Map<String, Object> params) throws IOException, SQLException {
+    public Optional<Object> runCommand(String  url, Map<String, Object> params) throws IOException, SQLException {
         /* TODO убрать такое! this проблема сингл тон */
         this.params = params;
-        this.fileService = new FileService(PropertiesCustom.getName("url.config.back") + "\\" + url);
+        this.fileService = new FileService(this.propertiesCustom.getProperties().getProperty("url.config.back") + "\\" + url);
         /* TODO убрать такое! this проблема сингл тон */
         List<CommandModel> config = convertConfig();
         return startCommand(config);
@@ -108,18 +126,17 @@ public class CommandService {
     }
 
     private void convertDataset(List<ConvertModel> listConvertModel, Map<String, Object> dataset) throws IOException {
-        ConvertService convertService = new ConvertService();
         if (listConvertModel != null){
             for (ConvertModel convertModel:listConvertModel){
                 Object res = null;
                 if (convertModel.getType().equals(ConvertTypeEnum.hashPassword.getTitle())){
-                    res = convertService.hashPassword((String) dataset.get(convertModel.getKey()));
+                    res = this.convertService.hashPassword((String) dataset.get(convertModel.getKey()));
                 }
                 if (convertModel.getType().equals(ConvertTypeEnum.createToken.getTitle())) {
-                    res = convertService.createToken(this.params);
+                    res = this.convertService.createToken(this.params);
                 }
                 if (convertModel.getType().equals(ConvertTypeEnum.saveValue.getTitle())){
-                    res = convertService.saveValue(convertModel);
+                    res = this.convertService.saveValue(convertModel);
                 }
                 dataset.put(convertModel.getKey(), res);
             }
@@ -133,12 +150,12 @@ public class CommandService {
         if (!validateService.getResult().isEmpty()){
             return new ResponseEntity<>(validateService.getResult(), HttpStatus.BAD_REQUEST);
         };
-        return null;
+        return new ResponseEntity<>(validateService.getResult(), HttpStatus.OK);
     }
 
     private Object runPostgresqlService(CommandSqlModel commandSql) throws SQLException, IOException {
-        PostgresqlService postgresqlService = new PostgresqlService();
-        Object res = postgresqlService.runSql(
+//        PostgresqlService postgresqlService = new PostgresqlService();
+        Object res = this.postgresqlService.runSql(
                 commandSql,
                 this.params,
                 this.dataset

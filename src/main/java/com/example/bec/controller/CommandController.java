@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("command")
@@ -31,6 +32,6 @@ public class CommandController {
             @RequestBody Map<String, Object> params
 
     ) throws SQLException, IOException {
-        return this.commandService.runCommand(name, params);
+        return this.commandService.runCommand(name, params).get();
     }
 }
