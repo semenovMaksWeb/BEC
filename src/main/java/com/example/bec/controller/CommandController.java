@@ -21,6 +21,7 @@ public class CommandController {
     public CommandController(CommandService commandService) {
         this.commandService =  commandService;
     }
+
     @RequestMapping(
             value = "",
             method = RequestMethod.POST

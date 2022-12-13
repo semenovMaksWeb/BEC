@@ -24,6 +24,7 @@ public class ConvertParamsLinkModel {
             result.put(d.getKey(), d.getValue().searchData(data));
         }
     }
+
     public void getObjectParams(Map<String, Object> result, Map<String, Object> data){
         if (this.params == null){
             return;

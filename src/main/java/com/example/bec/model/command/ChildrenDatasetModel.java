@@ -15,6 +15,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class ChildrenDatasetModel {
     List<String> key;
+
     public Object searchData(Map<String , Object> data){
         Object link = data;
         for (String key: this.key){
