@@ -11,7 +11,6 @@ import java.nio.file.Files;
 /* TODO это не сервис */
 
 public class FileUtils{
-
     private final File file;
     private final File catalog;
 
@@ -30,6 +29,7 @@ public class FileUtils{
         }
         return this.file;
     }
+
     public String readFile() throws IOException {
         System.out.println(this.file.toPath());
         return new String(Files.readAllBytes(this.file.toPath()));

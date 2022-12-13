@@ -30,6 +30,7 @@ public class ValidateUtils {
             saveResult(key, validateParamsRulesModel.getError());
         }
     }
+
     private void validateVar(ValidateParamsRulesModel validateParamsRulesModel, String key){
         if (checkNull(key)){
             return;
@@ -59,5 +60,4 @@ public class ValidateUtils {
         result.computeIfAbsent(key, k -> new ArrayList<>());
         result.get(key).add(error);
     }
-
 }
