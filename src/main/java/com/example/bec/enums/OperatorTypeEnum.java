@@ -8,7 +8,9 @@ import lombok.Getter;
  public enum OperatorTypeEnum {
     equals("=="),
     more(">"),
-    less("<");
+    less("<"),
+    and("&"),
+    or("|");
 
     private final String title;
 }

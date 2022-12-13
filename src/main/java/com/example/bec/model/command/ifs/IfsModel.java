@@ -15,5 +15,8 @@ public class IfsModel {
     private Object value;
     private String operator;
 
+    public IfsModel(Object value){
+        this.value = value;
+    }
 
 }
