@@ -1,13 +1,13 @@
-package com.example.bec.service;
+package com.example.bec.utils;
 
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegularService {
+public class RegularUtils {
     Map<String, Object> params;
-    public RegularService(Map<String, Object> params) {
+    public RegularUtils(Map<String, Object> params) {
         this.params = params;
     }
 

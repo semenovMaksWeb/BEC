@@ -7,6 +7,10 @@ import com.example.bec.model.command.CommandModel;
 import com.example.bec.model.command.convert.ConvertModel;
 import com.example.bec.model.command.validate.ValidateParamsModel;
 
+import com.example.bec.utils.FileUtils;
+import com.example.bec.utils.IfsUtils;
+import com.example.bec.utils.RegularUtils;
+import com.example.bec.utils.ValidateUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,9 +39,9 @@ public class CommandService {
     }
 
 
-    private  List<CommandModel> convertConfig(FileService fileService) throws IOException {
+    private  List<CommandModel> convertConfig(FileUtils fileUtils) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(fileService.readFile(), new TypeReference<List<CommandModel>>(){});
+        return objectMapper.readValue(fileUtils.readFile(), new TypeReference<List<CommandModel>>(){});
     }
 
     /* TODO Optional и везде где может передаваться null */
@@ -46,8 +50,8 @@ public class CommandService {
         for (CommandModel commandModel : config) {
             /* есть обработка ifs */
             if (commandModel.getIfs() != null){
-                IfsService ifsService = new IfsService(commandModel.getIfs(), dataset, params);
-                if (!ifsService.checkIfs()){
+                IfsUtils ifsUtils = new IfsUtils(commandModel.getIfs(), dataset, params);
+                if (!ifsUtils.checkIfs()){
                     continue;
                 }
             }
@@ -105,18 +109,18 @@ public class CommandService {
         return Optional.empty();
     }
     public Optional<Object> runCommand(String  url, Map<String, Object> params) throws IOException, SQLException {
-        FileService fileService = new FileService(this.propertiesCustom.getProperties().getProperty("url.config.back") + "\\" + url);
-        return startCommand(convertConfig(fileService), params);
+        FileUtils fileUtils = new FileUtils(this.propertiesCustom.getProperties().getProperty("url.config.back") + "\\" + url);
+        return startCommand(convertConfig(fileUtils), params);
     }
 
     /* old */
     private String regularString(JsonNode regular, String text, Map<String, Object> params){
-        RegularService regularService  = new RegularService(params);
+        RegularUtils regularUtils  = new RegularUtils(params);
         String res = text;
         if (regular.isArray()){
             Iterator<JsonNode> itr = regular.elements();
             while (itr.hasNext()){
-                res = regularService.startRegular(itr.next().asText(), res);
+                res = regularUtils.startRegular(itr.next().asText(), res);
             }
         }
         return res;
@@ -142,11 +146,11 @@ public class CommandService {
     }
 
     private ResponseEntity<Map<String, List<String>>> ValidateParams(List<ValidateParamsModel> validate, Map<String, Object> params ){
-        ValidateService validateService = new ValidateService(params, validate);
-        validateService.validateStart();
-        if (!validateService.getResult().isEmpty()){
-            return new ResponseEntity<>(validateService.getResult(), HttpStatus.BAD_REQUEST);
+        ValidateUtils validateUtils = new ValidateUtils(params, validate);
+        validateUtils.validateStart();
+        if (!validateUtils.getResult().isEmpty()){
+            return new ResponseEntity<>(validateUtils.getResult(), HttpStatus.BAD_REQUEST);
         };
-        return new ResponseEntity<>(validateService.getResult(), HttpStatus.OK);
+        return new ResponseEntity<>(validateUtils.getResult(), HttpStatus.OK);
     }
 }

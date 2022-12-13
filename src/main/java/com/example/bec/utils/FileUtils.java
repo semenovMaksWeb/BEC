@@ -1,4 +1,4 @@
-package com.example.bec.service;
+package com.example.bec.utils;
 
 
 
@@ -10,16 +10,16 @@ import java.nio.file.Files;
 
 /* TODO это не сервис */
 
-public class FileService {
+public class FileUtils{
 
     private final File file;
     private final File catalog;
 
-    public FileService(String url, String name){
+    public FileUtils(String url, String name){
         this.file = new File(url + name);
         this.catalog = new File(url);
     }
-    public FileService(String url){
+    public FileUtils(String url){
         this.file = new File(url);
         this.catalog = new File(url);
     }

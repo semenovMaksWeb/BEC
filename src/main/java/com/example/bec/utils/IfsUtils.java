@@ -1,4 +1,4 @@
-package com.example.bec.service;
+package com.example.bec.utils;
 
 import com.example.bec.enums.OperatorTypeEnum;
 import com.example.bec.model.command.ifs.IfsModel;
@@ -10,12 +10,12 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class IfsService {
+public class IfsUtils{
     private List<IfsModel> ListIfsModel;
     private Map<String , Object> dataset;
     private Map<String , Object> params;
 
-    public IfsService(List<IfsModel> listIfsModel, Map<String, Object> dataset, Map<String, Object> params) {
+    public IfsUtils(List<IfsModel> listIfsModel, Map<String, Object> dataset, Map<String, Object> params) {
         this.ListIfsModel = listIfsModel;
         this.dataset = dataset;
         this.params = params;

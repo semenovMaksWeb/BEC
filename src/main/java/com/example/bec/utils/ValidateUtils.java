@@ -1,4 +1,4 @@
-package com.example.bec.service;
+package com.example.bec.utils;
 
 
 import com.example.bec.enums.ValidateParamsEnum;
@@ -11,12 +11,12 @@ import java.util.*;
 
 @Getter
 @Setter
-public class ValidateService {
+public class ValidateUtils {
     private Map<String , Object> params;
     private List<ValidateParamsModel> validateParamModels;
     private Map<String , List<String>> result = new HashMap<>();
 
-    public ValidateService(Map<String, Object> params, List<ValidateParamsModel> validateParamModels){
+    public ValidateUtils(Map<String, Object> params, List<ValidateParamsModel> validateParamModels){
         this.params = params;
         this.validateParamModels = validateParamModels;
     }
