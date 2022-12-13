@@ -1,6 +1,5 @@
 package com.example.bec.utils;
 
-
 import com.example.bec.enums.ValidateParamsEnum;
 import com.example.bec.model.command.validate.ValidateParamsModel;
 import com.example.bec.model.command.validate.ValidateParamsRulesModel;

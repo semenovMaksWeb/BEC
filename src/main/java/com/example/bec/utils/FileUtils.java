@@ -1,14 +1,9 @@
 package com.example.bec.utils;
 
-
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-
-
-/* TODO это не сервис */
 
 public class FileUtils{
     private final File file;
