@@ -24,6 +24,7 @@ public class IfsUtils{
     public boolean checkIfs(){
         convertValue();
         convertComparisons();
+        convertCombination();
         System.out.println(listIfsModel);
         return (boolean) listIfsModel.get(0).getValue();
     }
@@ -79,6 +80,36 @@ public class IfsUtils{
         } while (listIfsModel.size() >= index);
     }
 
+    private void convertCombination(){
+        int index = -1;
+        do {
+            index++;
+            if (listIfsModel.size() <= index){
+                break;
+            }
+            if (listIfsModel.get(index).getOperator() == null){
+                continue;
+            }
+            if (listIfsModel.get(index).getOperator().equals(OperatorTypeEnum.and.getTitle())) {
+                boolean val = this.operatorAnd(
+                        listIfsModel.get(index - 1).getValue(),
+                        listIfsModel.get(index + 1).getValue()
+                );
+                operatorComparisons(val, index);
+                index--;
+            }
+            else if (listIfsModel.get(index).getOperator().equals(OperatorTypeEnum.or.getTitle())) {
+                boolean val = this.operatorOr(
+                        listIfsModel.get(index - 1).getValue(),
+                        listIfsModel.get(index + 1).getValue()
+                );
+                operatorComparisons(val, index);
+                index--;
+            }
+
+        }while (listIfsModel.size() >= index);
+    }
+
     private void deleteIfsModel(int index_min, int index_max){
         listIfsModel.subList(index_min, index_max + 1).clear();
     }
@@ -101,6 +132,9 @@ public class IfsUtils{
         if (val1 instanceof Integer && val2 instanceof Integer){
             return val1 == val2;
         }
+        if (val1 instanceof Boolean && val2 instanceof Boolean){
+            return val1 == val2;
+        }
         return false;
     }
     private boolean operatorMove(Object val1, Object val2){
@@ -113,6 +147,20 @@ public class IfsUtils{
     private boolean operatorLess(Object val1, Object val2){
         if (val1 instanceof Integer && val2 instanceof Integer){
             return (int)val1 < (int)val2;
+        }
+        return false;
+    }
+
+    private boolean operatorAnd(Object val1, Object val2){
+        if (val1 instanceof Boolean && val2 instanceof Boolean){
+            return (boolean)val1 && (boolean)val2;
+        }
+        return false;
+    }
+
+    private boolean operatorOr(Object val1, Object val2){
+        if (val1 instanceof Boolean && val2 instanceof Boolean){
+            return (boolean)val1 || (boolean)val2;
         }
         return false;
     }
