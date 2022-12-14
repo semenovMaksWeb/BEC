@@ -57,10 +57,10 @@ public class CommandService {
             }
             /* Прогон children */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.block.getTitle()) ) {
-                Object res = startCommand(commandModel.getChildren(), params);
+                Optional<Object> res = startCommand(commandModel.getChildren(), params);
                 /* Прогон children вызвал return и нужно вернуть выше */
-                if (res != null){
-                    return Optional.of(res);
+                if (res.isPresent()){
+                    return res;
                 }
             }
             /* вызвать другой файл с конфигом и получить от него ответ */
@@ -74,7 +74,7 @@ public class CommandService {
                 {
                     return result;
                 } else {
-                    dataset.put(commandModel.getKey(),result);
+                    result.ifPresent(o -> dataset.put(commandModel.getKey(), o));
                 }
             }
             /*Return команды */
