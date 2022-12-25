@@ -1,13 +1,12 @@
 package com.example.bec.controller;
 
 import com.example.bec.enums.RightConstNameEnum;
+import com.example.bec.service.AuthorizationService;
 import com.example.bec.service.CommandService;
 import io.swagger.annotations.ApiParam;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -19,9 +18,11 @@ import java.util.Optional;
 @RequestMapping("command")
 public class CommandController {
     private final CommandService commandService;
+    private final AuthorizationService authorizationService;
 
-    public CommandController(CommandService commandService) {
+    public CommandController(CommandService commandService, AuthorizationService authorizationService) {
         this.commandService =  commandService;
+        this.authorizationService = authorizationService;
     }
 
     @RequestMapping(
@@ -40,11 +41,13 @@ public class CommandController {
     @RequestMapping(
             value = "/get_names",
             method = RequestMethod.GET
-    ) public Object getFilesNames() throws SQLException, IOException {
-        Map<String, Object> params = new HashMap<>();
-        params.put("right_const_name", RightConstNameEnum.namesFileConfigBecGet);
-        Optional<Object> result = this.commandService.runCommand("check_right.json", params);
-        System.out.println(result.get());
+    ) public Object getFilesNames(
+            @RequestHeader(name="Authorization") String token
+    ) throws SQLException, IOException {
+        Optional<Object> result = authorizationService.checkRight(RightConstNameEnum.namesFileConfigBecGet.getTitle(), token);
+        if (result.isPresent()){
+            return result.get();
+        }
         return this.commandService.getFilesName();
     }
 
