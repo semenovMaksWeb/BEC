@@ -1,5 +1,6 @@
 package com.example.bec.controller;
 
+import com.example.bec.enums.RightConstNameEnum;
 import com.example.bec.service.CommandService;
 import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -35,4 +37,15 @@ public class CommandController {
     ) throws SQLException, IOException {
         return this.commandService.runCommand(name, params).orElseGet(Optional::empty);
     }
+    @RequestMapping(
+            value = "/get_names",
+            method = RequestMethod.GET
+    ) public Object getFilesNames() throws SQLException, IOException {
+        Map<String, Object> params = new HashMap<>();
+        params.put("right_const_name", RightConstNameEnum.namesFileConfigBecGet);
+        Optional<Object> result = this.commandService.runCommand("check_right.json", params);
+        System.out.println(result.get());
+        return this.commandService.getFilesName();
+    }
+
 }

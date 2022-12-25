@@ -1,9 +1,14 @@
 package com.example.bec.utils;
 
+import com.example.bec.model.command.SelectItemModel;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class FileUtils{
     private final File file;
@@ -42,6 +47,20 @@ public class FileUtils{
         if (this.file.delete()){
             System.out.println("src.File delete");
         }
+    }
+
+    public List<SelectItemModel> catalogFileNames(){
+        int index = 0;
+        List<SelectItemModel> namesFiles = new ArrayList<>();
+        if(this.catalog.isDirectory()){
+            for(File item : Objects.requireNonNull(this.catalog.listFiles())){
+                if(item.isFile()){
+                    index++;
+                    namesFiles.add(new SelectItemModel(index, item.getName() ));
+                }
+            }
+        }
+        return namesFiles;
     }
 
     public void updateTextFile(String text) throws IOException {

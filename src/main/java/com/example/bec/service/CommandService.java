@@ -4,6 +4,7 @@ import com.example.bec.configuration.PropertiesCustom;
 import com.example.bec.enums.CommandTypeEnum;
 import com.example.bec.enums.ConvertTypeEnum;
 import com.example.bec.model.command.CommandModel;
+import com.example.bec.model.command.SelectItemModel;
 import com.example.bec.model.command.convert.ConvertModel;
 import com.example.bec.model.command.validate.ValidateParamsModel;
 
@@ -152,5 +153,10 @@ public class CommandService {
             return new ResponseEntity<>(validateUtils.getResult(), HttpStatus.BAD_REQUEST);
         };
         return new ResponseEntity<>(validateUtils.getResult(), HttpStatus.OK);
+    }
+
+    public List<SelectItemModel> getFilesName() throws IOException {
+        FileUtils fileUtils = new FileUtils(this.propertiesCustom.getProperties().getProperty("url.config.back"));
+        return fileUtils.catalogFileNames();
     }
 }
