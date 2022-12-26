@@ -25,8 +25,8 @@ public class AuthorizationService {
         Optional<Object> result = this.commandService.runCommand("check_right.json", params);
         if (result.isPresent()){
             if (
-                    result.get() instanceof ResponseEntity<?> &&
-                            !((ResponseEntity<?>) result.get()).getStatusCode().equals(HttpStatus.OK))
+                result.get() instanceof ResponseEntity<?> &&
+                !((ResponseEntity<?>) result.get()).getStatusCode().equals(HttpStatus.OK))
             {
                 return result;
             }

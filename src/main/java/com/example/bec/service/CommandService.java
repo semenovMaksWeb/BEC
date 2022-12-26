@@ -40,13 +40,14 @@ public class CommandService {
     }
 
 
-    private  List<CommandModel> convertConfig(FileUtils fileUtils) throws IOException {
+    public List<CommandModel> convertConfig(String url) throws IOException {
+        FileUtils fileUtils = new FileUtils(this.propertiesCustom.getProperties().getProperty("url.config.back") + "\\" + url);
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(fileUtils.readFile(), new TypeReference<List<CommandModel>>(){});
     }
 
     /* TODO Optional и везде где может передаваться null */
-    private Optional<Object> startCommand(List<CommandModel> config, Map<String, Object> params) throws SQLException, IOException {
+    public Optional<Object> startCommand(List<CommandModel> config, Map<String, Object> params) throws SQLException, IOException {
         Map<String, Object> dataset = new HashMap<>();
         for (CommandModel commandModel : config) {
             /* есть обработка ifs */
@@ -110,8 +111,7 @@ public class CommandService {
         return Optional.empty();
     }
     public Optional<Object> runCommand(String  url, Map<String, Object> params) throws IOException, SQLException {
-        FileUtils fileUtils = new FileUtils(this.propertiesCustom.getProperties().getProperty("url.config.back") + "\\" + url);
-        return startCommand(convertConfig(fileUtils), params);
+        return startCommand(convertConfig(url), params);
     }
 
     /* old */

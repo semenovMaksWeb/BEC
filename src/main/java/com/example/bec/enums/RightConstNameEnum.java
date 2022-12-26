@@ -8,7 +8,8 @@ import lombok.Getter;
 
 public enum RightConstNameEnum {
 
-    namesFileConfigBecGet("names-file-config-bec_get");
+    namesFileConfigBecGet("names-file-config-bec_get"),
+    configCommandGet("config-command_get");
 
     private final String title;
 }
