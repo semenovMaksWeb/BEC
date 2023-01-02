@@ -2,14 +2,24 @@ package com.example.bec.service;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 @Service
 public class EmailCustomService {
     private final JavaMailSender emailSender;
+    private final TemplateEngine templateEngine;
 
-    public EmailCustomService(JavaMailSender emailSender) {
+    public EmailCustomService(JavaMailSender emailSender, TemplateEngine templateEngine) {
         this.emailSender = emailSender;
+        this.templateEngine = templateEngine;
     }
 
     public void sendSimpleEmail(String toAddress, String subject, String message) {
@@ -18,5 +28,18 @@ public class EmailCustomService {
         simpleMailMessage.setSubject(subject);
         simpleMailMessage.setText(message);
         emailSender.send(simpleMailMessage);
+    }
+    public void sendSimpleEmailTemplate(String toAddress, String subject, String template, Map<String, Object> params) throws MessagingException {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message,
+                MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
+                StandardCharsets.UTF_8.name());
+        Context context = new Context();
+        context.setVariables(params);
+        String emailContent = templateEngine.process(template, context);
+        mimeMessageHelper.setTo(toAddress);
+        mimeMessageHelper.setSubject(subject);
+        mimeMessageHelper.setText(emailContent, true);
+        emailSender.send(message);
     }
 }
