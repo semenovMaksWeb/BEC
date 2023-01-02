@@ -1,11 +1,13 @@
 package com.example.bec.service;
 
+import com.example.bec.configuration.TemplateEngineConfig;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
+
 import org.thymeleaf.context.Context;
+
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -15,11 +17,11 @@ import java.util.Map;
 @Service
 public class EmailCustomService {
     private final JavaMailSender emailSender;
-    private final TemplateEngine templateEngine;
+    private final TemplateEngineConfig templateEngineConfig;
 
-    public EmailCustomService(JavaMailSender emailSender, TemplateEngine templateEngine) {
+    public EmailCustomService(JavaMailSender emailSender, TemplateEngineConfig templateEngineConfig) {
         this.emailSender = emailSender;
-        this.templateEngine = templateEngine;
+        this.templateEngineConfig = templateEngineConfig;
     }
 
     public void sendSimpleEmail(String toAddress, String subject, String message) {
@@ -36,7 +38,7 @@ public class EmailCustomService {
                 StandardCharsets.UTF_8.name());
         Context context = new Context();
         context.setVariables(params);
-        String emailContent = templateEngine.process(template, context);
+        String emailContent = templateEngineConfig.emailTemplateEngine().process(template, context);
         mimeMessageHelper.setTo(toAddress);
         mimeMessageHelper.setSubject(subject);
         mimeMessageHelper.setText(emailContent, true);
