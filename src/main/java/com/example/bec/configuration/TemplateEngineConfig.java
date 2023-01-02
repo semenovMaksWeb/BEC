@@ -21,12 +21,6 @@ import java.util.Collections;
 
 @Configuration
  public class TemplateEngineConfig {
-    @Bean
-    public ResourceBundleMessageSource emailMessageSource() {
-        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("mail/MailMessages");
-        return messageSource;
-    }
 
     @Bean
     public TemplateEngine emailTemplateEngine() {
@@ -37,8 +31,6 @@ import java.util.Collections;
         templateEngine.addTemplateResolver(htmlTemplateResolver());
         // Resolver for HTML editable emails (which will be treated as a String)
         templateEngine.addTemplateResolver(stringTemplateResolver());
-        // Message source, internationalization specific to emails
-        templateEngine.setTemplateEngineMessageSource(emailMessageSource());
         return templateEngine;
     }
 
@@ -46,10 +38,9 @@ import java.util.Collections;
         final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setOrder(1);
         templateResolver.setResolvablePatterns(Collections.singleton("text/*"));
-        templateResolver.setPrefix("/mail/");
         templateResolver.setSuffix(".txt");
         templateResolver.setTemplateMode(TemplateMode.TEXT);
-        templateResolver.setCharacterEncoding("utf-8");
+        templateResolver.setCharacterEncoding("UTF-8");
         templateResolver.setCacheable(false);
         return templateResolver;
     }
@@ -57,11 +48,11 @@ import java.util.Collections;
     private ITemplateResolver htmlTemplateResolver() {
         final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setOrder(2);
-        templateResolver.setResolvablePatterns(Collections.singleton("html/*"));
-        templateResolver.setPrefix("/mail/");
         templateResolver.setSuffix(".html");
+        templateResolver.setPrefix("templates/");
+        templateResolver.setTemplateMode("HTML");
         templateResolver.setTemplateMode(TemplateMode.HTML);
-        templateResolver.setCharacterEncoding("utf-8");
+        templateResolver.setCharacterEncoding("UTF-8");
         templateResolver.setCacheable(false);
         return templateResolver;
     }
@@ -70,7 +61,7 @@ import java.util.Collections;
         final StringTemplateResolver templateResolver = new StringTemplateResolver();
         templateResolver.setOrder(3);
         // No resolvable pattern, will simply process as a String template everything not previously matched
-        templateResolver.setTemplateMode("HTML5");
+        templateResolver.setTemplateMode("HTML");
         templateResolver.setCacheable(false);
         return templateResolver;
     }

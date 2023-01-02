@@ -28,11 +28,11 @@ public class EmailController {
     )
     public boolean emailTest() throws MessagingException, IOException {
         Map<String, Object> params = new HashMap<>();
-        params.put("name_user", "Семенов Максим");
+        params.put("name", "Семенов Максим");
         this.emailCustomService.sendSimpleEmailTemplate(
                 "msZatoshka@yandex.ru",
                 "тестовое письмо",
-                "\\confirmed",
+                "confirmed.html",
                 params
         );
         return true;

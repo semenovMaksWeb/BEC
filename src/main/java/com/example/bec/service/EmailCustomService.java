@@ -34,8 +34,8 @@ public class EmailCustomService {
     public void sendSimpleEmailTemplate(String toAddress, String subject, String template, Map<String, Object> params) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message,
-                MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
-                StandardCharsets.UTF_8.name());
+                true,
+                "UTF-8");
         Context context = new Context();
         context.setVariables(params);
         String emailContent = templateEngineConfig.emailTemplateEngine().process(template, context);
