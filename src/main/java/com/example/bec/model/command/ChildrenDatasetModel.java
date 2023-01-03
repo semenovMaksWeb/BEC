@@ -16,7 +16,10 @@ import java.util.Map;
 public class ChildrenDatasetModel {
     List<String> key;
 
-    public Object searchData(Map<String , Object> data){
+    public Object searchData(Map<String , Object> data, Object value){
+        if (value != null){
+            return  value;
+        }
         Object link = data;
         for (String key: this.key){
             link = ((Map<?, ?>) link).get(key);

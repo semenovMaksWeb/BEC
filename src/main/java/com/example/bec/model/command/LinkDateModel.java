@@ -12,4 +12,5 @@ import lombok.Setter;
 public class LinkDateModel<T> {
     private T dataset;
     private T params;
+    private Object value;
 }

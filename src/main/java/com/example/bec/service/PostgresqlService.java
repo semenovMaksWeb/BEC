@@ -23,12 +23,17 @@ public class PostgresqlService {
     public PostgresqlService(ConnectionBd connectionBd) {
        this.connectionBd = connectionBd;
     }
-    private void StatementSave(PreparedStatement statement, List<SqlParamsModel> config, Map<String, Object> params) throws SQLException {
+    private void StatementSave(
+            PreparedStatement statement,
+            List<SqlParamsModel> config,
+            Map<String, Object> params,
+            Object value
+    ) throws SQLException {
         if (config == null){
             return;
         }
         for (SqlParamsModel element : config) {
-            Object data = element.searchData(params);
+            Object data = element.searchData(params, value);
             if (Objects.equals(element.getType(), VarTypeEnum.string.getTitle())) {
                 statement.setString(element.getIndex(), data.toString());
             } else if (Objects.equals(element.getType(), VarTypeEnum.integer.getTitle())) {
@@ -43,8 +48,8 @@ public class PostgresqlService {
             Map<String, Object> dataset
     ) throws SQLException, IOException {
         PreparedStatement statement = this.connectionBd.postgresqlConnection().prepareStatement(commandSql.getText());
-        StatementSave(statement, commandSql.getParams(), params);
-        StatementSave(statement, commandSql.getDataset(), dataset);
+        StatementSave(statement, commandSql.getParams(), params, commandSql.getValue());
+        StatementSave(statement, commandSql.getDataset(), dataset, commandSql.getValue());
         ResultSet rs = statement.executeQuery();
         return convertRsInJson(rs, commandSql.getConvert());
     }

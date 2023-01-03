@@ -15,11 +15,9 @@ import java.util.Map;
 @RestController
 public class EmailController {
     private  final EmailCustomService emailCustomService;
-    private final PropertiesCustom propertiesCustom;
 
     public EmailController(EmailCustomService emailCustomService, PropertiesCustom propertiesCustom) {
         this.emailCustomService = emailCustomService;
-        this.propertiesCustom = propertiesCustom;
     }
 
     @RequestMapping(

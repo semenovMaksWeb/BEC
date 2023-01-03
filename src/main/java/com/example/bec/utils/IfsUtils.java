@@ -32,10 +32,10 @@ public class IfsUtils{
     private void convertValue(){
         for(IfsModel ifsModel: listIfsModel){
             if (ifsModel.getDataset() != null){
-                ifsModel.setValue(ifsModel.getDataset().searchData(this.dataset));
+                ifsModel.setValue(ifsModel.getDataset().searchData(this.dataset, ifsModel.getValue()));
             }
             else if (ifsModel.getParams() != null){
-                ifsModel.setValue(ifsModel.getParams().searchData(this.params));
+                ifsModel.setValue(ifsModel.getParams().searchData(this.params, ifsModel.getValue()));
             }
         }
     }
