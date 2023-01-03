@@ -1,5 +1,6 @@
 package com.example.bec.model.command.ifs;
 
+import com.example.bec.model.command.LinkDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,9 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class IfsModel {
-    private IfsParamsModel dataset;
-    private IfsParamsModel params;
+public class IfsModel extends LinkDate<IfsParamsModel> {
     private Object value;
     private String operator;
 

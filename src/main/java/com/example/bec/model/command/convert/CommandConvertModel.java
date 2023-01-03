@@ -1,5 +1,6 @@
 package com.example.bec.model.command.convert;
 
+import com.example.bec.model.command.LinkDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommandConvertModel {
-    private List<ConvertModel> dataset;
-    private List<ConvertModel> params;
+public class CommandConvertModel extends LinkDate<List<ConvertModel>> {
+
 }
