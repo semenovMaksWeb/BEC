@@ -20,10 +20,13 @@ public class MapChildrenDatasetUtils {
     ){
         Object res = null;
         if (elem.getDataset() != null){
-            res = elem.getDataset().searchData(this.dataset, elem.getValue());
+            res = elem.getDataset().searchData(this.dataset, null);
         }
         if (elem.getParams() != null){
-            res = elem.getParams().searchData(this.params, elem.getValue());
+            res = elem.getParams().searchData(this.params, null);
+        }
+        if (elem.getValue() != null){
+            res = elem.getValue();
         }
         return res;
     }
@@ -37,13 +40,8 @@ public class MapChildrenDatasetUtils {
         }
         return result;
     }
-    public Map<String, Object> getObjectKey(
-            LinkDateModel<ChildrenDatasetModel> config,
-            String key
-    ){
-        Map<String, Object> result = new HashMap<>();
-        result.put(key, this.checkDatasetOrParams(config));
-        return result;
+    public Object getObjectKey(LinkDateModel<ChildrenDatasetModel> config){
+        return this.checkDatasetOrParams(config);
     }
 
 }

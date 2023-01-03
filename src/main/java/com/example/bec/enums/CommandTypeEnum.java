@@ -11,6 +11,7 @@ import lombok.Getter;
     validate("validate"),
     block("block"),
     convert("convert"),
+   email("email"),
     config_link("config_link");
 
     private final String title;

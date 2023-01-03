@@ -5,6 +5,7 @@ import com.example.bec.model.command.LinkDateModel;
 import com.example.bec.service.MapChildrenDatasetUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.Map;
 @Setter
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class CommandEmailModel {
     private LinkDateModel<ChildrenDatasetModel> from;
     private LinkDateModel<ChildrenDatasetModel> template;
@@ -24,9 +26,9 @@ public class CommandEmailModel {
 
         Map<String, Object> result = new HashMap<>();
         result.put("params", mapChildrenDatasetUtils.getObject(this.params));
-        result.put("from", mapChildrenDatasetUtils.getObjectKey(this.from, "from"));
-        result.put("template", mapChildrenDatasetUtils.getObjectKey(this.from, "template"));
-        result.put("subject", mapChildrenDatasetUtils.getObjectKey(this.from, "subject"));
+        result.put("from", mapChildrenDatasetUtils.getObjectKey(this.from));
+        result.put("template", mapChildrenDatasetUtils.getObjectKey(this.template));
+        result.put("subject", mapChildrenDatasetUtils.getObjectKey(this.subject));
         return result;
     }
 }

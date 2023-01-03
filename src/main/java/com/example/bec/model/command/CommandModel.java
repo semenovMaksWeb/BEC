@@ -1,6 +1,7 @@
 package com.example.bec.model.command;
 
 import com.example.bec.model.command.convert.CommandConvertModel;
+import com.example.bec.model.command.email.CommandEmailModel;
 import com.example.bec.model.command.ifs.IfsModel;
 import com.example.bec.model.command.sql.CommandSqlModel;
 import com.example.bec.model.command.validate.ValidateParamsModel;
@@ -23,8 +24,7 @@ public class CommandModel {
     private List<ValidateParamsModel> validate;
     private List<CommandModel> children;
     private CommandConvertModel convert;
-    private  String link;
+    private String link;
     private List<IfsModel> ifs;
-    /* todo создать класс */
-    private Object email;
+    private CommandEmailModel email;
 }

@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -18,7 +19,7 @@ public class AuthorizationService {
         this.commandService = commandService;
     }
 
-    public Optional<Object> checkRight(String right, String token) throws SQLException, IOException {
+    public Optional<Object> checkRight(String right, String token) throws SQLException, IOException, MessagingException {
         Map<String, Object> params = new HashMap<>();
         params.put("right_const_name", right);
         params.put("token", token);

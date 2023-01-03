@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
@@ -29,17 +30,21 @@ import java.util.*;
 public class CommandService {
     private final ConvertService convertService;
     private final CommandService commandService;
+
+    private final EmailCustomService emailCustomService;
     private final PostgresqlService postgresqlService;
     private final PropertiesCustom propertiesCustom;
 
     public CommandService(
             @Lazy ConvertService convertService,
             @Lazy CommandService commandService,
+            @Lazy EmailCustomService emailCustomService,
             @Lazy PostgresqlService postgresqlService,
             PropertiesCustom propertiesCustom
     ) {
         this.convertService = convertService;
         this.commandService = commandService;
+        this.emailCustomService = emailCustomService;
         this.postgresqlService = postgresqlService;
         this.propertiesCustom = propertiesCustom;
     }
@@ -52,7 +57,7 @@ public class CommandService {
     }
 
     /* TODO Optional и везде где может передаваться null */
-    public Optional<Object> startCommand(List<CommandModel> config, Map<String, Object> params) throws SQLException, IOException {
+    public Optional<Object> startCommand(List<CommandModel> config, Map<String, Object> params) throws SQLException, IOException, MessagingException {
         Map<String, Object> dataset = new HashMap<>();
         for (CommandModel commandModel : config) {
             /* есть обработка ifs */
@@ -83,6 +88,17 @@ public class CommandService {
                 } else {
                     result.ifPresent(o -> dataset.put(commandModel.getKey(), o));
                 }
+            }
+            /* email команды */
+            if (Objects.equals(commandModel.getType(), CommandTypeEnum.email.getTitle())) {
+                Map<String, Object> result = commandModel.getEmail().generatorResult(dataset, params);
+                System.out.println(result);
+                this.emailCustomService.sendSimpleEmailTemplate(
+                        result.get("from").toString(),
+                        result.get("subject").toString(),
+                        result.get("template").toString(),
+                        (Map<String, Object>) result.get("params")
+                );
             }
             /*Return команды */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.returns.getTitle()) ) {
@@ -115,7 +131,7 @@ public class CommandService {
         }
         return Optional.empty();
     }
-    public Optional<Object> runCommand(String  url, Map<String, Object> params) throws IOException, SQLException {
+    public Optional<Object> runCommand(String  url, Map<String, Object> params) throws IOException, SQLException, MessagingException {
         return startCommand(convertConfig(url), params);
     }
 
