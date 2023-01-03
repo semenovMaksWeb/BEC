@@ -29,21 +29,17 @@ import java.util.*;
 public class CommandService {
     private final ConvertService convertService;
     private final CommandService commandService;
-
-    private final MapChildrenDatasetService mapChildrenDatasetService;
     private final PostgresqlService postgresqlService;
     private final PropertiesCustom propertiesCustom;
 
     public CommandService(
             @Lazy ConvertService convertService,
             @Lazy CommandService commandService,
-            @Lazy MapChildrenDatasetService mapChildrenDatasetService,
             @Lazy PostgresqlService postgresqlService,
             PropertiesCustom propertiesCustom
     ) {
         this.convertService = convertService;
         this.commandService = commandService;
-        this.mapChildrenDatasetService = mapChildrenDatasetService;
         this.postgresqlService = postgresqlService;
         this.propertiesCustom = propertiesCustom;
     }
@@ -138,9 +134,10 @@ public class CommandService {
 
     private void convertDataset(List<ConvertModel> listConvertModel, Map<String, Object> link, Map<String, Object> params, Map<String, Object> dataset) throws IOException {
         if (listConvertModel != null){
+            MapChildrenDatasetUtils mapChildrenDatasetUtils = new MapChildrenDatasetUtils(dataset, params);
             for (ConvertModel convertModel:listConvertModel){
                 Object res = null;
-                Map<String, Object> data = mapChildrenDatasetService.getObject(params, dataset, convertModel.getParams());
+                Map<String, Object> data = mapChildrenDatasetUtils.getObject(convertModel.getParams());
 
                 if (convertModel.getType().equals(ConvertTypeEnum.hashPassword.getTitle())){
                     res = this.convertService.hashPassword(data);
