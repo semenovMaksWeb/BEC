@@ -1,0 +1,31 @@
+[
+  {
+    "type": "convert",
+    "convert": {
+      "dataset": [
+        {
+          "key": ["token"],
+          "type": "createToken",
+          "params": {
+            "email": {
+              "params": {
+                "key": ["email"]
+              }
+            },
+            "nik": {
+              "params": {
+                "key": ["nik"]
+              }
+            }
+          }
+        }
+      ],
+      "params": [
+        {
+          "key": ["password"],
+          "type": "hashPassword"
+        }
+      ]
+    }
+  }
+]

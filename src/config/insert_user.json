@@ -12,7 +12,7 @@
                     },
                     {
                         "type": "var",
-                        "error": "Имя пользователя является числом",
+                        "error": "Имя пользователя является строкой",
                         "params": {
                             "type": "String"
                         }
@@ -245,6 +245,18 @@
                     },
                     "subject": {
                         "value": "Подтверждение почты"
+                    },
+                    "params": {
+                        "name": {
+                            "params": {
+                                "key": ["name"]
+                            }
+                        },
+                        "surname": {
+                            "params": {
+                                "key": ["surname"]
+                            }
+                        }
                     }
                 }
             },
