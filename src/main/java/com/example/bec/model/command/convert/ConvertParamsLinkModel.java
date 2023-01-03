@@ -1,7 +1,7 @@
 package com.example.bec.model.command.convert;
 
 import com.example.bec.model.command.ChildrenDatasetModel;
-import com.example.bec.model.command.LinkDate;
+import com.example.bec.model.command.LinkDateModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.Map;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConvertParamsLinkModel extends LinkDate<Map<String,ChildrenDatasetModel>> {
+public class ConvertParamsLinkModel extends LinkDateModel<Map<String,ChildrenDatasetModel>> {
 
     public void getObjectDataset(Map<String, Object> result, Map<String, Object> data){
         if (this.getDataset() == null){
