@@ -26,4 +26,14 @@ public class ChildrenDatasetModel {
         }
         return link;
     }
+    public void updateData(Map<String , Object> data, Object res){
+        Map<String, Object> link = data;
+        for (int i = 0; i <this.key.size() - 1 ; i++) {
+            link = (Map<String, Object>)(link).get(key);
+        }
+        link.put(
+                this.key.get(this.key.size() - 1),
+                res
+        );
+    }
 }

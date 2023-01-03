@@ -25,4 +25,6 @@ public class CommandModel {
     private CommandConvertModel convert;
     private  String link;
     private List<IfsModel> ifs;
+    /* todo создать класс */
+    private Object email;
 }

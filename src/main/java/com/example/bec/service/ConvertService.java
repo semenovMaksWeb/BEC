@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -21,14 +20,11 @@ public class ConvertService {
         this.propertiesCustom = propertiesCustom;
     }
 
-    public String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
+    public String hashPassword(Map<String, Object> data) {
+        return BCrypt.hashpw(data.get("password").toString(), BCrypt.gensalt());
     }
 
-    public String createToken(Map<String, Object> params, Map<String, Object> dataset, ConvertModel convertModel) throws IOException {
-        Map<String, Object> data = new HashMap<>();
-       convertModel.getParams().getLink().getObjectParams(data,params);
-        convertModel.getParams().getLink().getObjectDataset(data,dataset);
+    public String createToken(Map<String, Object> data) throws IOException {
         return JWT.create()
                 .withSubject("User Details")
                 .withClaim("email", data.get("email").toString())
@@ -37,7 +33,4 @@ public class ConvertService {
                 .sign(Algorithm.HMAC256(this.propertiesCustom.getProperties().getProperty("token.secret")));
     }
 
-    public Object saveValue(ConvertModel convertModel){
-        return convertModel.getParams().getValue();
-    }
 }

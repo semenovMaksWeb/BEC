@@ -29,12 +29,21 @@ import java.util.*;
 public class CommandService {
     private final ConvertService convertService;
     private final CommandService commandService;
-    private  final  PostgresqlService postgresqlService;
+
+    private final MapChildrenDatasetService mapChildrenDatasetService;
+    private final PostgresqlService postgresqlService;
     private final PropertiesCustom propertiesCustom;
 
-    public CommandService(@Lazy ConvertService convertService, @Lazy CommandService commandService, @Lazy PostgresqlService postgresqlService, PropertiesCustom propertiesCustom) {
+    public CommandService(
+            @Lazy ConvertService convertService,
+            @Lazy CommandService commandService,
+            @Lazy MapChildrenDatasetService mapChildrenDatasetService,
+            @Lazy PostgresqlService postgresqlService,
+            PropertiesCustom propertiesCustom
+    ) {
         this.convertService = convertService;
         this.commandService = commandService;
+        this.mapChildrenDatasetService = mapChildrenDatasetService;
         this.postgresqlService = postgresqlService;
         this.propertiesCustom = propertiesCustom;
     }
@@ -127,20 +136,20 @@ public class CommandService {
         return res;
     }
 
-    private void convertDataset(List<ConvertModel> listConvertModel, Map<String, Object> result, Map<String, Object> params, Map<String, Object> dataset) throws IOException {
+    private void convertDataset(List<ConvertModel> listConvertModel, Map<String, Object> link, Map<String, Object> params, Map<String, Object> dataset) throws IOException {
         if (listConvertModel != null){
             for (ConvertModel convertModel:listConvertModel){
                 Object res = null;
+                Map<String, Object> data = mapChildrenDatasetService.getObject(params, dataset, convertModel.getParams());
+
                 if (convertModel.getType().equals(ConvertTypeEnum.hashPassword.getTitle())){
-                    res = this.convertService.hashPassword((String) result.get(convertModel.getKey()));
+                    res = this.convertService.hashPassword(data);
                 }
+
                 if (convertModel.getType().equals(ConvertTypeEnum.createToken.getTitle())) {
-                    res = this.convertService.createToken(params, dataset, convertModel);
+                    res = this.convertService.createToken(data);
                 }
-                if (convertModel.getType().equals(ConvertTypeEnum.saveValue.getTitle())){
-                    res = this.convertService.saveValue(convertModel);
-                }
-                result.put(convertModel.getKey(), res);
+                convertModel.updateData(link, res);
             }
         }
 
