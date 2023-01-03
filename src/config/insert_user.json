@@ -142,13 +142,17 @@
                 "convert": {
                     "dataset": [
                         {
-                            "key": "token",
+                            "key": ["token"],
                             "type": "createToken",
                             "params": {
-                                "link": {
+                                "email": {
                                     "params": {
-                                        "email": { "key": ["email"] },
-                                        "nik": {"key": ["nik"] }
+                                        "key": ["email"]
+                                    }
+                                },
+                                "nik": {
+                                    "params": {
+                                        "key": ["nik"]
                                     }
                                 }
                             }
@@ -156,8 +160,15 @@
                     ],
                     "params": [
                         {
-                            "key": "password",
-                            "type": "hashPassword"
+                            "key": ["password"],
+                            "type": "hashPassword",
+                            "params": {
+                                "password": {
+                                    "params": {
+                                        "key": ["password"]
+                                    }
+                                }
+                            }
                         }
                     ]
                 }
@@ -222,12 +233,18 @@
                 }
             },
             {
-                "type": "email",
+               "type": "email",
                 "email": {
                     "from": {
                         "params": {
                             "key": ["email"]
                         }
+                    },
+                    "template": {
+                        "value": "confirmed.html"
+                    },
+                    "subject": {
+                        "value": "Подтверждение почты"
                     }
                 }
             },
