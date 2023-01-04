@@ -2,7 +2,7 @@ package com.example.bec.model.command.email;
 
 import com.example.bec.model.command.ChildrenDatasetModel;
 import com.example.bec.model.command.LinkDateModel;
-import com.example.bec.service.MapChildrenDatasetUtils;
+import com.example.bec.utils.MapChildrenDatasetUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
