@@ -1,0 +1,43 @@
+[
+  {
+    "key": null,
+    "type": "validate",
+    "validate": [
+      {
+        "key": "id_user",
+        "riles": [
+          {
+            "type": "req",
+            "error": "Id пользователя обязательно поле"
+          },
+          {
+            "type": "var",
+            "error": "Id пользователя является числом",
+            "params": {
+              "type": "Integer"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": "user",
+    "type": "postgresql",
+    "sql": {
+      "convert": "object",
+      "text": "select * from tec.user_update_confirmed(_id =>?);",
+      "params": [
+        {
+          "type": "Integer",
+          "key": ["id_user"],
+          "index": 1
+        }
+      ]
+    }
+  },
+  {
+    "key": "user",
+    "type": "return"
+  }
+]
