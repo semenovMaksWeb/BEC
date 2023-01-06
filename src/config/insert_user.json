@@ -156,6 +156,17 @@
                                     }
                                 }
                             }
+                        },
+                        {
+                            "key": ["email_hash"],
+                            "type": "hashPassword",
+                            "params": {
+                                "password": {
+                                    "params": {
+                                        "key": ["email"]
+                                    }
+                                }
+                            }
                         }
                     ],
                     "params": [
@@ -255,6 +266,19 @@
                         "surname": {
                             "params": {
                                 "key": ["surname"]
+                            }
+                        },
+                        "host": {
+                            "value": "http://localhost:8080/"
+                        },
+                        "email": {
+                            "dataset": {
+                                "key": ["email_hash"]
+                            }
+                        },
+                        "id_user": {
+                            "dataset": {
+                                "key": ["user", "id_"]
                             }
                         }
                     }
