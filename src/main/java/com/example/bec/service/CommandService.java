@@ -159,6 +159,11 @@ public class CommandService {
                 if (convertModel.getType().equals(ConvertTypeEnum.createToken.getTitle())) {
                     res = this.convertService.createToken(data);
                 }
+
+                if (convertModel.getType().equals(ConvertTypeEnum.checkPassword.getTitle())) {
+                    res = this.convertService.checkPassword(data);
+                }
+
                 convertModel.updateData(link, res);
             }
         }

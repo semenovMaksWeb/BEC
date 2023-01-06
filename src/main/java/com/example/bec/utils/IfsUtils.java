@@ -25,7 +25,6 @@ public class IfsUtils{
         convertValue();
         convertComparisons();
         convertCombination();
-        System.out.println(listIfsModel);
         return (boolean) listIfsModel.get(0).getValue();
     }
 

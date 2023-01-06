@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Optional;
+
 @RestController
 public class UserController {
 
@@ -21,7 +26,10 @@ public class UserController {
             method = RequestMethod.GET)
     public Object confirmedUser(
             @ApiParam(required = true, value = "hash индификатора пользователя")
-            @RequestParam String hash){
-        return userService.confirmedUser(hash);
+            @RequestParam String hash,
+            @ApiParam(required = true, value = "id пользователя")
+            @RequestParam String id
+    ) throws SQLException, MessagingException, IOException {
+        return userService.confirmedUser(hash, id).orElseGet(Optional::empty);
     }
 }

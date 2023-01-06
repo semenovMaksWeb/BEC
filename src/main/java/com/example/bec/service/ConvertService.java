@@ -4,7 +4,6 @@ package com.example.bec.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.bec.configuration.PropertiesCustom;
-import com.example.bec.model.command.convert.ConvertModel;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +21,10 @@ public class ConvertService {
 
     public String hashPassword(Map<String, Object> data) {
         return BCrypt.hashpw(data.get("password").toString(), BCrypt.gensalt());
+    }
+
+    public boolean checkPassword(Map<String, Object> data) {
+        return BCrypt.checkpw(data.get("password").toString(), data.get("hash").toString());
     }
 
     public String createToken(Map<String, Object> data) throws IOException {
