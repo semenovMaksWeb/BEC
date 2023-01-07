@@ -3,6 +3,7 @@ package com.example.bec.utils;
 import com.example.bec.model.command.ChildrenDatasetModel;
 import com.example.bec.model.command.LinkDateModel;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public class MapChildrenDatasetUtils {
     }
     private Object checkDatasetOrParams(
             LinkDateModel<ChildrenDatasetModel> elem
-    ){
+    ) throws IOException {
         Object res = null;
         if (elem.getDataset() != null){
             res = elem.getDataset().searchData(this.dataset, null);
@@ -32,7 +33,7 @@ public class MapChildrenDatasetUtils {
     }
     public Map<String, Object> getObject(
             Map<String, LinkDateModel<ChildrenDatasetModel>> config
-    ){
+    ) throws IOException {
         Map<String, Object> result = new HashMap<>();
         for (Map.Entry<String, LinkDateModel<ChildrenDatasetModel>> elem: config.entrySet()) {
             Object res = checkDatasetOrParams(elem.getValue());
@@ -40,7 +41,7 @@ public class MapChildrenDatasetUtils {
         }
         return result;
     }
-    public Object getObjectKey(LinkDateModel<ChildrenDatasetModel> config){
+    public Object getObjectKey(LinkDateModel<ChildrenDatasetModel> config) throws IOException {
         return this.checkDatasetOrParams(config);
     }
 

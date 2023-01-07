@@ -1,24 +1,27 @@
 package com.example.bec.model.command;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.example.bec.configuration.PropertiesCustom;
+import lombok.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class ChildrenDatasetModel {
-    List<String> key;
+    private List<String> key;
+    private String properties;
 
-    public Object searchData(Map<String , Object> data, Object value){
+    public Object searchData(Map<String , Object> data, Object value) throws IOException {
         if (value != null){
             return  value;
+        }
+        if (properties != null){
+            //return  propertiesCustom.getProperties().getProperty(properties);
         }
         Object link = data;
         for (String key: this.key){

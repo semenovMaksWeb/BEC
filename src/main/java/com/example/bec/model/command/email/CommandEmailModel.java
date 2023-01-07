@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class CommandEmailModel {
     private LinkDateModel<ChildrenDatasetModel> subject;
     private Map<String, LinkDateModel<ChildrenDatasetModel>> params;
 
-    public Map<String, Object> generatorResult(Map<String, Object> dataset,Map<String, Object> params){
+    public Map<String, Object> generatorResult(Map<String, Object> dataset,Map<String, Object> params) throws IOException {
         MapChildrenDatasetUtils mapChildrenDatasetUtils = new MapChildrenDatasetUtils(dataset, params);
 
         Map<String, Object> result = new HashMap<>();

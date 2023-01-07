@@ -13,4 +13,5 @@ import lombok.Setter;
 public class SqlParamsModel extends ChildrenDatasetModel {
     private String type;
     private Integer index;
+
 }

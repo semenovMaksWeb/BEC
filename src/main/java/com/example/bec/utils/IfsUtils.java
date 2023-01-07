@@ -5,6 +5,8 @@ import com.example.bec.model.command.ifs.IfsModel;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -21,14 +23,14 @@ public class IfsUtils{
         this.params = params;
     }
 
-    public boolean checkIfs(){
+    public boolean checkIfs() throws IOException {
         convertValue();
         convertComparisons();
         convertCombination();
         return (boolean) listIfsModel.get(0).getValue();
     }
 
-    private void convertValue(){
+    private void convertValue() throws IOException {
         for(IfsModel ifsModel: listIfsModel){
             if (ifsModel.getDataset() != null){
                 ifsModel.setValue(ifsModel.getDataset().searchData(this.dataset, ifsModel.getValue()));

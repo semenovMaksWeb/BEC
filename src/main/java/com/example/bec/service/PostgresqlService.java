@@ -28,7 +28,7 @@ public class PostgresqlService {
             List<SqlParamsModel> config,
             Map<String, Object> params,
             Object value
-    ) throws SQLException {
+    ) throws SQLException, IOException {
         if (config == null){
             return;
         }
