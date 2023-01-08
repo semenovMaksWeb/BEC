@@ -1,0 +1,65 @@
+[
+  {
+    "type": "convert",
+    "convert": {
+      "params": [
+        {
+          "key": ["right_const_name"],
+          "type": "constValue",
+          "params": {
+            "const_name": {
+              "value": "roles-user_get"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "key": "validate",
+    "type": "config_link",
+    "link": "check_right.json"
+  },
+  {
+    "type": "block",
+    "ifs": [
+      {
+        "dataset": {
+          "key": ["validate", "result_", "status_"]
+        }
+      },
+      {
+        "operator": "=="
+      },
+      {
+        "value": 1
+      }
+    ],
+    "children": [
+      {
+        "key": "roles_user",
+        "type": "postgresql",
+        "sql": {
+          "convert": "array",
+          "text": "select * from tec.roles_user_get_name_id(_right_const_name => ?)",
+          "params": [
+            {
+              "type": "String",
+              "key": ["token"],
+              "index": 1
+            },
+            {
+              "type": "String",
+              "key": ["right_const_name"],
+              "index": 2
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "type": "return",
+    "key": "validate"
+  }
+]
