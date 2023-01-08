@@ -52,6 +52,13 @@ public class CommandService {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(fileUtils.readFile(), new TypeReference<List<CommandModel>>(){});
     }
+    public Optional<Object> startCommand(
+            List<CommandModel> config,
+            Map<String, Object> params
+    ) throws SQLException, MessagingException, IOException {
+        return this.startCommand(config, params, new HashMap<>());
+    }
+
 
     /* TODO Optional и везде где может передаваться null */
     public Optional<Object> startCommand(
@@ -132,7 +139,7 @@ public class CommandService {
         return Optional.empty();
     }
     public Optional<Object> runCommand(String  url, Map<String, Object> params) throws IOException, SQLException, MessagingException {
-        return startCommand(convertConfig(url), params, new HashMap<>());
+        return startCommand(convertConfig(url), params);
     }
 
     /* old */
