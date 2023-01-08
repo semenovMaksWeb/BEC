@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -88,7 +89,8 @@ public class CommandController {
         ObjectMapper objectMapper = new ObjectMapper();
         return  this.commandService.startCommand(
                 objectMapper.readValue(json, new TypeReference<List<CommandModel>>(){}),
-                params
+                params,
+                new HashMap<String , Object>()
         );
     }
 }

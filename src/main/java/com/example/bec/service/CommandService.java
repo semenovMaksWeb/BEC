@@ -54,8 +54,11 @@ public class CommandService {
     }
 
     /* TODO Optional и везде где может передаваться null */
-    public Optional<Object> startCommand(List<CommandModel> config, Map<String, Object> params) throws SQLException, IOException, MessagingException {
-        Map<String, Object> dataset = new HashMap<>();
+    public Optional<Object> startCommand(
+            List<CommandModel> config,
+            Map<String, Object> params,
+            Map<String, Object> dataset
+        ) throws SQLException, IOException, MessagingException {
         for (CommandModel commandModel : config) {
             /* есть обработка ifs */
             if (commandModel.getIfs() != null){
@@ -66,7 +69,7 @@ public class CommandService {
             }
             /* Прогон children */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.block.getTitle()) ) {
-                Optional<Object> res = startCommand(commandModel.getChildren(), params);
+                Optional<Object> res = startCommand(commandModel.getChildren(), params, dataset);
                 /* Прогон children вызвал return и нужно вернуть выше */
                 if (res.isPresent()){
                     return res;
@@ -129,7 +132,7 @@ public class CommandService {
         return Optional.empty();
     }
     public Optional<Object> runCommand(String  url, Map<String, Object> params) throws IOException, SQLException, MessagingException {
-        return startCommand(convertConfig(url), params);
+        return startCommand(convertConfig(url), params, new HashMap<>());
     }
 
     /* old */
