@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
  public enum ConvertTypeEnum {
     hashPassword("hashPassword"),
-
+    constValue("constValue"),
     checkPassword("checkPassword"),
     createToken("createToken");
 

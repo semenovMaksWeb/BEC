@@ -1,7 +1,5 @@
 package com.example.bec.model.command;
 
-
-import com.example.bec.configuration.PropertiesCustom;
 import lombok.*;
 
 import java.io.IOException;
@@ -14,14 +12,10 @@ import java.util.Map;
 @NoArgsConstructor
 public class ChildrenDatasetModel {
     private List<String> key;
-    private String properties;
 
     public Object searchData(Map<String , Object> data, Object value) throws IOException {
         if (value != null){
             return  value;
-        }
-        if (properties != null){
-            //return  propertiesCustom.getProperties().getProperty(properties);
         }
         Object link = data;
         for (String key: this.key){

@@ -163,7 +163,9 @@ public class CommandService {
                 if (convertModel.getType().equals(ConvertTypeEnum.checkPassword.getTitle())) {
                     res = this.convertService.checkPassword(data);
                 }
-
+                if (convertModel.getType().equals(ConvertTypeEnum.constValue.getTitle())){
+                    res = data.get("const_name");
+                }
                 convertModel.updateData(link, res);
             }
         }
