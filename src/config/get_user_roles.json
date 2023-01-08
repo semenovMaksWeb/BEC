@@ -25,7 +25,7 @@
     "ifs": [
       {
         "dataset": {
-          "key": ["validate", "result_", "status_"]
+          "key": ["validate", "result_", "status"]
         }
       },
       {
@@ -41,20 +41,19 @@
         "type": "postgresql",
         "sql": {
           "convert": "array",
-          "text": "select * from tec.roles_user_get_name_id(_right_const_name => ?)",
-          "params": [
+          "text": "select * from tec.roles_user_get_name_id(_id => ?)",
+          "dataset": [
             {
-              "type": "String",
-              "key": ["token"],
+              "type": "Integer",
+              "key": ["validate", "result_", "id"],
               "index": 1
-            },
-            {
-              "type": "String",
-              "key": ["right_const_name"],
-              "index": 2
             }
           ]
         }
+      },
+      {
+        "type": "return",
+        "key": "roles_user"
       }
     ]
   },
