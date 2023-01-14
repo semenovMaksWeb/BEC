@@ -87,7 +87,7 @@ public class CommandController {
             return result.get();
         }
         ObjectMapper objectMapper = new ObjectMapper();
-        return  this.commandService.startCommand(
+        return this.commandService.startCommand(
                 objectMapper.readValue(json, new TypeReference<List<CommandModel>>(){}),
                 params
         );

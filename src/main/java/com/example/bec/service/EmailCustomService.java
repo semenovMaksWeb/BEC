@@ -20,14 +20,7 @@ public class EmailCustomService {
         this.emailSender = emailSender;
         this.templateEngineConfig = templateEngineConfig;
     }
-
-    public void sendSimpleEmail(String toAddress, String subject, String message) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(toAddress);
-        simpleMailMessage.setSubject(subject);
-        simpleMailMessage.setText(message);
-        emailSender.send(simpleMailMessage);
-    }
+    
     public void sendSimpleEmailTemplate(String toAddress, String subject, String template, Map<String, Object> params) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message,
