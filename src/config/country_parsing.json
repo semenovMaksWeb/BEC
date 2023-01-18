@@ -1,0 +1,141 @@
+[
+  {
+    "key": "doc",
+    "type": "parsing_html",
+    "parsing": {
+      "name": "connectSite",
+      "params": {
+        "url": {
+          "value": "https://www.komandirovka.ru/countries"
+        }
+      }
+    }
+  },
+  {
+    "key": "list",
+    "type": "parsing_html",
+    "parsing": {
+      "name": "selectElements",
+      "params": {
+        "select": {
+          "value": ".alpha__flags .alpha__flag"
+        },
+        "element": {
+          "dataset": {
+            "key": ["doc"]
+          }
+        }
+      }
+    }
+  },
+  {
+    "key": null,
+    "type": "foreach",
+    "foreach": {
+      "elem": "elem",
+      "list": {
+        "dataset": {
+          "key": ["list"]
+        }
+      }
+    },
+    "children": [
+      {
+        "key": "name",
+        "type": "parsing_html",
+        "parsing": {
+          "name": "selectElementText",
+          "params": {
+            "select": {
+              "value": ".alpha__flag-txt"
+            },
+            "element": {
+              "dataset": {
+                "key": ["elem"]
+              }
+            }
+          }
+        }
+      },
+      {
+        "key": "capital",
+        "type": "parsing_html",
+        "parsing": {
+          "name": "selectElementText",
+          "params": {
+            "select": {
+              "value": ".alpha__links div:nth-of-type(3) a"
+            },
+            "element": {
+              "dataset": {
+                "key": ["elem"]
+              }
+            }
+          }
+        }
+      },
+      {
+        "key": "flag",
+        "type": "parsing_html",
+        "parsing": {
+          "name": "selectElementAttr",
+          "params": {
+            "select": {
+              "value": "img"
+            },
+            "element": {
+              "dataset": {
+                "key": ["elem"]
+              }
+            },
+            "attr": {
+              "value": "data-src"
+            }
+          }
+        }
+      },
+      {
+        "key": null,
+        "type": "convert",
+        "convert": {
+          "dataset": [
+            {
+              "key": ["flag"],
+              "type": "beforeAdd",
+              "params": {
+                "value": {
+                  "value": "https://www.komandirovka.ru"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": "sql",
+        "type": "postgresql",
+        "sql": {
+          "convert": "object",
+          "text": "select * from libs.country_insert(_name => ?, _capital => ?, _flag => ?)",
+          "dataset": [
+            {
+              "type": "String",
+              "key": ["name"],
+              "index": 1
+            },
+            {
+              "type": "String",
+              "key": ["capital"],
+              "index": 2
+            },
+            {
+              "type": "String",
+              "key": ["flag"],
+              "index": 3
+            }
+          ]
+        }
+      }
+    ]
+  }
+]
