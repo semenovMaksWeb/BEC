@@ -12,7 +12,9 @@ import lombok.Getter;
     block("block"),
     convert("convert"),
    email("email"),
-    config_link("config_link");
+    config_link("config_link"),
+
+    parsing_html("parsing_html");
 
     private final String title;
 }
