@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ForeachModel {
-    private LinkDateModel<ChildrenDatasetModel> elem;
-    private LinkDateModel<ChildrenDatasetModel> in;
+    private String elem;
+    private LinkDateModel<ChildrenDatasetModel> list;
     private List<CommandModel> children;
 }

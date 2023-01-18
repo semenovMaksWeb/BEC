@@ -11,10 +11,9 @@ import lombok.Getter;
     validate("validate"),
     block("block"),
     convert("convert"),
-   email("email"),
+    email("email"),
     config_link("config_link"),
-
-    parsing_html("parsing_html");
-
+    parsing_html("parsing_html"),
+    foreach("foreach");
     private final String title;
 }

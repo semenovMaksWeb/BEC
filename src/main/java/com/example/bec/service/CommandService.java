@@ -65,7 +65,6 @@ public class CommandService {
         return this.startCommand(config, params, new HashMap<>());
     }
 
-
     /* TODO Optional и везде где может передаваться null */
     public Optional<Object> startCommand(
             List<CommandModel> config,
@@ -86,6 +85,21 @@ public class CommandService {
                 /* Прогон children вызвал return и нужно вернуть выше */
                 if (res.isPresent()){
                     return res;
+                }
+            }
+            /* Прогон foreach */
+            if (Objects.equals(commandModel.getType(), CommandTypeEnum.foreach.getTitle()) ) {
+                MapChildrenDatasetUtils mapChildrenDatasetUtils = new MapChildrenDatasetUtils(dataset, params);
+                /* массив прогона*/
+                List<Object> list = (List<Object>) mapChildrenDatasetUtils.getObjectKey(commandModel.getForeach().getList());
+                /* ключ сохранения dataset */
+                for (Object el: list){
+                    dataset.put(commandModel.getForeach().getElem(), el);
+                    Optional<Object> res = startCommand(commandModel.getChildren(), params, dataset);
+                    /* Прогон children вызвал return и нужно вернуть выше */
+                    if (res.isPresent()){
+                        return res;
+                    }
                 }
             }
             /* прогон parsing html */
@@ -135,7 +149,7 @@ public class CommandService {
             }
             /*Вызов валидации параметров */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.validate.getTitle()) ) {
-                ResponseEntity<Map<String, List<String>>> mapResponseEntity = ValidateParams(commandModel.getValidate(), params);
+                ResponseEntity<Map<String, List<String>>> mapResponseEntity = validateParams(commandModel.getValidate(), params);
                 if (!mapResponseEntity.getStatusCode().equals(HttpStatus.OK) ){
                     return Optional.of(mapResponseEntity);
                 }
@@ -187,6 +201,7 @@ public class CommandService {
                     res = data.get("const_name");
                 }
                 if (convertModel.getType().equals(ConvertTypeEnum.beforeAdd.getTitle())){
+                    convertModel.searchData(link,null).toString();
                     res = data.get("value").toString() + convertModel.searchData(link,null).toString();
                 }
                 convertModel.updateData(link, res);
@@ -224,7 +239,7 @@ public class CommandService {
         return res;
     }
 
-    private ResponseEntity<Map<String, List<String>>> ValidateParams(List<ValidateParamsModel> validate, Map<String, Object> params ){
+    private ResponseEntity<Map<String, List<String>>> validateParams(List<ValidateParamsModel> validate, Map<String, Object> params ){
         ValidateUtils validateUtils = new ValidateUtils(params, validate);
         validateUtils.validateStart();
         if (!validateUtils.getResult().isEmpty()){
