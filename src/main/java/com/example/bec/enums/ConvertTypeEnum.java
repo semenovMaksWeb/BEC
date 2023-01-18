@@ -9,7 +9,8 @@ import lombok.Getter;
     hashPassword("hashPassword"),
     constValue("constValue"),
     checkPassword("checkPassword"),
-    createToken("createToken");
+    createToken("createToken"),
+   beforeAdd("beforeAdd");
 
     private final String title;
 }

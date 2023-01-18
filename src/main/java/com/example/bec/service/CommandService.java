@@ -3,6 +3,7 @@ package com.example.bec.service;
 import com.example.bec.configuration.PropertiesCustom;
 import com.example.bec.enums.CommandTypeEnum;
 import com.example.bec.enums.ConvertTypeEnum;
+import com.example.bec.enums.ParsingHtmlTypeEnum;
 import com.example.bec.model.command.CommandModel;
 import com.example.bec.model.command.SelectItemModel;
 import com.example.bec.model.command.convert.ConvertModel;
@@ -13,6 +14,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.jsoup.nodes.Element;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,8 @@ public class CommandService {
 
     private final EmailCustomService emailCustomService;
     private final PostgresqlService postgresqlService;
+
+    private final ParsingHtmlSiteService parsingHtmlSiteService;
     private final PropertiesCustom propertiesCustom;
 
     public CommandService(
@@ -37,12 +41,14 @@ public class CommandService {
             @Lazy CommandService commandService,
             @Lazy EmailCustomService emailCustomService,
             @Lazy PostgresqlService postgresqlService,
+            @Lazy ParsingHtmlSiteService parsingHtmlSiteService,
             PropertiesCustom propertiesCustom
     ) {
         this.convertService = convertService;
         this.commandService = commandService;
         this.emailCustomService = emailCustomService;
         this.postgresqlService = postgresqlService;
+        this.parsingHtmlSiteService = parsingHtmlSiteService;
         this.propertiesCustom = propertiesCustom;
     }
 
@@ -81,6 +87,10 @@ public class CommandService {
                 if (res.isPresent()){
                     return res;
                 }
+            }
+            /* прогон parsing html */
+            if (Objects.equals(commandModel.getType(), CommandTypeEnum.parsing_html.getTitle())){
+                dataset.put(commandModel.getKey(), this.parsingHtml(commandModel, params, dataset));
             }
             /* вызвать другой файл с конфигом и получить от него ответ */
             if (Objects.equals(commandModel.getType(), CommandTypeEnum.config_link.getTitle())){
@@ -176,10 +186,42 @@ public class CommandService {
                 if (convertModel.getType().equals(ConvertTypeEnum.constValue.getTitle())){
                     res = data.get("const_name");
                 }
+                if (convertModel.getType().equals(ConvertTypeEnum.beforeAdd.getTitle())){
+                    res = data.get("value").toString() + convertModel.searchData(link,null).toString();
+                }
                 convertModel.updateData(link, res);
             }
         }
+    }
 
+    private Object parsingHtml(CommandModel commandModel, Map<String, Object> params, Map<String, Object> dataset) throws IOException {
+        Object res = null;
+        MapChildrenDatasetUtils mapChildrenDatasetUtils = new MapChildrenDatasetUtils(dataset, params);
+        if (Objects.equals(commandModel.getParsing().getName(), ParsingHtmlTypeEnum.connectSite.getTitle())){
+            res = this.parsingHtmlSiteService.connectSite(
+                    mapChildrenDatasetUtils.getObjectKey(commandModel.getParsing().getParams().get("url")).toString()
+            );
+        }
+        if (Objects.equals(commandModel.getParsing().getName(), ParsingHtmlTypeEnum.selectElements.getTitle())){
+            res = this.parsingHtmlSiteService.selectElements(
+                    mapChildrenDatasetUtils.getObjectKey(commandModel.getParsing().getParams().get("select")).toString(),
+                    (Element) mapChildrenDatasetUtils.getObjectKey(commandModel.getParsing().getParams().get("element"))
+            );
+        }
+        if (Objects.equals(commandModel.getParsing().getName(), ParsingHtmlTypeEnum.selectElementAttr.getTitle())){
+            res = this.parsingHtmlSiteService.selectElementAttr(
+                    mapChildrenDatasetUtils.getObjectKey(commandModel.getParsing().getParams().get("select")).toString(),
+                    (Element) mapChildrenDatasetUtils.getObjectKey(commandModel.getParsing().getParams().get("element")),
+                    mapChildrenDatasetUtils.getObjectKey(commandModel.getParsing().getParams().get("attr")).toString()
+            );
+        }
+        if (Objects.equals(commandModel.getParsing().getName(), ParsingHtmlTypeEnum.selectElementText.getTitle())){
+            res = this.parsingHtmlSiteService.selectElementText(
+                    mapChildrenDatasetUtils.getObjectKey(commandModel.getParsing().getParams().get("select")).toString(),
+                    (Element) mapChildrenDatasetUtils.getObjectKey(commandModel.getParsing().getParams().get("element"))
+            );
+        }
+        return res;
     }
 
     private ResponseEntity<Map<String, List<String>>> ValidateParams(List<ValidateParamsModel> validate, Map<String, Object> params ){

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
-public class ParsingHtmlSizeService {
+public class ParsingHtmlSiteService {
     public Document connectSite(String url, String agent, String referrer) throws IOException {
        return Jsoup.connect(url)
                 .userAgent(agent)
@@ -31,9 +31,5 @@ public class ParsingHtmlSizeService {
 
     public String selectElementAttr(String select, Element element, String attr){
         return element.select(select).attr(attr);
-    }
-
-    public void parsingConfig(){
-
     }
 }
