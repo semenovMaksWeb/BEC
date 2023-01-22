@@ -1,7 +1,6 @@
 package com.example.bec.service;
 
 import com.example.bec.configuration.TemplateEngineConfig;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -20,8 +19,21 @@ public class EmailCustomService {
         this.emailSender = emailSender;
         this.templateEngineConfig = templateEngineConfig;
     }
-    
-    public void sendSimpleEmailTemplate(String toAddress, String subject, String template, Map<String, Object> params) throws MessagingException {
+    public void sendSimpleEmailTemplate(Map<String, Object> params) throws MessagingException {
+        this.sendSimpleEmailTemplate(
+                params.get("from").toString(),
+                params.get("subject").toString(),
+                params.get("template").toString(),
+                (Map<String, Object>) params.get("params")
+        );
+    }
+
+    public void sendSimpleEmailTemplate(
+            String toAddress,
+            String subject,
+            String template,
+            Map<String, Object> params
+    ) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(message,
                 true,

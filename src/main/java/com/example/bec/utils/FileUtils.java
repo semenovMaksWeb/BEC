@@ -1,6 +1,6 @@
 package com.example.bec.utils;
 
-import com.example.bec.model.command.SelectItemModel;
+import com.example.bec.model.SelectItemModel;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class FileUtils{
+public class FileUtils {
     private final File file;
     private final File catalog;
 

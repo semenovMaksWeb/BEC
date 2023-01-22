@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
- public enum OperatorTypeEnum {
+public enum OperatorTypeEnum {
     equals("=="),
     more(">"),
     less("<"),

@@ -1,4 +1,4 @@
-package com.example.bec.v2.enums;
+package com.example.bec.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,6 @@ import lombok.Getter;
 @Getter
 public enum StoreCommandTypeEnums {
     dataset("dataset"),
-    value("value"),
-    params("params");
-
+    value("value");
     private final String title;
 }

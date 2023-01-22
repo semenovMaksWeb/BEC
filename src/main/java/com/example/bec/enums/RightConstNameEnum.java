@@ -5,9 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-
 public enum RightConstNameEnum {
-
     namesFileConfigBecGet("names-file-config-bec_get"),
     configCommandGet("config-command_get");
 

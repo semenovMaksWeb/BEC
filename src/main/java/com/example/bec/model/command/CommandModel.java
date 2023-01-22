@@ -1,34 +1,28 @@
 package com.example.bec.model.command;
 
-import com.example.bec.model.command.convert.CommandConvertModel;
-import com.example.bec.model.command.email.CommandEmailModel;
-import com.example.bec.model.command.foreach.ForeachModel;
 import com.example.bec.model.command.ifs.IfsModel;
-import com.example.bec.model.command.parsing_html.ParsingHtmlModel;
-import com.example.bec.model.command.sql.CommandSqlModel;
-import com.example.bec.model.command.validate.ValidateParamsModel;
 
+import java.util.List;
+
+import com.example.bec.model.command.sql.SqlModel;
+import com.example.bec.model.command.validate.ValidateParamsModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class CommandModel {
-    private String key;
-    private String type;
-    private CommandSqlModel sql;
-    private List<ValidateParamsModel> validate;
-    private List<CommandModel> children;
-    private CommandConvertModel convert;
-    private String link;
+    private List<String> key;
     private List<IfsModel> ifs;
-    private CommandEmailModel email;
-    private ParsingHtmlModel parsing;
-    private ForeachModel foreach;
+    private String type;
+    private List<CommandModel> children; // type = block
+    private String link; // ссылка на другой файл конфиг type = config_link
+    private SqlModel sql; // type = postgresql
+    private CommandEmailModel email; // type = email отправка писем
+    private ParsingHtmlSiteModel parsingSite; // type = parsing_html функционал парсинга сайта или html
+    private List<ValidateParamsModel> validate;
 }

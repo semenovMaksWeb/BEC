@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
- public enum ConvertTypeEnum {
+public enum ConvertTypeEnum {
     hashPassword("hashPassword"),
     constValue("constValue"),
     checkPassword("checkPassword"),
     createToken("createToken"),
-   beforeAdd("beforeAdd");
+    beforeAdd("beforeAdd");
 
     private final String title;
 }

@@ -2,41 +2,36 @@ package com.example.bec.utils;
 
 import com.example.bec.enums.OperatorTypeEnum;
 import com.example.bec.model.command.ifs.IfsModel;
+import com.example.bec.model.command.store.StoreCommandModel;
+import com.example.bec.model.command.store.StoreFindCommandModel;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
-public class IfsUtils{
+public class IfsUtils {
     private List<IfsModel> listIfsModel;
-    private Map<String , Object> dataset;
-    private Map<String , Object> params;
+    private StoreCommandModel data;
 
-    public IfsUtils(List<IfsModel> listIfsModel, Map<String, Object> dataset, Map<String, Object> params) {
+    public IfsUtils(List<IfsModel> listIfsModel, StoreCommandModel data) {
         this.listIfsModel = listIfsModel;
-        this.dataset = dataset;
-        this.params = params;
+        this.data = data;
     }
 
-    public boolean checkIfs() throws IOException {
+    public boolean checkIfs() {
         convertValue();
         convertComparisons();
         convertCombination();
-        return (boolean) listIfsModel.get(0).getValue();
+        return (boolean) listIfsModel.get(0).getData().getValue();
     }
 
-    private void convertValue() throws IOException {
+    private void convertValue() {
         for(IfsModel ifsModel: listIfsModel){
-            if (ifsModel.getDataset() != null){
-                ifsModel.setValue(ifsModel.getDataset().searchData(this.dataset, ifsModel.getValue()));
-            }
-            else if (ifsModel.getParams() != null){
-                ifsModel.setValue(ifsModel.getParams().searchData(this.params, ifsModel.getValue()));
+            if (ifsModel.getData().getKey() != null) {
+                ifsModel.getData().setValue(this.data.searchValue(ifsModel.getData().getKey()));
             }
         }
     }
@@ -54,8 +49,8 @@ public class IfsUtils{
             /* == */
             if (listIfsModel.get(index).getOperator().equals(OperatorTypeEnum.equals.getTitle())) {
                 boolean val = this.operatorEquals(
-                        listIfsModel.get(index - 1).getValue(),
-                        listIfsModel.get(index + 1).getValue()
+                        listIfsModel.get(index - 1).getData().getValue(),
+                        listIfsModel.get(index + 1).getData().getValue()
                 );
                 operatorComparisons(val, index);
                 index--;
@@ -63,8 +58,8 @@ public class IfsUtils{
             /* > */
             else if (listIfsModel.get(index).getOperator().equals(OperatorTypeEnum.more.getTitle())) {
                 boolean val = this.operatorMove(
-                        listIfsModel.get(index - 1).getValue(),
-                        listIfsModel.get(index + 1).getValue()
+                        listIfsModel.get(index - 1).getData().getValue(),
+                        listIfsModel.get(index + 1).getData().getValue()
                 );
                 operatorComparisons(val, index);
                 index--;
@@ -72,8 +67,8 @@ public class IfsUtils{
             /* < */
             else if (listIfsModel.get(index).getOperator().equals(OperatorTypeEnum.less.getTitle())) {
                 boolean val = this.operatorLess(
-                        listIfsModel.get(index - 1).getValue(),
-                        listIfsModel.get(index + 1).getValue()
+                        listIfsModel.get(index - 1).getData().getValue(),
+                        listIfsModel.get(index + 1).getData().getValue()
                 );
                 operatorComparisons(val, index);
                 index--;
@@ -93,22 +88,22 @@ public class IfsUtils{
             }
             if (listIfsModel.get(index).getOperator().equals(OperatorTypeEnum.and.getTitle())) {
                 boolean val = this.operatorAnd(
-                        listIfsModel.get(index - 1).getValue(),
-                        listIfsModel.get(index + 1).getValue()
+                        listIfsModel.get(index - 1).getData().getValue(),
+                        listIfsModel.get(index + 1).getData().getValue()
                 );
                 operatorComparisons(val, index);
                 index--;
             }
             else if (listIfsModel.get(index).getOperator().equals(OperatorTypeEnum.or.getTitle())) {
                 boolean val = this.operatorOr(
-                        listIfsModel.get(index - 1).getValue(),
-                        listIfsModel.get(index + 1).getValue()
+                        listIfsModel.get(index - 1).getData().getValue(),
+                        listIfsModel.get(index + 1).getData().getValue()
                 );
                 operatorComparisons(val, index);
                 index--;
             }
 
-        }while (listIfsModel.size() >= index);
+        } while (listIfsModel.size() >= index);
     }
 
     private void deleteIfsModel(int index_min, int index_max){
@@ -117,7 +112,7 @@ public class IfsUtils{
     private void addIfsModel(boolean val, int index){
         listIfsModel.add(
                 index,
-                new IfsModel(val)
+                new IfsModel(new StoreFindCommandModel(val))
         );
     }
 

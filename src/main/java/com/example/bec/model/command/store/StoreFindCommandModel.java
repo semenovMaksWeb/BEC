@@ -1,8 +1,8 @@
-package com.example.bec.v2.model;
+package com.example.bec.model.command.store;
 
-import com.example.bec.v2.enums.StoreCommandTypeEnums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
@@ -10,8 +10,12 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class StoreFindCommandModel {
-    private StoreCommandTypeEnums type;
+    private String type;
     private List<String> key;
     private Object value;
+    public StoreFindCommandModel(Object value){
+        this.value = value;
+    }
 }

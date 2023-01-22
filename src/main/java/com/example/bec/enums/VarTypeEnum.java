@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
- public enum VarTypeEnum {
+public enum VarTypeEnum {
     string("String"),
     integer("Integer");
 

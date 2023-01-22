@@ -11,18 +11,18 @@ import java.util.Properties;
 
 @Configuration
 public class ConnectionBd {
-    private final PropertiesCustom propertiesCustom;
+    private final PropertiesConfig propertiesConfig;
 
-    public ConnectionBd(PropertiesCustom propertiesCustom) {
-        this.propertiesCustom = propertiesCustom;
+    public ConnectionBd(PropertiesConfig propertiesConfig) {
+        this.propertiesConfig = propertiesConfig;
     }
 
     @Bean
     public Connection postgresqlConnection() throws IOException, SQLException {
-        String url = "jdbc:postgresql://" + propertiesCustom.getProperties().getProperty("db.host");
+        String url = "jdbc:postgresql://" + propertiesConfig.getProperties().getProperty("db.host");
         Properties props = new Properties();
-        props.setProperty("user", propertiesCustom.getProperties().getProperty("db.user"));
-        props.setProperty("password", propertiesCustom.getProperties().getProperty("db.password"));
-        return  DriverManager.getConnection(url, props);
+        props.setProperty("user", propertiesConfig.getProperties().getProperty("db.user"));
+        props.setProperty("password", propertiesConfig.getProperties().getProperty("db.password"));
+        return DriverManager.getConnection(url, props);
     }
 }

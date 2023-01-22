@@ -1,0 +1,14 @@
+[
+  {
+    "key": ["user"],
+    "type": "postgresql",
+    "sql": {
+      "text": "select * from tec.user",
+      "convert": "array"
+    }
+  },
+  {
+    "key": ["user"],
+    "type": "return"
+  }
+]

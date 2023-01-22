@@ -8,5 +8,4 @@ public class BecApplication {
     public static void main(String[] args) {
         SpringApplication.run(BecApplication.class, args);
     }
-
 }

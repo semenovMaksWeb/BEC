@@ -1,4 +1,4 @@
-package com.example.bec.model.command;
+package com.example.bec.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LinkDateModel<T> {
-    private T dataset;
-    private T params;
-    private Object value;
+public class SelectItemModel {
+    Integer id;
+    String name;
 }

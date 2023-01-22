@@ -1,6 +1,5 @@
 package com.example.bec.model.command.sql;
 
-import com.example.bec.model.command.LinkDateModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +9,10 @@ import java.util.List;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class CommandSqlModel extends LinkDateModel<List<SqlParamsModel>> {
+@NoArgsConstructor
+public class SqlModel {
     private String text;
     private String convert;
+    private List<SqlParamsModel> params;
 }

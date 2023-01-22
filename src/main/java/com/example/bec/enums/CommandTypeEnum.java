@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
- public enum CommandTypeEnum {
+public enum CommandTypeEnum {
     postgresql("postgresql"),
     returns("return"),
     validate("validate"),
@@ -15,5 +15,6 @@ import lombok.Getter;
     config_link("config_link"),
     parsing_html("parsing_html"),
     foreach("foreach");
+
     private final String title;
 }

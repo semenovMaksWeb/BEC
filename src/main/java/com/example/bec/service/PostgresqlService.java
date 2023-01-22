@@ -2,12 +2,11 @@ package com.example.bec.service;
 
 import com.example.bec.configuration.ConnectionBd;
 import com.example.bec.enums.VarTypeEnum;
-import com.example.bec.model.command.sql.CommandSqlModel;
+import com.example.bec.model.command.sql.SqlModel;
 import com.example.bec.model.command.sql.SqlParamsModel;
-
+import com.example.bec.model.command.store.StoreCommandModel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.postgresql.util.PGobject;
 import org.springframework.stereotype.Service;
 
@@ -25,33 +24,33 @@ public class PostgresqlService {
     }
     private void StatementSave(
             PreparedStatement statement,
-            List<SqlParamsModel> config,
-            Map<String, Object> params,
-            Object value
-    ) throws SQLException, IOException {
-        if (config == null){
+            List<SqlParamsModel> sqlParamsList,
+            StoreCommandModel storeCommandModel
+    ) throws SQLException {
+        if (sqlParamsList == null){
             return;
         }
-        for (SqlParamsModel element : config) {
-            Object data = element.searchData(params, value);
-            if (Objects.equals(element.getType(), VarTypeEnum.string.getTitle())) {
-                statement.setString(element.getIndex(), data.toString());
-            } else if (Objects.equals(element.getType(), VarTypeEnum.integer.getTitle())) {
-                statement.setInt(element.getIndex(), (Integer) data);
+        for (SqlParamsModel sqlParam : sqlParamsList) {
+            Object data =  storeCommandModel.storeGetData(sqlParam.getData());
+            /* это строка */
+            if (Objects.equals(sqlParam.getType(), VarTypeEnum.string.getTitle())) {
+                statement.setString(sqlParam.getIndex(), data.toString());
+            }
+            /* это число */
+            else if (Objects.equals(sqlParam.getType(), VarTypeEnum.integer.getTitle())) {
+                statement.setInt(sqlParam.getIndex(), (Integer) data);
             }
         }
     }
 
     public Object runSql(
-            CommandSqlModel commandSql,
-            Map<String, Object> params,
-            Map<String, Object> dataset
+            SqlModel sqlModel,
+            StoreCommandModel storeCommandModel
     ) throws SQLException, IOException {
-        PreparedStatement statement = this.connectionBd.postgresqlConnection().prepareStatement(commandSql.getText());
-        StatementSave(statement, commandSql.getParams(), params, commandSql.getValue());
-        StatementSave(statement, commandSql.getDataset(), dataset, commandSql.getValue());
+        PreparedStatement statement = this.connectionBd.postgresqlConnection().prepareStatement(sqlModel.getText());
+        StatementSave(statement, sqlModel.getParams(), storeCommandModel);
         ResultSet rs = statement.executeQuery();
-        return convertRsInJson(rs, commandSql.getConvert());
+        return convertRsInJson(rs, sqlModel.getConvert());
     }
 
     private Object convertRsInJson(ResultSet rs, String typeConvert) throws SQLException, JsonProcessingException {
@@ -79,6 +78,6 @@ public class PostgresqlService {
         if (Objects.equals(typeConvert, "object")){
             return result.get(0);
         }
-        return  result;
+        return result;
     }
 }
