@@ -1,4 +1,4 @@
-package com.example.bec.service;
+package com.example.bec.utils;
 
 import com.example.bec.enums.ValidateParamsEnum;
 import com.example.bec.model.command.store.StoreCommandModel;
@@ -11,7 +11,7 @@ import java.util.*;
 
 public class ValidateUtils {
     private final StoreCommandModel storeCommandModel;
-    private final Map<String , List<String>> result = new HashMap<>();
+    private final Map<String, List<String>> result = new HashMap<>();
 
     public ValidateUtils(StoreCommandModel storeCommandModel){
         this.storeCommandModel = storeCommandModel;
@@ -22,13 +22,13 @@ public class ValidateUtils {
     }
 
     private void validateReq(ValidateParamsRulesModel validateParamsRulesModel, String key){
-        if (this.checkNull(key)){
+        if (this.checkNull(this.storeCommandModel.searchValue(key))){
             saveResult(key, validateParamsRulesModel.getError());
         }
     }
 
     private void validateVar(ValidateParamsRulesModel validateParamsRulesModel, String key) {
-        if (this.storeCommandModel.searchValue(key) != null && this.storeCommandModel.searchValue(key).equals("")){
+        if (this.storeCommandModel.searchValue(key) == null || this.storeCommandModel.searchValue(key).equals("")){
             return;
         }
         if (!Objects.equals(

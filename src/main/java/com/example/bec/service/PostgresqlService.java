@@ -31,7 +31,7 @@ public class PostgresqlService {
             return;
         }
         for (SqlParamsModel sqlParam : sqlParamsList) {
-            Object data =  storeCommandModel.storeGetData(sqlParam.getData());
+            Object data = storeCommandModel.storeGetData(sqlParam.getData());
             /* это строка */
             if (Objects.equals(sqlParam.getType(), VarTypeEnum.string.getTitle())) {
                 statement.setString(sqlParam.getIndex(), data.toString());

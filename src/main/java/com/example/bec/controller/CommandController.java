@@ -27,7 +27,7 @@ public class CommandController {
             @RequestParam String name,
             @ApiParam(required = true, value = "параметры для команды")
             @RequestBody Map<String, Object> params,
-            @RequestHeader(name="Authorization") String token
+            @RequestHeader(name="Authorization", required=false) String token
 
     ) throws IOException, SQLException, MessagingException {
         params.put("token", token);

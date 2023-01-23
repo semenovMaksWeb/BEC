@@ -1,0 +1,348 @@
+[
+  {
+    "key": ["val"],
+    "type": "validate",
+    "validate": [
+      {
+        "key": "name",
+        "riles": [
+          {
+            "type": "req",
+            "error": "Имя пользователя обязательно поле"
+          },
+          {
+            "type": "var",
+            "error": "Имя пользователя является строкой",
+            "params": {
+              "type": "String"
+            }
+          }
+        ]
+      },
+      {
+        "key": "email",
+        "riles": [
+          {
+            "type": "req",
+            "error": "Почта пользователя обязательно поле"
+          },
+          {
+            "type": "var",
+            "error": "Почта пользователя является строкой",
+            "params": {
+              "type": "String"
+            }
+          }
+        ]
+      },
+      {
+        "key": "nik",
+        "riles": [
+          {
+            "type": "req",
+            "error": "Ник пользователя обязательно поле"
+          },
+          {
+            "type": "var",
+            "error": "Ник пользователя является строкой",
+            "params": {
+              "type": "String"
+            }
+          }
+        ]
+      },
+      {
+        "key": "password",
+        "riles": [
+          {
+            "type": "req",
+            "error": "Пароль пользователя обязательно поле"
+          },
+          {
+            "type": "var",
+            "error": "Пароль пользователя является строкой",
+            "params": {
+              "type": "String"
+            }
+          }
+        ]
+      },
+      {
+        "key": "patronymic",
+        "riles": [
+          {
+            "type": "req",
+            "error": "Отчество пользователя обязательно поле"
+          },
+          {
+            "type": "var",
+            "error": "Отчество пользователя является строкой",
+            "params": {
+              "type": "String"
+            }
+          }
+        ]
+      },
+      {
+        "key": "surname",
+        "riles": [
+          {
+            "type": "req",
+            "error": "Фамилия пользователя обязательно поле"
+          },
+          {
+            "type": "var",
+            "error": "Фамилия пользователя является строкой",
+            "params": {
+              "type": "String"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "ifs": [
+      {
+        "data": {
+          "key": ["val"],
+          "type": "dataset",
+          "tec": "getStatusCode"
+        }
+      },
+      {
+        "operator": ">"
+      },
+      {
+        "data": {
+          "type": "value",
+          "value": 400
+        }
+      }
+    ],
+    "key": ["val"],
+    "type": "return"
+  },
+  {
+    "key": ["check_user"],
+    "type": "postgresql",
+    "sql": {
+      "convert": "object",
+      "text": "select * from tec.user_check_unique(_nik => ?, _email => ?)",
+      "params": [
+        {
+          "type": "String",
+          "data": {
+            "type": "dataset",
+            "key": ["nik"]
+          },
+          "index": 1
+        },
+        {
+          "type": "String",
+          "data": {
+            "type": "dataset",
+            "key": ["email"]
+          },
+          "index": 2
+        }
+      ]
+    }
+  },
+  {
+    "ifs": [
+      {
+        "data": {
+          "type": "dataset",
+          "key": ["check_user", "status"]
+        }
+      },
+      {
+        "operator": "=="
+      },
+      {
+        "data": {
+          "type": "value",
+          "value": 1
+        }
+      }
+    ],
+    "type": "block",
+    "children": [
+      {
+        "key": ["token"],
+        "type": "convert",
+        "convert": {
+          "type": "createToken",
+          "params": {
+            "email": {
+                "type": "dataset",
+                "key": ["email"]
+            },
+            "nik": {
+              "type": "dataset",
+              "key": ["nik"]
+              }
+            }
+          }
+      },
+      {
+        "key": ["password"],
+        "type": "convert",
+        "convert": {
+          "type": "hashPassword",
+          "params": {
+            "password": {
+              "type": "dataset",
+              "key": ["password"]
+            }
+          }
+        }
+      },
+      {
+        "key": ["email_hash"],
+        "type": "convert",
+        "convert": {
+          "type": "hashPassword",
+          "params": {
+            "password": {
+              "type": "dataset",
+              "key": ["email"]
+            }
+          }
+        }
+      },
+      {
+        "key": ["user"],
+        "type": "postgresql",
+        "sql": {
+          "convert": "object",
+          "text": "select * from tec.user_insert(_nik =>?, _email =>?, _password=>?, _surname=>?, _name=>?, _patronymic=>?);",
+          "params": [
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["nik"]
+              },
+              "index": 1
+            },
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["email"]
+              },
+              "index": 2
+            },
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["password"]
+              },
+              "index": 3
+            },
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["surname"]
+              },
+              "index": 4
+            },
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["name"]
+              },
+              "index": 5
+            },
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["patronymic"]
+              },
+              "index": 6
+            }
+          ]
+        }
+      },
+      {
+        "key": ["create_token"],
+        "type": "postgresql",
+        "sql": {
+          "text": "select * from  tec.token_insert(_id_user => ?, _token => ?);",
+          "params": [
+            {
+              "type": "Integer",
+              "data": {
+                "type": "dataset",
+                "key": ["user", "id_"]
+              },
+              "index": 1
+            },
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["token"]
+              },
+              "index": 2
+            }
+          ]
+        }
+      },
+      {
+        "key": ["email"],
+        "type": "email",
+        "email": {
+          "from": {
+            "type": "dataset",
+            "key": ["email"]
+          },
+          "template": {
+            "type": "value",
+            "value": "confirmed.html"
+          },
+          "subject": {
+            "type": "value",
+            "value": "Подтверждение почты"
+          },
+          "params": {
+            "name": {
+              "type": "dataset",
+              "key": ["name"]
+            },
+            "surname": {
+              "type": "dataset",
+              "key": ["surname"]
+            },
+            "host": {
+              "type": "value",
+              "value": "http://localhost:8080/"
+            },
+            "email": {
+              "type": "dataset",
+              "key": ["email_hash"]
+            },
+            "id_user": {
+              "type": "dataset",
+              "key": ["user", "id_"]
+            }
+          }
+        }
+      },
+      {
+        "key": ["token"],
+        "type": "return"
+      }
+    ]
+  },
+  {
+    "key": ["check_user"],
+    "type": "return"
+  }
+]

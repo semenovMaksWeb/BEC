@@ -6,6 +6,7 @@ import com.example.bec.model.command.CommandModel;
 import com.example.bec.model.command.store.StoreCommandModel;
 import com.example.bec.utils.FileUtils;
 import com.example.bec.utils.IfsUtils;
+import com.example.bec.utils.ValidateUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Lazy;

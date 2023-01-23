@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Title</title>
+</head>
+<body>
+<div style="width: 600px; border: 2px solid #E9EBF6; margin: auto; font-size: 16px; color: #555555;">
+    <h1
+            th:text="${'Здравствуйте ' + surname + ' ' + name}"
+            style="margin: 0; padding: 8px; background-color: #E9EBF6; text-align: center;"
+    >
+    </h1>
+    <div style="overflow: hidden; padding: 8px; padding-top: 0; background-color: #F5F6FB;">
+        <p>Вы получили это письмо, потому что вы (или кто-то, кто выдает себя за вас!) зарегистрировал новую учетную запись в доменной системе.</p>
+        <p>Если вы хотите подтвердить эту учетную запись электронной почты (что необходимо для использования системы), нажмите эту ссылку .
+            <a th:href="${host + 'confirmed?hash=' + email + '&id=' + id_user}" > нажмите эту ссылку.</a>
+        </p>
+        <p>Если вы не знаете, о чем идет речь, или вам не нужна учетная запись, просто ничего не делайте.</p>
+        <p>Приведенная выше ссылка для быстрого входа — это одноразовый доступ к вашей учетной записи. Пожалуйста, используйте ссылку, чтобы подтвердить свой адрес электронной почты и завершить регистрацию учетной записи..</p>
+        <br />
+        <p>Спасибо!</p>
+    </div>
+</div>
+</body>
+</html>

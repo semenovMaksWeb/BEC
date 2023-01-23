@@ -31,6 +31,7 @@ public class ConvertService {
     }
 
     public String createToken(String email, String nik) throws IOException {
+        System.out.println(1);
         return JWT.create()
                 .withSubject("User Details")
                 .withClaim("email",email)
@@ -43,12 +44,9 @@ public class ConvertService {
         /* создать токен */
         Object res = null;
         if (convertModel.getType().equals(ConvertTypeEnum.createToken.getTitle())){
-             storeCommandModel.updateValue(
-                     keys,
-                     this.createToken(
-                             data.get("email").toString(),
-                             data.get("nik").toString()
-                     )
+            res = this.createToken(
+                    data.get("email").toString(),
+                    data.get("nik").toString()
              );
 
         }

@@ -1,8 +1,9 @@
 package com.example.bec.model.command.store;
 
 import com.example.bec.enums.StoreCommandTypeEnums;
-
+import com.example.bec.enums.StoreFindCommandTecEnum;
 import lombok.Getter;
+import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,17 @@ public class StoreCommandModel {
             return storeFindCommandModel.getValue();
         }
         if (storeFindCommandModel.getType().equals(StoreCommandTypeEnums.dataset.getTitle())){
-            return  searchValue(storeFindCommandModel.getKey());
+            Object res = searchValue(storeFindCommandModel.getKey());
+            if (storeFindCommandModel.getTec() != null){
+                return storeGetTec(storeFindCommandModel.getTec(), res);
+            }
+            return res;
+        }
+        return null;
+    }
+    private Object storeGetTec(String tec, Object res){
+        if (tec.equals(StoreFindCommandTecEnum.getStatusCode.getTitle()) && res instanceof ResponseEntity){
+            return ((ResponseEntity<?>) res).getStatusCode().value();
         }
         return null;
     }
@@ -31,14 +42,17 @@ public class StoreCommandModel {
         }
         return data;
     }
+
     public void updateValue(List<String> keys, Object value){
         Object linkUpdate = searchValue(keys.subList(0, keys.size() - 1));
             assert linkUpdate != null;
             ((HashMap<String, Object>) linkUpdate).put(keys.get(keys.size() - 1), value);
     }
+
     public Object searchValue(String key){
         return  this.data.get(key);
     }
+
     public Object searchValue(List<String> keys){
         Object link = this.getData();
         for (String key: keys){
@@ -46,6 +60,7 @@ public class StoreCommandModel {
         }
         return link;
     }
+
     public void updateData(Map<String, Object> map){
         this.data.putAll(map);
     }

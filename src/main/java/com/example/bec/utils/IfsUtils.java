@@ -1,6 +1,7 @@
 package com.example.bec.utils;
 
 import com.example.bec.enums.OperatorTypeEnum;
+import com.example.bec.enums.StoreCommandTypeEnums;
 import com.example.bec.model.command.ifs.IfsModel;
 import com.example.bec.model.command.store.StoreCommandModel;
 import com.example.bec.model.command.store.StoreFindCommandModel;
@@ -30,8 +31,8 @@ public class IfsUtils {
 
     private void convertValue() {
         for(IfsModel ifsModel: listIfsModel){
-            if (ifsModel.getData().getKey() != null) {
-                ifsModel.getData().setValue(this.data.searchValue(ifsModel.getData().getKey()));
+            if (ifsModel.getData() != null && ifsModel.getData().getType().equals(StoreCommandTypeEnums.dataset.getTitle())) {
+                ifsModel.getData().setValue(this.data.storeGetData(ifsModel.getData()));
             }
         }
     }
@@ -126,7 +127,7 @@ public class IfsUtils {
             return val1.equals(val2);
         }
         if (val1 instanceof Integer && val2 instanceof Integer){
-            return val1 == val2;
+                return ((Integer) val1).intValue() == ((Integer) val2).intValue();
         }
         if (val1 instanceof Boolean && val2 instanceof Boolean){
             return val1 == val2;
@@ -135,14 +136,14 @@ public class IfsUtils {
     }
     private boolean operatorMove(Object val1, Object val2){
         if (val1 instanceof Integer && val2 instanceof Integer){
-            return (int)val1 > (int)val2;
+            return (Integer) val1 > (Integer) val2;
         }
         return false;
     }
 
     private boolean operatorLess(Object val1, Object val2){
         if (val1 instanceof Integer && val2 instanceof Integer){
-            return (int)val1 < (int)val2;
+            return (Integer)val1 < (Integer)val2;
         }
         return false;
     }
