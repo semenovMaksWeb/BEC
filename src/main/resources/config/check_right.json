@@ -49,7 +49,7 @@
     ]
   },
   {
-    "key": ["check"],
+    "key": ["check_right"],
     "type": "postgresql",
     "sql": {
       "convert": "object",
@@ -74,10 +74,5 @@
         }
       ]
     }
-  },
-  {
-    "key": ["check"],
-    "type": "return"
-
   }
 ]

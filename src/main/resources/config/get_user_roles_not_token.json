@@ -1,0 +1,68 @@
+[
+  {
+    "key": ["right_const_name"],
+    "type": "convert",
+    "convert": {
+      "type": "constValue",
+      "params": {
+        "const_name": {
+          "type": "value",
+          "value": "roles-user_get"
+        }
+      }
+    }
+  },
+  {
+    "key": null,
+    "type": "config_link",
+    "link": "check_right.json"
+  },
+  {
+    "type": "block",
+    "ifs": [
+      {
+        "data": {
+          "type": "dataset",
+          "key": ["check_right", "result_", "status"]
+        }
+      },
+      {
+        "operator": "=="
+      },
+      {
+        "data": {
+          "type": "value",
+          "value": 1
+        }
+      }
+    ],
+    "children": [
+      {
+        "key": ["roles_user"],
+        "type": "postgresql",
+        "sql": {
+          "convert": "array",
+          "text": "select * from tec.roles_user_not_get_name_id(_id => ?)",
+          "params": [
+            {
+              "type": "Integer",
+              "data": {
+                "type": "dataset",
+                "key": ["check_right", "result_", "id"]
+              },
+              "index": 1
+            }
+          ]
+        }
+      },
+      {
+        "type": "return",
+        "key": ["roles_user"]
+      }
+    ]
+  },
+  {
+    "type": "return",
+    "key": ["check_right"]
+  }
+]

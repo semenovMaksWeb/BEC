@@ -67,7 +67,10 @@ public class ConvertService {
                     data.get("password").toString()
             );
         }
-
+        /* сохранить константу */
+        else if(convertModel.getType().equals(ConvertTypeEnum.constValue.getTitle())){
+            res = data.get("const_name");
+        }
         storeCommandModel.updateValue(
                 keys,
                 res
