@@ -24,5 +24,7 @@ public class CommandModel {
     private SqlModel sql; // type = postgresql
     private CommandEmailModel email; // type = email отправка писем
     private ParsingHtmlSiteModel parsingSite; // type = parsing_html функционал парсинга сайта или html
-    private List<ValidateParamsModel> validate;
+    private List<ValidateParamsModel> validate; // type = validate
+    private CommandConvertModel convert; // type = convert
+    private ForeachModel foreach;
 }

@@ -21,7 +21,7 @@ public class StoreCommandModel {
         }
         return null;
     }
-    public Object storeGetData(Map<String, StoreFindCommandModel> storeFindCommandModelMap) {
+    public Map<String, Object> storeGetData(Map<String, StoreFindCommandModel> storeFindCommandModelMap) {
         Map<String, Object> data = new HashMap<>();
         for (Map.Entry<String, StoreFindCommandModel> storeFindCommandModel: storeFindCommandModelMap.entrySet()){
             data.put(

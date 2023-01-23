@@ -23,15 +23,19 @@ public class CommandService {
     private final PropertiesConfig propertiesConfig;
     private final PostgresqlService postgresqlService;
     private final EmailCustomService emailCustomService;
+    private final ConvertService convertService;
     private final ParsingHtmlSiteService parsingHtmlSiteService;
     public CommandService(
             PropertiesConfig propertiesConfig,
             @Lazy PostgresqlService postgresqlService,
             @Lazy EmailCustomService emailCustomService,
-            ParsingHtmlSiteService parsingHtmlSiteService){
+            @Lazy ConvertService convertService,
+            @Lazy ParsingHtmlSiteService parsingHtmlSiteService
+    ){
         this.propertiesConfig = propertiesConfig;
         this.postgresqlService = postgresqlService;
         this.emailCustomService = emailCustomService;
+        this.convertService = convertService;
         this.parsingHtmlSiteService = parsingHtmlSiteService;
     }
 
@@ -102,6 +106,24 @@ public class CommandService {
                         commandModel.getKey(),
                         validateUtils.validateStart(commandModel.getValidate())
                 );
+            }
+            /* convert */
+            else if (Objects.equals(commandModel.getType(), CommandTypeEnum.convert.getTitle()) ) {
+                this.convertService.convertConfig(commandModel.getConvert(), storeCommandModel, commandModel.getKey());
+            }
+            /* foreach */
+            else if (Objects.equals(commandModel.getType(), CommandTypeEnum.foreach.getTitle()) ) {
+                List<Object> list = (List<Object>) storeCommandModel.searchValue(commandModel.getForeach().getList());
+                for (Object elem : list) {
+                    storeCommandModel.updateValue(
+                            commandModel.getForeach().getElem(),
+                            elem
+                    );
+                    Object res = run(commandModel.getChildren(), storeCommandModel.getData());
+                    if (res != null){
+                        return res;
+                    }
+                }
             }
         }
     return null;
