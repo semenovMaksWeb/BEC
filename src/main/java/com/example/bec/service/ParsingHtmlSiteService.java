@@ -44,7 +44,6 @@ public class ParsingHtmlSiteService {
             res = this.connectSite(
                     storeCommandModel.storeGetData(commandModel.getParsingSite().getParams().get("url")).toString()
             );
-            System.out.println(res);
         }
         /* получить элемент */
         else if (Objects.equals(commandModel.getParsingSite().getType(), ParsingHtmlTypeEnum.selectElements.getTitle())) {
@@ -62,7 +61,6 @@ public class ParsingHtmlSiteService {
         }
         /* получить текст элемента */
         if (Objects.equals(commandModel.getParsingSite().getType(), ParsingHtmlTypeEnum.selectElementText.getTitle())) {
-            System.out.println(storeCommandModel.storeGetData(commandModel.getParsingSite().getParams().get("element")).toString());
             res = this.selectElementText(
                     (Elements) storeCommandModel.storeGetData(commandModel.getParsingSite().getParams().get("element"))
             );
