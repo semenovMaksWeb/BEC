@@ -4,6 +4,7 @@ import com.example.bec.configuration.PropertiesConfig;
 import com.example.bec.enums.CommandTypeEnum;
 import com.example.bec.model.command.CommandModel;
 import com.example.bec.model.command.store.StoreCommandModel;
+import com.example.bec.model.command.store.StoreFindCommandModel;
 import com.example.bec.utils.FileUtils;
 import com.example.bec.utils.IfsUtils;
 import com.example.bec.utils.ValidateUtils;
@@ -46,14 +47,29 @@ public class CommandService {
         return objectMapper.readValue(fileUtils.readFile(), new TypeReference<List<CommandModel>>(){});
     }
 
-    public Object run(String  url, Map<String, Object> params) throws IOException, SQLException, MessagingException {
-        List<CommandModel> config = this.getConfigFileName(url);
-        return this.run(config, params);
-    }
-
-    public Object run(List<CommandModel> config, Map<String, Object> params) throws SQLException, IOException, MessagingException {
+    /* config и store */
+    public Object run(List<CommandModel> config, Map<String, Object> params) throws SQLException, MessagingException, IOException {
         StoreCommandModel storeCommandModel = new StoreCommandModel();
         storeCommandModel.updateData(params);
+        return this.run(config, storeCommandModel);
+    }
+
+    /* url file и store */
+    public Object run(String  url, StoreCommandModel storeCommandModel) throws IOException, SQLException, MessagingException {
+        List<CommandModel> config = this.getConfigFileName(url);
+        return this.run(config, storeCommandModel);
+    }
+
+    /* url file и store */
+    public Object run(String  url, Map<String, Object> params) throws IOException, SQLException, MessagingException {
+        List<CommandModel> config = this.getConfigFileName(url);
+        StoreCommandModel storeCommandModel = new StoreCommandModel();
+        storeCommandModel.updateData(params);
+        return this.run(config, storeCommandModel);
+    }
+
+    /*  config и store */
+    public Object run(List<CommandModel> config, StoreCommandModel storeCommandModel) throws SQLException, IOException, MessagingException {
         /* прогон команд */
         for (CommandModel commandModel : config) {
             /* ifs */
@@ -76,17 +92,17 @@ public class CommandService {
             }
             /* block */
             else if (Objects.equals(commandModel.getType(), CommandTypeEnum.block.getTitle()) ) {
-                Object res = run(commandModel.getChildren(), storeCommandModel.getData());
+                Object res = run(commandModel.getChildren(), storeCommandModel);
                 if (res != null){
                     return res;
                 }
             }
             /* config_link */
             else if (Objects.equals(commandModel.getType(), CommandTypeEnum.config_link.getTitle())) {
-                storeCommandModel.updateValue(
-                        commandModel.getKey(),
-                        this.run(commandModel.getLink(), storeCommandModel.getData())
-                );
+                Object res = run(commandModel.getLink(), storeCommandModel);
+                if (res != null){
+                    return res;
+                }
             }
             /* email */
             else if (Objects.equals(commandModel.getType(), CommandTypeEnum.email.getTitle())) {
@@ -120,7 +136,7 @@ public class CommandService {
                             commandModel.getForeach().getElem(),
                             elem
                     );
-                    Object res = run(commandModel.getChildren(), storeCommandModel.getData());
+                    Object res = run(commandModel.getChildren(), storeCommandModel);
                     if (res != null){
                         return res;
                     }

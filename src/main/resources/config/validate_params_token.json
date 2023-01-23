@@ -1,0 +1,46 @@
+[
+  {
+    "key": ["val"],
+    "type": "validate",
+    "validate": [
+      {
+        "key": "token",
+        "riles": [
+          {
+            "type": "req",
+            "error": "Токен обязательно поле"
+          },
+          {
+            "type": "var",
+            "error": "Токен пользователя является строкой",
+            "params": {
+              "type": "String"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "key": ["val"],
+    "type": "return",
+    "ifs": [
+      {
+        "data": {
+          "key": ["val"],
+          "type": "dataset",
+          "tec": "getStatusCode"
+        }
+      },
+      {
+        "operator": "=="
+      },
+      {
+        "data": {
+          "type": "value",
+          "value": 400
+        }
+      }
+    ]
+  }
+]

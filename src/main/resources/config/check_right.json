@@ -1,0 +1,83 @@
+[
+  {
+    "key": ["check_token"],
+    "type": "config_link",
+    "link": "validate_params_token.json"
+  },
+  {
+    "key": ["val_rules"],
+    "type": "validate",
+    "validate": [
+        {
+            "key": "right_const_name",
+            "riles": [
+            {
+              "type": "req",
+              "error": "Право обязательно поле"
+            },
+            {
+              "type": "var",
+              "error": "Право является строкой",
+              "params": {
+                "type": "String"
+              }
+            }
+          ]
+        }
+    ]
+  },
+  {
+    "key": ["val_rules"],
+    "type": "return",
+    "ifs": [
+      {
+        "data": {
+          "key": ["val_rules"],
+          "type": "dataset",
+          "tec": "getStatusCode"
+        }
+      },
+      {
+        "operator": "=="
+      },
+      {
+        "data": {
+          "type": "value",
+          "value": 400
+        }
+      }
+    ]
+  },
+  {
+    "key": ["check"],
+    "type": "postgresql",
+    "sql": {
+      "convert": "object",
+      "text": "select * from tec.check_right(_token => ?, _right_const_name => ?)",
+      "params": [
+        {
+          "type": "String",
+          "data": {
+            "type": "dataset",
+            "key": ["token"]
+          },
+          "index": 1
+        },
+        {
+          "type": "String",
+          "data": {
+            "type": "dataset",
+            "key": ["right_const_name"]
+          },
+
+          "index": 2
+        }
+      ]
+    }
+  },
+  {
+    "key": ["check"],
+    "type": "return"
+
+  }
+]

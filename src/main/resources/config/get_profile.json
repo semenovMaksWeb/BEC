@@ -1,0 +1,29 @@
+[
+  {
+    "key": ["check_token"],
+    "type": "config_link",
+    "link": "validate_params_token.json"
+  },
+  {
+    "key": ["profile"],
+    "type": "postgresql",
+    "sql": {
+      "convert": "object",
+      "text": "select * from tec.profile(_token => ?)",
+      "params": [
+        {
+          "type": "String",
+          "data": {
+            "type": "dataset",
+            "key": ["token"]
+          },
+          "index": 1
+        }
+      ]
+    }
+  },
+  {
+    "key": ["profile"],
+    "type": "return"
+  }
+]

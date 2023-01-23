@@ -1,14 +1,30 @@
 [
   {
-    "key": ["user"],
-    "type": "postgresql",
-    "sql": {
-      "text": "select * from tec.user",
-      "convert": "array"
-    }
+    "key": null,
+    "type": "block",
+    "children": [
+      {
+        "key": ["profile"],
+        "type": "postgresql",
+        "sql": {
+          "convert": "object",
+          "text": "select * from tec.profile(_token => ?)",
+          "params": [
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["token"]
+              },
+              "index": 1
+            }
+          ]
+        }
+      }
+    ]
   },
   {
-    "key": ["user"],
-    "type": "return"
+    "type": "return",
+    "key": ["profile"]
   }
 ]
