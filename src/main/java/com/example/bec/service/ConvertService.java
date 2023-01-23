@@ -31,7 +31,6 @@ public class ConvertService {
     }
 
     public String createToken(String email, String nik) throws IOException {
-        System.out.println(1);
         return JWT.create()
                 .withSubject("User Details")
                 .withClaim("email",email)
