@@ -55,7 +55,7 @@ public class CommandService {
     }
 
     /* url file и store */
-    public Object run(String  url, StoreCommandModel storeCommandModel) throws IOException, SQLException, MessagingException {
+    public Object run(String url, StoreCommandModel storeCommandModel) throws IOException, SQLException, MessagingException {
         List<CommandModel> config = this.getConfigFileName(url);
         return this.run(config, storeCommandModel);
     }

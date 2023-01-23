@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ParsingHtmlTypeEnum {
     connectSite("connectSite"),
     selectElements("selectElements"),
+    selectElement("selectElement"),
     selectElementText("selectElementText"),
     selectElementAttr("selectElementAttr");
 

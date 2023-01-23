@@ -41,7 +41,7 @@
         "key": ["html_name"],
         "type": "parsing_html",
         "parsingSite": {
-          "type": "selectElements",
+          "type": "selectElement",
           "params": {
             "select": {
               "type": "value",
@@ -58,7 +58,7 @@
         "key": ["html_capital"],
         "type": "parsing_html",
         "parsingSite": {
-          "type": "selectElements",
+          "type": "selectElement",
           "params": {
             "select": {
               "type": "value",
@@ -75,7 +75,7 @@
         "key": ["html_flag"],
         "type": "parsing_html",
         "parsingSite": {
-          "type": "selectElements",
+          "type": "selectElement",
           "params": {
             "select": {
               "type": "value",
@@ -142,6 +142,40 @@
               "value": "https://www.komandirovka.ru"
             }
           }
+        }
+      },
+      {
+        "key": ["sql"],
+        "type": "postgresql",
+        "sql": {
+          "convert": "object",
+          "text": "select * from libs.country_insert(_name => ?, _capital => ?, _flag => ?)",
+          "params": [
+            {
+              "data": {
+                "type": "dataset",
+                "key": ["name"]
+              },
+              "type": "String",
+              "index": 1
+            },
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["capital"]
+              },
+              "index": 2
+            },
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["flag"]
+              },
+              "index": 3
+            }
+          ]
         }
       }
     ]
