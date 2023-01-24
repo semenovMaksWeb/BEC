@@ -2,9 +2,10 @@ package com.example.bec.utils;
 
 import com.example.bec.model.SelectItemModel;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,9 @@ public class FileUtils {
             }
         }
     }
-
+    public ReadableByteChannel downloadFileUrl(String url) throws IOException {
+        return Channels.newChannel(new URL(url).openStream());
+    }
     public void deleteFile(){
         if (this.file.delete()){
             System.out.println("src.File delete");
@@ -62,7 +65,12 @@ public class FileUtils {
         }
         return namesFiles;
     }
-
+    public void outputStream(ReadableByteChannel readableByteChannel) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream(this.file);
+        fileOutputStream.getChannel()
+                .transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
+        fileOutputStream.close();
+    }
     public void updateTextFile(String text) throws IOException {
         if(!this.file.exists()){
             this.createFile();

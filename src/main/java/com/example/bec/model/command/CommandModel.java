@@ -1,5 +1,6 @@
 package com.example.bec.model.command;
 
+import com.example.bec.model.command.file.CommandFileModel;
 import com.example.bec.model.command.ifs.IfsModel;
 
 import java.util.List;
@@ -27,4 +28,5 @@ public class CommandModel {
     private List<ValidateParamsModel> validate; // type = validate
     private CommandConvertModel convert; // type = convert
     private ForeachModel foreach;
+    private CommandFileModel file;
 }

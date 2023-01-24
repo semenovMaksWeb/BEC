@@ -14,6 +14,7 @@ public enum CommandTypeEnum {
     email("email"),
     config_link("config_link"),
     parsing_html("parsing_html"),
+    file("file"),
     foreach("foreach");
 
     private final String title;

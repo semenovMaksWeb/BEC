@@ -4,7 +4,6 @@ import com.example.bec.configuration.PropertiesConfig;
 import com.example.bec.enums.CommandTypeEnum;
 import com.example.bec.model.command.CommandModel;
 import com.example.bec.model.command.store.StoreCommandModel;
-import com.example.bec.model.command.store.StoreFindCommandModel;
 import com.example.bec.utils.FileUtils;
 import com.example.bec.utils.IfsUtils;
 import com.example.bec.utils.ValidateUtils;
@@ -27,18 +26,21 @@ public class CommandService {
     private final EmailCustomService emailCustomService;
     private final ConvertService convertService;
     private final ParsingHtmlSiteService parsingHtmlSiteService;
+    private final FileService fileService;
     public CommandService(
             PropertiesConfig propertiesConfig,
             @Lazy PostgresqlService postgresqlService,
             @Lazy EmailCustomService emailCustomService,
             @Lazy ConvertService convertService,
-            @Lazy ParsingHtmlSiteService parsingHtmlSiteService
+            @Lazy ParsingHtmlSiteService parsingHtmlSiteService,
+            @Lazy FileService fileService
     ){
         this.propertiesConfig = propertiesConfig;
         this.postgresqlService = postgresqlService;
         this.emailCustomService = emailCustomService;
         this.convertService = convertService;
         this.parsingHtmlSiteService = parsingHtmlSiteService;
+        this.fileService = fileService;
     }
 
     private List<CommandModel> getConfigFileName(String url) throws IOException {
@@ -49,7 +51,7 @@ public class CommandService {
 
     /* config и store */
     public Object run(List<CommandModel> config, Map<String, Object> params) throws SQLException, MessagingException, IOException {
-        StoreCommandModel storeCommandModel = new StoreCommandModel();
+        StoreCommandModel storeCommandModel = new StoreCommandModel(propertiesConfig);
         storeCommandModel.updateData(params);
         return this.run(config, storeCommandModel);
     }
@@ -63,7 +65,7 @@ public class CommandService {
     /* url file и store */
     public Object run(String  url, Map<String, Object> params) throws IOException, SQLException, MessagingException {
         List<CommandModel> config = this.getConfigFileName(url);
-        StoreCommandModel storeCommandModel = new StoreCommandModel();
+        StoreCommandModel storeCommandModel = new StoreCommandModel(propertiesConfig);
         storeCommandModel.updateData(params);
         return this.run(config, storeCommandModel);
     }
@@ -141,6 +143,10 @@ public class CommandService {
                         return res;
                     }
                 }
+            }
+            /* file */
+            else if (Objects.equals(commandModel.getType(), CommandTypeEnum.file.getTitle()) ) {
+                this.fileService.fileConfig(commandModel.getFile(), storeCommandModel);
             }
         }
     return null;
