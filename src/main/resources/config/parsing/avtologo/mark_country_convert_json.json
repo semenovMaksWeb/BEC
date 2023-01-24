@@ -1,0 +1,44 @@
+[
+  {
+    "key": null,
+    "type": "config_link",
+    "link": "parsing/lib/read-files-name.json"
+  },
+  {
+    "key": null,
+    "type": "foreach",
+    "foreach": {
+      "list": ["files_name_list"],
+      "elem": ["file_name"]
+    },
+    "children": [
+      {
+        "key": null,
+        "type": "config_link",
+        "link": "parsing/lib/convert-html-to-element.json"
+      },
+      {
+        "key": ["id_country"],
+        "type": "postgresql",
+        "sql": {
+          "convert": "object",
+          "text": "select * from libs.country_get_name(?)",
+          "params": [
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["file_name"]
+              },
+              "index": 1
+            }
+          ]
+        }
+      },
+      {
+        "key": ["id_country", "country_get_name"],
+        "type": "return"
+      }
+    ]
+  }
+]

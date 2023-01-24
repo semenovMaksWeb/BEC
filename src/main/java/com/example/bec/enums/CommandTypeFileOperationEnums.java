@@ -10,6 +10,8 @@ public enum CommandTypeFileOperationEnums {
     downloadFileUrl("downloadFileUrl"),
     outputString("outputString"),
     loaderString("loaderString"),
+    fileNameCatalog("fileNameCatalog"),
+    catalogFileNamesString("catalogFileNamesString"),
     outputStream("outputStream");
     private final String title;
 }

@@ -1,0 +1,44 @@
+[
+  {
+    "key": ["url_catalog"],
+    "type": "convert",
+    "convert": {
+      "type": "constValue",
+      "params": {
+        "const_value": {
+          "type": "properties",
+          "properties": "url.static"
+        }
+      }
+    }
+  },
+  {
+    "key": ["url_catalog"],
+    "type": "convert",
+    "convert": {
+      "type": "afterAdd",
+      "params": {
+        "value": {
+          "type": "value",
+          "value": "\\html-parsing\\"
+        }
+      }
+    }
+  },
+  {
+    "key": null,
+    "type": "file",
+    "file":  {
+      "catalog": {
+        "type": "dataset",
+        "key": ["url_catalog"]
+      },
+      "operation": [
+        {
+          "key": ["files_name_list"],
+          "type": "catalogFileNamesString"
+        }
+      ]
+    }
+  }
+]

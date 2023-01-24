@@ -65,6 +65,17 @@ public class FileUtils {
         }
         return namesFiles;
     }
+    public List<String> catalogFileNamesString(){
+        List<String> namesFiles = new ArrayList<>();
+        if(this.catalog.isDirectory()){
+            for(File item : Objects.requireNonNull(this.catalog.listFiles())){
+                if(item.isFile()){
+                    namesFiles.add(item.getName());
+                }
+            }
+        }
+        return namesFiles;
+    }
     public void outputStream(ReadableByteChannel readableByteChannel) throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(this.file);
         fileOutputStream.getChannel()

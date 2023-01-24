@@ -14,28 +14,27 @@ import java.util.Map;
 
 @Service
 public class FileService {
-    public void fileConfig(
+
+    private void fileConfig(
             CommandFileModel commandFileModel,
-            StoreCommandModel storeCommandModel
+            StoreCommandModel storeCommandModel,
+            FileUtils fileUtils
     ) throws IOException {
-        String catalog = (String) storeCommandModel.storeGetData(commandFileModel.getCatalog());
-        String name = (String) storeCommandModel.storeGetData(commandFileModel.getName());
-        FileUtils fileUtils = new FileUtils(catalog, name);
         for (CommandFileOperationModel commandFileOperationModel: commandFileModel.getOperation()){
             Map<String , Object> data = new HashMap<>();
             if (commandFileOperationModel.getParams() != null){
                 data = storeCommandModel.storeGetData(commandFileOperationModel.getParams());
             }
-            /* создаие файла */
+            /* создание файла */
             if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.createFile.getTitle())){
                 fileUtils.createFile();
             }
             /* скачать файл по url */
             if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.downloadFileUrl.getTitle())){
-               storeCommandModel.updateValue(
-                       commandFileOperationModel.getKey(),
-                       fileUtils.downloadFileUrl((String) data.get("url"))
-               );
+                storeCommandModel.updateValue(
+                        commandFileOperationModel.getKey(),
+                        fileUtils.downloadFileUrl((String) data.get("url"))
+                );
             }
             /* запись файл по byte */
             if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.outputStream.getTitle())){
@@ -52,6 +51,36 @@ public class FileService {
                         fileUtils.readFile()
                 );
             }
+            /* возращение имен файлов в каталоге [{id,name}] */
+            if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.fileNameCatalog.getTitle())){
+                storeCommandModel.updateValue(
+                        commandFileOperationModel.getKey(),
+                        fileUtils.catalogFileNames()
+                );
+            }
+            /* возращение имен файлов в каталоге [String] */
+            if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.catalogFileNamesString.getTitle())){
+                storeCommandModel.updateValue(
+                        commandFileOperationModel.getKey(),
+                        fileUtils.catalogFileNamesString()
+                );
+            }
+        }
+    }
+
+    public void fileConfig(
+            CommandFileModel commandFileModel,
+            StoreCommandModel storeCommandModel
+    ) throws IOException {
+        if (commandFileModel.getCatalog() != null && commandFileModel.getName() != null){
+            String catalog = (String) storeCommandModel.storeGetData(commandFileModel.getCatalog());
+            String name = (String) storeCommandModel.storeGetData(commandFileModel.getName());
+            FileUtils fileUtils = new FileUtils(catalog, name);
+            this.fileConfig(commandFileModel, storeCommandModel, fileUtils);
+        }else if (commandFileModel.getCatalog() != null){
+            String catalog = (String) storeCommandModel.storeGetData(commandFileModel.getCatalog());
+            FileUtils fileUtils = new FileUtils(catalog);
+            this.fileConfig(commandFileModel, storeCommandModel, fileUtils);
         }
     }
 }
