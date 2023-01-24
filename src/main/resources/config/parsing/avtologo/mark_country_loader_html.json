@@ -1,0 +1,33 @@
+[
+  {
+    "key": ["name_file"],
+    "type": "convert",
+    "convert": {
+      "type": "constValue",
+      "params": {
+        "const_value": {
+          "type": "value",
+          "value": "автолого_страны.html"
+        }
+      }
+    }
+  },
+  {
+    "key": ["url"],
+    "type": "convert",
+    "convert": {
+      "type": "constValue",
+      "params": {
+        "const_value": {
+          "type": "value",
+          "value": "https://xn--80aed5aobb1a.xn--p1ai/other-car-brands/"
+        }
+      }
+    }
+  },
+  {
+    "key": ["result"],
+    "type": "config_link",
+    "link": "parsing/lib/loader-html.json"
+  }
+]

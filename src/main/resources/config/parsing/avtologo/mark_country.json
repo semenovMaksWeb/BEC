@@ -1,0 +1,108 @@
+[
+  {
+    "key": ["file_name"],
+    "type": "convert",
+    "convert": {
+      "type": "constValue",
+      "params": {
+        "const_value": {
+          "type": "value",
+          "value": "автолого_страны.html"
+        }
+      }
+    }
+  },
+  {
+    "key": ["result"],
+    "type": "config_link",
+    "link": "parsing/lib/convert-html-to-element.json"
+  },
+  {
+    "key": ["link"],
+    "type": "parsing_html",
+    "parsingSite": {
+      "type": "selectElements",
+      "params": {
+        "element": {
+          "type": "dataset",
+          "key": ["body"]
+        },
+        "select": {
+          "type": "value",
+          "value": ".main-box-title a"
+        }
+      }
+    }
+  },
+  {
+    "key": ["foreach"],
+    "type": "foreach",
+    "foreach": {
+      "elem": ["elem"],
+      "list": ["link"]
+    },
+    "children": [
+      {
+        "key": ["url"],
+        "type": "parsing_html",
+        "parsingSite": {
+          "type": "selectElementAttr",
+          "params": {
+            "element": {
+              "type": "dataset",
+              "key": ["elem"]
+            },
+            "attr": {
+              "type": "value",
+              "value": "href"
+            }
+          }
+        }
+      },
+      {
+        "key": ["url"],
+        "type": "convert",
+        "convert": {
+          "type": "beforeAdd",
+          "params": {
+            "value": {
+              "type": "value",
+              "value": "https://xn--80aed5aobb1a.xn--p1ai/"
+            }
+          }
+        }
+      },
+      {
+        "key": ["name_file"],
+        "type": "parsing_html",
+        "parsingSite": {
+          "type": "selectElementText",
+          "params": {
+            "element": {
+              "type": "dataset",
+              "key": ["elem"]
+            }
+          }
+        }
+      },
+      {
+        "key": ["name_file"],
+        "type": "convert",
+        "convert": {
+          "type": "afterAdd",
+          "params": {
+            "value": {
+              "type": "value",
+              "value": ".html"
+            }
+          }
+        }
+      },
+      {
+        "key": ["result"],
+        "type": "config_link",
+        "link": "parsing/lib/loader-html.json"
+      }
+    ]
+  }
+]

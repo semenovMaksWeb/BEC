@@ -32,8 +32,8 @@
       "type": "connectSiteHtml",
       "params": {
         "url": {
-          "type": "value",
-          "value": "https://xn--80aed5aobb1a.xn--p1ai/"
+          "type": "dataset",
+          "key": ["url"]
         }
       }
     }
@@ -47,8 +47,8 @@
         "key": ["url_catalog"]
       },
       "name": {
-        "type": "value",
-        "value": "автолого.html"
+        "type": "dataset",
+        "key": ["name_file"]
       },
       "operation": [
         {
