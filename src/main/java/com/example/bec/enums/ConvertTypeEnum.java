@@ -10,7 +10,9 @@ public enum ConvertTypeEnum {
     constValue("constValue"),
     checkPassword("checkPassword"),
     createToken("createToken"),
+    afterAdd("afterAdd"),
     beforeAdd("beforeAdd");
 
     private final String title;
 }
+

@@ -51,7 +51,11 @@ public class ConvertService {
         }
         /* добавить значение к начало переменной */
         else if (convertModel.getType().equals(ConvertTypeEnum.beforeAdd.getTitle())){
-           res = storeCommandModel.searchValue(keys).toString() + data.get("value").toString();
+           res = data.get("value").toString() + storeCommandModel.searchValue(keys).toString();
+        }
+        /* добавить значение в конец переменной */
+        else if(convertModel.getType().equals(ConvertTypeEnum.afterAdd.getTitle())){
+            res = storeCommandModel.searchValue(keys).toString() + data.get("value").toString();
         }
         /* проверить кэш паролей */
         else if (convertModel.getType().equals(ConvertTypeEnum.checkPassword.getTitle())){
@@ -60,7 +64,7 @@ public class ConvertService {
                     data.get("hash").toString()
             );
         }
-        /* проверить кэш паролей */
+        /* сохранить кэш пароля */
         else if (convertModel.getType().equals(ConvertTypeEnum.hashPassword.getTitle())){
             res = this.hashPassword(
                     data.get("password").toString()
@@ -68,8 +72,9 @@ public class ConvertService {
         }
         /* сохранить константу */
         else if(convertModel.getType().equals(ConvertTypeEnum.constValue.getTitle())){
-            res = data.get("const_name");
+            res = data.get("const_value");
         }
+
         storeCommandModel.updateValue(
                 keys,
                 res
