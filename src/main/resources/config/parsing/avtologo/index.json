@@ -1,0 +1,12 @@
+[
+  {
+    "key": ["result"],
+    "type": "config_link",
+    "link": "parsing/avtologo/mark_country_loader_html.json"
+  },
+  {
+    "key": ["result"],
+    "type": "config_link",
+    "link": "parsing/avtologo/mark_countrys_loader_html.json"
+  }
+]
