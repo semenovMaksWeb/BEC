@@ -1,0 +1,95 @@
+[
+  {
+    "key": ["url_catalog"],
+    "type": "convert",
+    "convert": {
+      "type": "constValue",
+      "params": {
+        "const_value": {
+          "type": "properties",
+          "properties": "url.static"
+        }
+      }
+    }
+  },
+  {
+    "key": ["url_catalog"],
+    "type": "convert",
+    "convert": {
+      "type": "afterAdd",
+      "params": {
+        "value": {
+          "type": "value",
+          "value": "\\html-parsing\\"
+        }
+      }
+    }
+  },
+  {
+    "key": ["file_read"],
+    "type": "file",
+    "file":  {
+      "catalog": {
+        "type": "dataset",
+        "key": ["url_catalog"]
+      },
+      "name": {
+        "type": "value",
+        "value": "автолого.html"
+      },
+      "operation": [
+        {
+          "key": ["avtologo_html"],
+          "type": "loaderString"
+        }
+      ]
+    }
+  },
+  {
+    "key": ["body"],
+    "type": "parsing_html",
+    "parsingSite": {
+        "type": "parsingHtml",
+        "params": {
+          "html": {
+            "type": "dataset",
+            "key": ["avtologo_html"]
+          }
+        }
+    }
+  },
+  {
+    "key": ["link"],
+    "type": "parsing_html",
+    "parsingSite": {
+        "type": "selectElements",
+        "params": {
+          "element": {
+            "type": "dataset",
+            "key": ["body"]
+          },
+          "select": {
+            "type": "value",
+            "value": ".main-box"
+          }
+      }
+    }
+  },
+  {
+    "key": ["foreach"],
+    "type": "foreach",
+    "foreach": {
+      "elem": ["elem"],
+      "list": ["link"]
+    },
+    "children": [
+      {
+
+      }
+    ]
+  },
+  {
+    "type": "return",
+    "key": ["link"]
+  }
+]
