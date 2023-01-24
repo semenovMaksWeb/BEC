@@ -1,0 +1,301 @@
+[
+  {
+    "key": ["url_catalog"],
+    "type": "convert",
+    "convert": {
+      "type": "constValue",
+      "params": {
+        "const_value": {
+          "type": "properties",
+          "properties": "url.static"
+        }
+      }
+    }
+  },
+  {
+    "key": ["url_catalog"],
+    "type": "convert",
+    "convert": {
+      "type": "afterAdd",
+      "params": {
+        "value": {
+          "type": "value",
+          "value": "\\img\\country\\"
+        }
+      }
+    }
+  },
+  {
+    "key": ["html_doc"],
+    "type": "parsing_html",
+    "parsingSite": {
+      "type": "connectSite",
+      "params": {
+        "url": {
+          "type": "value",
+          "value": "https://www.komandirovka.ru/countries"
+        }
+      }
+    }
+  },
+  {
+    "key": ["html_list"],
+    "type": "parsing_html",
+    "parsingSite": {
+      "type": "selectElements",
+      "params": {
+        "select": {
+          "type": "value",
+          "value": ".alpha__flags .alpha__flag"
+        },
+        "element": {
+          "type": "dataset",
+          "key": ["html_doc"]
+        }
+      }
+    }
+  },
+  {
+    "key": ["for"],
+    "type": "foreach",
+    "foreach": {
+      "elem": ["html_elem"],
+      "list": ["html_list"]
+    },
+    "children": [
+      {
+        "key": ["html_name"],
+        "type": "parsing_html",
+        "parsingSite": {
+          "type": "selectElement",
+          "params": {
+            "select": {
+              "type": "value",
+              "value": ".alpha__flag-txt"
+            },
+            "element": {
+              "type": "dataset",
+              "key": ["html_elem"]
+            }
+          }
+        }
+      },
+      {
+        "key": ["html_capital"],
+        "type": "parsing_html",
+        "parsingSite": {
+          "type": "selectElement",
+          "params": {
+            "select": {
+              "type": "value",
+              "value": ".alpha__links div:nth-of-type(3) a"
+            },
+            "element": {
+              "type": "dataset",
+              "key": ["html_elem"]
+            }
+          }
+        }
+      },
+      {
+        "key": ["html_flag"],
+        "type": "parsing_html",
+        "parsingSite": {
+          "type": "selectElement",
+          "params": {
+            "select": {
+              "type": "value",
+              "value": "img"
+            },
+            "element": {
+              "type": "dataset",
+              "key": ["html_elem"]
+            }
+          }
+        }
+      },
+      {
+        "key": ["name"],
+        "type": "parsing_html",
+        "parsingSite": {
+          "type": "selectElementText",
+          "params": {
+            "element": {
+              "type": "dataset",
+              "key": ["html_name"]
+            }
+          }
+        }
+      },
+      {
+        "key": ["capital"],
+        "type": "parsing_html",
+        "parsingSite": {
+          "type": "selectElementText",
+          "params": {
+            "element": {
+              "type": "dataset",
+              "key": ["html_capital"]
+            }
+          }
+        }
+      },
+      {
+        "key": ["html_flag_url"],
+        "type": "parsing_html",
+        "parsingSite": {
+          "type": "selectElementAttr",
+          "params": {
+            "element": {
+              "type": "dataset",
+              "key": ["html_flag"]
+            },
+            "attr": {
+              "type": "value",
+              "value": "data-src"
+            }
+          }
+        }
+      },
+      {
+        "key": ["html_flag_url"],
+        "type": "convert",
+        "convert": {
+          "type": "beforeAdd",
+          "params": {
+            "value": {
+              "type": "value",
+              "value": "https://www.komandirovka.ru"
+            }
+          }
+        }
+      },
+      {
+        "key": ["name_file"],
+        "type": "convert",
+        "convert": {
+          "type": "constValue",
+          "params": {
+            "const_value": {
+              "type": "dataset",
+              "key": ["name"]
+            }
+          }
+        }
+      },
+      {
+        "key": ["name_file"],
+        "type": "convert",
+        "convert": {
+          "type": "afterAdd",
+          "params": {
+            "value": {
+              "type": "value",
+              "value": ".jpg"
+            }
+          }
+        }
+      },
+      {
+        "key": ["file_save"],
+        "type": "file",
+        "file":  {
+          "catalog": {
+            "type": "dataset",
+            "key": ["url_catalog"]
+          },
+          "name": {
+            "type": "dataset",
+            "key": ["name_file"]
+          },
+          "operation": [
+            {
+              "type": "createFile"
+            },
+            {
+              "key": ["file_download"],
+              "type": "downloadFileUrl",
+              "params": {
+                "url": {
+                  "type": "dataset",
+                  "key": ["html_flag_url"]
+                }
+              }
+            },
+            {
+              "type": "outputStream",
+              "params": {
+                "byte": {
+                  "type": "dataset",
+                  "key": ["file_download"]
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "key": ["ulr_file_bd"],
+        "type": "convert",
+        "convert": {
+          "type": "constValue",
+          "params": {
+            "const_value": {
+              "type": "value",
+              "value": "\\img\\country\\"
+            }
+          }
+
+        }
+      },
+      {
+        "key": ["ulr_file_bd"],
+        "type": "convert",
+        "convert": {
+          "type": "afterAdd",
+          "params": {
+            "value": {
+              "type": "dataset",
+              "key": ["name_file"]
+            }
+          }
+
+        }
+      },
+      {
+        "key": ["sql"],
+        "type": "postgresql",
+        "sql": {
+          "convert": "object",
+          "text": "select * from libs.country_insert(_name => ?, _capital => ?, _flag => ?)",
+          "params": [
+            {
+              "data": {
+                "type": "dataset",
+                "key": ["name"]
+              },
+              "type": "String",
+              "index": 1
+            },
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["capital"]
+              },
+              "index": 2
+            },
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["ulr_file_bd"]
+              },
+              "index": 3
+            }
+          ]
+        }
+      }
+    ]
+  }
+]
