@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 public enum StoreCommandTypeEnums {
     dataset("dataset"),
+    properties("properties"),
     value("value");
     private final String title;
 }

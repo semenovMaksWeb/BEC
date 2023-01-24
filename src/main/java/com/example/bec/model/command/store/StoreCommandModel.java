@@ -1,10 +1,12 @@
 package com.example.bec.model.command.store;
 
+import com.example.bec.configuration.PropertiesConfig;
 import com.example.bec.enums.StoreCommandTypeEnums;
 import com.example.bec.enums.StoreFindCommandTecEnum;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,17 +14,25 @@ import java.util.Map;
 @Getter
 public class StoreCommandModel {
     private final Map<String, Object> data = new HashMap<>();
+    private final PropertiesConfig propertiesConfig;
 
-    public Object storeGetData(StoreFindCommandModel storeFindCommandModel) {
+    public StoreCommandModel(PropertiesConfig propertiesConfig) {
+        this.propertiesConfig = propertiesConfig;
+    }
+
+    public Object storeGetData(StoreFindCommandModel storeFindCommandModel) throws IOException {
         if (storeFindCommandModel.getType().equals(StoreCommandTypeEnums.value.getTitle())){
             return storeFindCommandModel.getValue();
         }
-        if (storeFindCommandModel.getType().equals(StoreCommandTypeEnums.dataset.getTitle())){
+        else if (storeFindCommandModel.getType().equals(StoreCommandTypeEnums.dataset.getTitle())){
             Object res = searchValue(storeFindCommandModel.getKey());
             if (storeFindCommandModel.getTec() != null){
                 return storeGetTec(storeFindCommandModel.getTec(), res);
             }
             return res;
+        }
+        else if (storeFindCommandModel.getType().equals(StoreCommandTypeEnums.properties.getTitle())){
+            return this.propertiesConfig.getProperties().getProperty(storeFindCommandModel.getProperties());
         }
         return null;
     }
@@ -32,7 +42,7 @@ public class StoreCommandModel {
         }
         return null;
     }
-    public Map<String, Object> storeGetData(Map<String, StoreFindCommandModel> storeFindCommandModelMap) {
+    public Map<String, Object> storeGetData(Map<String, StoreFindCommandModel> storeFindCommandModelMap) throws IOException {
         Map<String, Object> data = new HashMap<>();
         for (Map.Entry<String, StoreFindCommandModel> storeFindCommandModel: storeFindCommandModelMap.entrySet()){
             data.put(

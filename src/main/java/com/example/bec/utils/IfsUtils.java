@@ -9,6 +9,7 @@ import com.example.bec.model.command.store.StoreFindCommandModel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.IOException;
 import java.util.List;
 
 @Getter
@@ -22,14 +23,14 @@ public class IfsUtils {
         this.data = data;
     }
 
-    public boolean checkIfs() {
+    public boolean checkIfs() throws IOException {
         convertValue();
         convertComparisons();
         convertCombination();
         return (boolean) listIfsModel.get(0).getData().getValue();
     }
 
-    private void convertValue() {
+    private void convertValue() throws IOException {
         for(IfsModel ifsModel: listIfsModel){
             if (ifsModel.getData() != null && ifsModel.getData().getType().equals(StoreCommandTypeEnums.dataset.getTitle())) {
                 ifsModel.getData().setValue(this.data.storeGetData(ifsModel.getData()));

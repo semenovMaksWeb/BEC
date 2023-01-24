@@ -26,7 +26,7 @@ public class PostgresqlService {
             PreparedStatement statement,
             List<SqlParamsModel> sqlParamsList,
             StoreCommandModel storeCommandModel
-    ) throws SQLException {
+    ) throws SQLException, IOException {
         if (sqlParamsList == null){
             return;
         }

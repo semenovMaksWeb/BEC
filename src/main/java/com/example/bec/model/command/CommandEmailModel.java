@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public class CommandEmailModel {
     private StoreFindCommandModel subject;
     private Map<String, StoreFindCommandModel> params;
 
-    public Map<String, Object> generatorResult(StoreCommandModel data) {
+    public Map<String, Object> generatorResult(StoreCommandModel data) throws IOException {
         Map<String, Object> result = new HashMap<>();
         result.put("params", data.storeGetData(this.params));
         result.put("from", data.storeGetData(this.from));

@@ -15,6 +15,7 @@ public class StoreFindCommandModel {
     private String type;
     private List<String> key;
     private Object value;
+    private String properties;
     private String tec;
     public StoreFindCommandModel(Object value){
         this.value = value;
