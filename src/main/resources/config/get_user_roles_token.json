@@ -5,7 +5,7 @@
     "convert": {
       "type": "constValue",
       "params": {
-        "const_name": {
+        "const_value": {
           "type": "value",
           "value": "roles-user_get"
         }
