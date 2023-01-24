@@ -11,7 +11,11 @@ public enum ConvertTypeEnum {
     checkPassword("checkPassword"),
     createToken("createToken"),
     afterAdd("afterAdd"),
-    beforeAdd("beforeAdd");
+    beforeAdd("beforeAdd"),
+    addList("addList"),
+
+    createList("createList"),
+    createMap("createMap");
 
     private final String title;
 }

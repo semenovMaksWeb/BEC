@@ -10,9 +10,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ConvertService {
@@ -39,7 +37,10 @@ public class ConvertService {
                 .sign(Algorithm.HMAC256(this.propertiesConfig.getProperties().getProperty("token.secret")));
     }
     public void convertConfig(CommandConvertModel convertModel, StoreCommandModel storeCommandModel, List<String> keys) throws IOException {
-        Map<String, Object> data = storeCommandModel.storeGetData(convertModel.getParams());
+        Map<String, Object> data =  new HashMap<>();
+        if (convertModel.getParams() != null){
+            data = storeCommandModel.storeGetData(convertModel.getParams());
+        }
         /* создать токен */
         Object res = null;
         if (convertModel.getType().equals(ConvertTypeEnum.createToken.getTitle())){
@@ -74,7 +75,20 @@ public class ConvertService {
         else if(convertModel.getType().equals(ConvertTypeEnum.constValue.getTitle())){
             res = data.get("const_value");
         }
-
+        /* сохранить Map<String,Object> */
+        else if(convertModel.getType().equals(ConvertTypeEnum.createMap.getTitle())){
+            res = new HashMap<>(data);
+        }
+        /* create List */
+        else if(convertModel.getType().equals(ConvertTypeEnum.createList.getTitle())){
+            res = new ArrayList<>();
+        }
+        /* add_list */
+        else if(convertModel.getType().equals(ConvertTypeEnum.addList.getTitle())){
+            Object list = storeCommandModel.searchValue(keys);
+            ((List<Object>) list).add(data.get("value"));
+            return;
+        }
         storeCommandModel.updateValue(
                 keys,
                 res
