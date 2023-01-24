@@ -1,5 +1,12 @@
 [
   {
+    "key": ["list"],
+    "type": "convert",
+    "convert": {
+      "type": "createList"
+    }
+  },
+  {
     "key": null,
     "type": "config_link",
     "link": "parsing/lib/read-files-name.json"
@@ -18,6 +25,27 @@
         "link": "parsing/lib/convert-html-to-element.json"
       },
       {
+        "key": ["name_country"],
+        "type": "convert",
+        "convert": {
+          "type": "substring",
+          "params": {
+            "value": {
+              "type": "dataset",
+              "key": ["file_name"]
+            },
+            "start": {
+              "type": "value",
+              "value": 0
+            },
+            "end": {
+              "type": "value",
+              "value": 5
+            }
+          }
+        }
+      },
+      {
         "key": ["id_country"],
         "type": "postgresql",
         "sql": {
@@ -28,7 +56,7 @@
               "type": "String",
               "data": {
                 "type": "dataset",
-                "key": ["file_name"]
+                "key": ["name_country"]
               },
               "index": 1
             }
@@ -36,9 +64,35 @@
         }
       },
       {
-        "key": ["id_country", "country_get_name"],
-        "type": "return"
+        "key": ["map"],
+        "type": "convert",
+        "convert": {
+          "type": "createMap",
+          "params": {
+            "country": {
+              "type": "dataset",
+              "key": ["id_country", "country_get_name"]
+            }
+          }
+        }
+      },
+      {
+        "key": ["list"],
+        "type": "convert",
+        "convert": {
+          "type": "addList",
+          "params": {
+            "value": {
+              "type": "dataset",
+              "key": ["map"]
+            }
+          }
+        }
       }
     ]
+  },
+  {
+    "key": ["list"],
+    "type": "return"
   }
 ]

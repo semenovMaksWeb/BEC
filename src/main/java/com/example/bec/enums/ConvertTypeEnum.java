@@ -15,6 +15,7 @@ public enum ConvertTypeEnum {
     addList("addList"),
 
     createList("createList"),
+    substring("substring"),
     createMap("createMap");
 
     private final String title;

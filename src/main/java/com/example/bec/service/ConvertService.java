@@ -83,6 +83,13 @@ public class ConvertService {
         else if(convertModel.getType().equals(ConvertTypeEnum.createList.getTitle())){
             res = new ArrayList<>();
         }
+        /* substring обрезать строку */
+        else if(convertModel.getType().equals(ConvertTypeEnum.substring.getTitle())){
+            res = data.get("value").toString().substring(
+                    (Integer) data.get("start"),
+                    data.get("value").toString().length() - (Integer) data.get("end")
+            );
+        }
         /* add_list */
         else if(convertModel.getType().equals(ConvertTypeEnum.addList.getTitle())){
             Object list = storeCommandModel.searchValue(keys);
