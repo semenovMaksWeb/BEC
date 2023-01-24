@@ -11,6 +11,7 @@ public enum ParsingHtmlTypeEnum {
     selectElement("selectElement"),
     selectElementText("selectElementText"),
     connectSiteHtml("connectSiteHtml"),
+    parsingHtml("parsingHtml"),
     selectElementAttr("selectElementAttr");
     private final String title;
 }

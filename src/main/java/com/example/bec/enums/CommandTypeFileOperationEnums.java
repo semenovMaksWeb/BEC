@@ -9,6 +9,7 @@ public enum CommandTypeFileOperationEnums {
     createFile("createFile"),
     downloadFileUrl("downloadFileUrl"),
     outputString("outputString"),
+    loaderString("loaderString"),
     outputStream("outputStream");
     private final String title;
 }

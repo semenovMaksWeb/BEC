@@ -45,6 +45,13 @@ public class FileService {
             if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.outputString.getTitle())){
                 fileUtils.updateTextFile(data.get("string").toString());
             }
+            /* чтения файла строкой */
+            if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.loaderString.getTitle())){
+                storeCommandModel.updateValue(
+                        commandFileOperationModel.getKey(),
+                        fileUtils.readFile()
+                );
+            }
         }
     }
 }
