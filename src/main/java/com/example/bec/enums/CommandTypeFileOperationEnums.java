@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum CommandTypeFileOperationEnums {
     createFile("createFile"),
     downloadFileUrl("downloadFileUrl"),
+    outputString("outputString"),
     outputStream("outputStream");
     private final String title;
 }

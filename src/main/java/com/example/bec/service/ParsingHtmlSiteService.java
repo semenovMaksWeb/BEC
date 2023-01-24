@@ -24,6 +24,9 @@ public class ParsingHtmlSiteService {
     public Element connectSite(String url) throws IOException {
         return connectSite(url, "Chrome/4.0.249.0 Safari/532.5", "http://www.google.com");
     }
+    public String connectSiteHtml(String url) throws IOException {
+        return connectSite(url, "Chrome/4.0.249.0 Safari/532.5", "http://www.google.com").html();
+    }
 
     public Element selectElement(String select, Element element){
        return element.select(select).get(0);
@@ -73,6 +76,12 @@ public class ParsingHtmlSiteService {
         if (Objects.equals(commandModel.getParsingSite().getType(), ParsingHtmlTypeEnum.selectElementText.getTitle())) {
             res = this.selectElementText(
                     (Element) storeCommandModel.storeGetData(commandModel.getParsingSite().getParams().get("element"))
+            );
+        }
+        /* получить html строкой */
+        if (Objects.equals(commandModel.getParsingSite().getType(), ParsingHtmlTypeEnum.connectSiteHtml.getTitle())) {
+            res = this.connectSiteHtml(
+                    storeCommandModel.storeGetData(commandModel.getParsingSite().getParams().get("url")).toString()
             );
         }
         return res;

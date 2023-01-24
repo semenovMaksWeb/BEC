@@ -41,6 +41,10 @@ public class FileService {
             if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.outputStream.getTitle())){
                 fileUtils.outputStream((ReadableByteChannel) data.get("byte"));
             }
+            /* запись файл по строку */
+            if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.outputString.getTitle())){
+                fileUtils.updateTextFile(data.get("string").toString());
+            }
         }
     }
 }

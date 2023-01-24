@@ -10,7 +10,7 @@ public enum ParsingHtmlTypeEnum {
     selectElements("selectElements"),
     selectElement("selectElement"),
     selectElementText("selectElementText"),
+    connectSiteHtml("connectSiteHtml"),
     selectElementAttr("selectElementAttr");
-
     private final String title;
 }
