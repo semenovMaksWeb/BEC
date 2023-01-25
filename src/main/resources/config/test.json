@@ -20,26 +20,13 @@
       "params": {
         "value": {
           "type": "value",
-          "value": "\\html-parsing\\"
+          "value": "\\convert-bd\\"
         }
       }
     }
   },
   {
-    "key": ["html_text"],
-    "type": "parsing_html",
-    "parsingSite": {
-      "type": "connectSiteHtml",
-      "params": {
-        "url": {
-          "type": "value",
-          "value": "https://xn--80aed5aobb1a.xn--p1ai/"
-        }
-      }
-    }
-  },
-  {
-    "key": ["file_save"],
+    "key": null,
     "type": "file",
     "file":  {
       "catalog": {
@@ -48,22 +35,45 @@
       },
       "name": {
         "type": "value",
-        "value": "автолого.html"
+        "value": "1.json"
       },
       "operation": [
         {
-          "type": "createFile"
-        },
-        {
-          "type": "outputString",
-          "params": {
-            "string": {
-              "type": "dataset",
-              "key": ["html_text"]
-            }
-          }
+          "key": ["json_map_bd"],
+          "type": "outputJson"
         }
       ]
     }
+  },
+  {
+    "key": null,
+    "type": "foreach",
+    "foreach": {
+      "list": ["json_map_bd", "data"],
+      "elem": ["elem"]
+    },
+    "children": [
+      {
+        "key": ["res"],
+        "type": "postgresql",
+        "sql": {
+          "text": "EXECUTE format(select * from ?)",
+          "params": [
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["json_map_bd", "name"]
+              },
+              "index": 1
+            }
+          ]
+        }
+      },
+      {
+        "type": "return",
+        "key": ["res"]
+      }
+    ]
   }
 ]
