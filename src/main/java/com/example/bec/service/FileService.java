@@ -26,7 +26,7 @@ public class FileService {
                 data = storeCommandModel.storeGetData(commandFileOperationModel.getParams());
             }
             /* создание файла */
-            if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.createFile.getTitle())){
+           else if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.createFile.getTitle())){
                 fileUtils.createFile();
             }
             /* скачать файл по url */
@@ -63,6 +63,13 @@ public class FileService {
                 storeCommandModel.updateValue(
                         commandFileOperationModel.getKey(),
                         fileUtils.catalogFileNamesString()
+                );
+            }
+            /* возращение имен файлов в каталоге [String] */
+            if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.outputJson.getTitle())){
+                storeCommandModel.updateValue(
+                        commandFileOperationModel.getKey(),
+                        fileUtils.getJsonFile()
                 );
             }
         }

@@ -1,6 +1,10 @@
 package com.example.bec.utils;
 
 import com.example.bec.model.SelectItemModel;
+import com.example.bec.model.command.CommandModel;
+import com.example.bec.model.parsing.JsonConvertBd;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
 import java.net.URL;
@@ -9,6 +13,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class FileUtils {
@@ -89,5 +94,9 @@ public class FileUtils {
         FileWriter writer = new FileWriter(file);
         writer.write(text);
         writer.close();
+    }
+    public Map<String, Object> getJsonFile() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(this.readFile(), new TypeReference<Map<String, Object> >(){});
     }
 }

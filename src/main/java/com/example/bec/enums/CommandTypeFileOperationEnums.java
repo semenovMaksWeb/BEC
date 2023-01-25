@@ -12,6 +12,7 @@ public enum CommandTypeFileOperationEnums {
     loaderString("loaderString"),
     fileNameCatalog("fileNameCatalog"),
     catalogFileNamesString("catalogFileNamesString"),
-    outputStream("outputStream");
+    outputStream("outputStream"),
+    outputJson("outputJson");
     private final String title;
 }
