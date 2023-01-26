@@ -1,5 +1,23 @@
 [
   {
+    "key": ["right_const_name"],
+    "type": "convert",
+    "convert": {
+      "type": "constValue",
+      "params": {
+        "const_value": {
+          "type": "value",
+          "value": "bec-command-tec-start"
+        }
+      }
+    }
+  },
+  {
+    "key": null,
+    "type": "config_link",
+    "link": "check_right.json"
+  },
+  {
     "key": ["url_catalog"],
     "type": "convert",
     "convert": {
