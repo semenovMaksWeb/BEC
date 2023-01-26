@@ -66,7 +66,9 @@ public class PostgresqlService {
                 /* это json */
                 else if (rs.getObject(i) != null && rs.getObject(i) instanceof PGobject ){
                    PGobject pGobject = (PGobject) rs.getObject(i);
-                   map.put(metaData.getColumnName(i),new ObjectMapper().readValue(pGobject.getValue(), Object.class));
+                   if (!pGobject.getType().equals("void")){
+                       map.put(metaData.getColumnName(i),new ObjectMapper().readValue(pGobject.getValue(), Object.class));
+                   }
                 }
                 /* это примитив */
                 else {

@@ -6,6 +6,7 @@ import com.example.bec.configuration.PropertiesConfig;
 import com.example.bec.enums.ConvertTypeEnum;
 import com.example.bec.model.command.CommandConvertModel;
 import com.example.bec.model.command.store.StoreCommandModel;
+import com.example.bec.model.command.store.StoreFindCommandModel;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,32 @@ public class ConvertService {
                 .withIssuedAt(new Date())
                 .sign(Algorithm.HMAC256(this.propertiesConfig.getProperties().getProperty("token.secret")));
     }
+    public String createMapKeyString(Map<String, Object> map){
+        StringBuilder keyString = new StringBuilder();
+        for(String key: map.keySet()){
+            if (!keyString.toString().equals("")){
+                keyString.append(",");
+            }
+            keyString.append(key);
+        }
+        return keyString.toString();
+    }
+    public String createMapValueString(Map<String, Object> map){
+        StringBuilder keyString = new StringBuilder();
+        for(Map.Entry<String, Object> value: map.entrySet()){
+            if (!keyString.toString().equals("")){
+                keyString.append(",");
+            }
+            if (value.getValue() instanceof String){
+                keyString.append('\'').append(value.getValue().toString()).append('\'');
+            }else {
+                keyString.append(value.getValue());
+            }
+
+        }
+        return keyString.toString();
+    }
+
     public void convertConfig(CommandConvertModel convertModel, StoreCommandModel storeCommandModel, List<String> keys) throws IOException {
         Map<String, Object> data =  new HashMap<>();
         if (convertModel.getParams() != null){
@@ -89,6 +116,14 @@ public class ConvertService {
                     (Integer) data.get("start"),
                     data.get("value").toString().length() - (Integer) data.get("end")
             );
+        }
+        /* createMapKeyString */
+        else if (convertModel.getType().equals(ConvertTypeEnum.createMapKeyString.getTitle())){
+            res = this.createMapKeyString((Map<String, Object>) data.get("map"));
+        }
+        /* createMapKeyString */
+        else if (convertModel.getType().equals(ConvertTypeEnum.createMapValueString.getTitle())){
+            res = this.createMapValueString((Map<String, Object>) data.get("map"));
         }
         /* add_list */
         else if(convertModel.getType().equals(ConvertTypeEnum.addList.getTitle())){

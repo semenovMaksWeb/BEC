@@ -10,6 +10,8 @@ public enum ConvertTypeEnum {
     constValue("constValue"),
     checkPassword("checkPassword"),
     createToken("createToken"),
+    createMapKeyString("createMapKeyString"),
+    createMapValueString("createMapValueString"),
     afterAdd("afterAdd"),
     beforeAdd("beforeAdd"),
     addList("addList"),
