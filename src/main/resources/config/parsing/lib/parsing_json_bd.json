@@ -1,0 +1,125 @@
+[
+  {
+    "key": ["url_catalog"],
+    "type": "convert",
+    "convert": {
+      "type": "constValue",
+      "params": {
+        "const_value": {
+          "type": "properties",
+          "properties": "url.static"
+        }
+      }
+    }
+  },
+  {
+    "key": ["url_catalog"],
+    "type": "convert",
+    "convert": {
+      "type": "afterAdd",
+      "params": {
+        "value": {
+          "type": "value",
+          "value": "\\convert-bd\\"
+        }
+      }
+    }
+  },
+  {
+    "key": null,
+    "type": "file",
+    "file":  {
+      "catalog": {
+        "type": "dataset",
+        "key": ["url_catalog"]
+      },
+      "name": {
+        "type": "dataset",
+        "key": ["file_name"]
+      },
+      "operation": [
+        {
+          "key": ["json_map_bd"],
+          "type": "outputJson"
+        }
+      ]
+    }
+  },
+  {
+    "key": null,
+    "type": "foreach",
+    "foreach": {
+      "list": ["json_map_bd", "data"],
+      "elem": ["elem"]
+    },
+    "children": [
+      {
+        "key": ["keyString"],
+        "type": "convert",
+        "convert": {
+          "type": "createMapKeyString",
+          "params": {
+            "map": {
+              "type": "dataset",
+              "key": ["elem"]
+            }
+          }
+        }
+      },
+      {
+        "key": ["valueString"],
+        "type": "convert",
+        "convert": {
+          "type": "createMapValueString",
+          "params": {
+            "map": {
+              "type": "dataset",
+              "key": ["elem"]
+            }
+          }
+        }
+      },
+      {
+        "key": ["res"],
+        "type": "postgresql",
+        "sql": {
+          "text": "SELECT * FROM public.insert_into_dynamic(_schema => ?, _table => ?, _column => ?, _values => ?)",
+          "params": [
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["json_map_bd", "schema"]
+              },
+              "index": 1
+            },
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["json_map_bd", "name"]
+              },
+              "index": 2
+            },
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["keyString"]
+              },
+              "index": 3
+            },
+            {
+              "type": "String",
+              "data": {
+                "type": "dataset",
+                "key": ["valueString"]
+              },
+              "index": 4
+            }
+          ]
+        }
+      }
+    ]
+  }
+]
