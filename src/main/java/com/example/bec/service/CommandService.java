@@ -9,6 +9,7 @@ import com.example.bec.utils.IfsUtils;
 import com.example.bec.utils.ValidateUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -27,13 +28,16 @@ public class CommandService {
     private final ConvertService convertService;
     private final ParsingHtmlSiteService parsingHtmlSiteService;
     private final FileService fileService;
+
+    private final ExcelService excelService;
     public CommandService(
             PropertiesConfig propertiesConfig,
             @Lazy PostgresqlService postgresqlService,
             @Lazy EmailCustomService emailCustomService,
             @Lazy ConvertService convertService,
             @Lazy ParsingHtmlSiteService parsingHtmlSiteService,
-            @Lazy FileService fileService
+            @Lazy FileService fileService,
+            @Lazy ExcelService excelService
     ){
         this.propertiesConfig = propertiesConfig;
         this.postgresqlService = postgresqlService;
@@ -41,6 +45,7 @@ public class CommandService {
         this.convertService = convertService;
         this.parsingHtmlSiteService = parsingHtmlSiteService;
         this.fileService = fileService;
+        this.excelService = excelService;
     }
 
     private List<CommandModel> getConfigFileName(String url) throws IOException {
@@ -50,20 +55,20 @@ public class CommandService {
     }
 
     /* config и store */
-    public Object run(List<CommandModel> config, Map<String, Object> params) throws SQLException, MessagingException, IOException {
+    public Object run(List<CommandModel> config, Map<String, Object> params) throws SQLException, MessagingException, IOException, InvalidFormatException {
         StoreCommandModel storeCommandModel = new StoreCommandModel(propertiesConfig);
         storeCommandModel.updateData(params);
         return this.run(config, storeCommandModel);
     }
 
     /* url file и store */
-    public Object run(String url, StoreCommandModel storeCommandModel) throws IOException, SQLException, MessagingException {
+    public Object run(String url, StoreCommandModel storeCommandModel) throws IOException, SQLException, MessagingException, InvalidFormatException {
         List<CommandModel> config = this.getConfigFileName(url);
         return this.run(config, storeCommandModel);
     }
 
     /* url file и store */
-    public Object run(String  url, Map<String, Object> params) throws IOException, SQLException, MessagingException {
+    public Object run(String  url, Map<String, Object> params) throws IOException, SQLException, MessagingException, InvalidFormatException {
         List<CommandModel> config = this.getConfigFileName(url);
         StoreCommandModel storeCommandModel = new StoreCommandModel(propertiesConfig);
         storeCommandModel.updateData(params);
@@ -71,7 +76,7 @@ public class CommandService {
     }
 
     /*  config и store */
-    public Object run(List<CommandModel> config, StoreCommandModel storeCommandModel) throws SQLException, IOException, MessagingException {
+    public Object run(List<CommandModel> config, StoreCommandModel storeCommandModel) throws SQLException, IOException, MessagingException, InvalidFormatException {
         /* прогон команд */
         for (CommandModel commandModel : config) {
             /* ifs */
@@ -105,6 +110,10 @@ public class CommandService {
                 if (res != null){
                     return res;
                 }
+            }
+            /* excel */
+            else if (Objects.equals(commandModel.getType(), CommandTypeEnum.excel.getTitle())) {
+                this.excelService.configExcel(storeCommandModel, commandModel.getExcel());
             }
             /* email */
             else if (Objects.equals(commandModel.getType(), CommandTypeEnum.email.getTitle())) {

@@ -1,0 +1,61 @@
+[
+  {
+    "key": ["sql"],
+    "type": "postgresql",
+    "sql": {
+      "text": "select * from tec.user"
+    }
+  },
+  {
+    "key": ["excel"],
+    "type": "excel",
+    "excel":  {
+      "catalog": {
+        "type": "value",
+        "value": "D:\\maks\\BEC\\src\\main\\resources\\files\\"
+      },
+      "name": {
+        "type": "value",
+        "value": "1.xlsx"
+      },
+      "operation": [
+        {
+          "key": ["excel_workbook"],
+          "type": "createSheet",
+          "params": {
+            "name": {
+              "type": "value",
+              "value": "Пользователь"
+            }
+          }
+        },
+        {
+          "key": null,
+          "type": "createCell",
+          "params": {
+            "sheet": {
+              "type": "dataset",
+              "key": ["excel_workbook"]
+            },
+            "row": {
+              "type": "value",
+              "value": 0
+            },
+            "cell": {
+              "type": "value",
+              "value": 0
+            },
+            "value": {
+              "type": "value",
+              "value": "id"
+            }
+          }
+        },
+        {
+          "key": null,
+          "type": "setExcel"
+        }
+      ]
+    }
+  }
+]

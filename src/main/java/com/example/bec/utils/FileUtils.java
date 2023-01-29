@@ -33,18 +33,21 @@ public class FileUtils {
         }
         return this.file;
     }
+    public FileInputStream readFileStream() throws FileNotFoundException {
+       return new FileInputStream(new File(this.file.toURI()));
+    }
+    public InputStream readInputStream() throws FileNotFoundException {
+        return new FileInputStream(new File(this.file.toURI()));
+    }
 
-    public String readFile() throws IOException {
+     public String readFile() throws IOException {
         System.out.println(this.file.toPath());
         return new String(Files.readAllBytes(this.file.toPath()));
     }
 
     public void createFile() throws IOException {
-        if (this.catalog.mkdirs()){
-            if (this.file.createNewFile()){
-                System.out.println("src.File create");
-            }
-        }
+        this.catalog.mkdirs();
+        this.file.createNewFile();
     }
     public ReadableByteChannel downloadFileUrl(String url) throws IOException {
         return Channels.newChannel(new URL(url).openStream());
@@ -79,6 +82,10 @@ public class FileUtils {
         }
         return namesFiles;
     }
+    public FileOutputStream getFileOutputSteam() throws FileNotFoundException {
+        return new FileOutputStream(this.file) ;
+    }
+
     public void outputStream(ReadableByteChannel readableByteChannel) throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(this.file);
         fileOutputStream.getChannel()

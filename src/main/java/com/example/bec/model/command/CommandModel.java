@@ -29,4 +29,5 @@ public class CommandModel {
     private CommandConvertModel convert; // type = convert
     private ForeachModel foreach;
     private CommandFileModel file;
+    private CommandFileModel excel;
 }

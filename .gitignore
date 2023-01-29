@@ -30,4 +30,6 @@ build/
 
 application.properties
 .properties
+
 src/main/resources/static
+src/main/resources/files/
