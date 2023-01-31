@@ -10,6 +10,7 @@ public enum CommandExcelType {
     getSheet("getSheet"),
     setExcel("setExcel"),
     createCell("createCell"),
+    createRowArrayCell("createRowArrayCell"),
     generatorDataExcel("generatorDataExcel");
     private final String title;
 }

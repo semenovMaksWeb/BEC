@@ -13,7 +13,6 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.stereotype.Service;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
@@ -29,21 +28,26 @@ public class ExcelService {
         return wb.getSheet(name);
     }
 
-    public void generatorDataExcel(List<Map<String, Object>> data, XSSFSheet sheet){
-        XSSFRow rowColumn = sheet.createRow(0);
-        rowCreateCell(data.get(0).entrySet(), rowColumn, "key");
-
-        int index = 0;
+    public void generatorDataExcel(List<Map<String, Object>> data, XSSFSheet sheet, int rowIndex, ArrayList<String> columnList){
         for (Map<String , Object> elem : data){
-            index++;
-            XSSFRow row = sheet.createRow(index);
-            rowCreateCell(elem.entrySet(), row, "value");
+            XSSFRow row = sheet.createRow(rowIndex);
+            int indexCell = 0;
+
+            for (String columnName : columnList) {
+                createCell(row, elem.get(columnName), indexCell);
+                indexCell++;
+            }
+            rowIndex++;
+        }
+        for(int index = 0; index < columnList.size(); index++) {
+            sheet.autoSizeColumn(index);
         }
     }
     public void setExcel(Workbook workbook, FileOutputStream fos) throws IOException {
         workbook.write(fos);
         fos.close();
     }
+
 
     public void configExcel(StoreCommandModel storeCommandModel, CommandFileModel commandFileModel) throws IOException, InvalidFormatException {
         FileUtils fileUtils = new FileUtils(
@@ -75,20 +79,34 @@ public class ExcelService {
                 }
                 /* заполнить данными excel */
                 else if (commandFileOperationModel.getType().equals(CommandExcelType.generatorDataExcel.getTitle())){
-                    this.generatorDataExcel((List<Map<String, Object>>) data.get("data"), (XSSFSheet) data.get("sheet"));
+                    this.generatorDataExcel(
+                            (List<Map<String, Object>>) data.get("data"),
+                            (XSSFSheet) data.get("sheet"),
+                            (Integer) data.get("row"),
+                            (ArrayList<String>) data.get("column")
+                    );
                 }
                 /* заполнить данными excel */
                 else if (commandFileOperationModel.getType().equals(CommandExcelType.setExcel.getTitle())){
                     this.setExcel(workbook, fileUtils.getFileOutputSteam());
                 }
-                /* заполнить данными excel */
+                /* заполнить данными excel ячейку */
                 else if (commandFileOperationModel.getType().equals(CommandExcelType.createCell.getTitle())){
                     data.get("row");
-                    this.createCell(
+                    this.saveCell(
                             (Sheet) data.get("sheet"),
                             (Integer) data.get("row"),
                             (Integer) data.get("cell"),
                             data.get("value")
+                    );
+                }
+                /* заполнить данными excel строку ячейками из массива */
+                else if (commandFileOperationModel.getType().equals(CommandExcelType.createRowArrayCell.getTitle())){
+                    data.get("row");
+                    this.createRowArrayCell(
+                            (Sheet) data.get("sheet"),
+                            (Integer) data.get("row"),
+                            (ArrayList<String>) data.get("value")
                     );
                 }
             } catch (IOException e) {
@@ -97,20 +115,18 @@ public class ExcelService {
         });
     }
 
-    private void rowCreateCell(Set<Map.Entry<String , Object>> data, XSSFRow row, String type ){
-        int indexCol = -1;
-        for (Map.Entry<String, Object> elem : data){
-            indexCol++;
-            if (type.equals("key")){
-                createCell(row, elem.getKey(), indexCol);
-            }else {
-                createCell(row, elem.getValue(), indexCol);
-            }
-        }
-    }
-    public void createCell(Sheet sheet, int row, int cell, Object value){
+    public void saveCell(Sheet sheet, int row, int cell, Object value){
         sheet.createRow(row);
         this.createCell(sheet.getRow(row), value, cell);
+    }
+
+    public void createRowArrayCell(Sheet sheet, int rowIndex, ArrayList<String> value){
+        Row row = sheet.createRow(rowIndex);
+        int index = -1;
+        for (String elem : value){
+            index++;
+            this.createCell(row, elem, index);
+        }
     }
 
     private void createCell(Row row, Object elem, int index){

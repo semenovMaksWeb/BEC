@@ -31,7 +31,7 @@
         },
         {
           "key": null,
-          "type": "createCell",
+          "type": "createRowArrayCell",
           "params": {
             "sheet": {
               "type": "dataset",
@@ -41,13 +41,30 @@
               "type": "value",
               "value": 0
             },
-            "cell": {
-              "type": "value",
-              "value": 0
-            },
             "value": {
               "type": "value",
-              "value": "id"
+              "value": ["Индификатор", "Ник", "Почта"]
+            }
+          }
+        },
+        {
+          "type": "generatorDataExcel",
+          "params": {
+            "sheet": {
+              "type": "dataset",
+              "key": ["excel_workbook"]
+            },
+            "column": {
+              "type": "value",
+              "value": ["id", "nik", "email"]
+            },
+            "row": {
+              "type": "value",
+              "value": 1
+            },
+            "data": {
+              "type": "dataset",
+              "key": ["sql"]
             }
           }
         },
