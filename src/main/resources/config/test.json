@@ -10,14 +10,6 @@
     "key": ["excel"],
     "type": "excel",
     "excel":  {
-      "catalog": {
-        "type": "value",
-        "value": "D:\\maks\\BEC\\src\\main\\resources\\files\\"
-      },
-      "name": {
-        "type": "value",
-        "value": "1.xlsx"
-      },
       "operation": [
         {
           "key": ["excel_workbook"],
@@ -67,10 +59,6 @@
               "key": ["sql"]
             }
           }
-        },
-        {
-          "key": null,
-          "type": "setExcel"
         }
       ]
     }

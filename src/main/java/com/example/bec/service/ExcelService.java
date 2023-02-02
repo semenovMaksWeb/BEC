@@ -1,14 +1,13 @@
 package com.example.bec.service;
 
 import com.example.bec.enums.CommandExcelType;
-import com.example.bec.model.command.file.CommandFileModel;
+import com.example.bec.model.command.CommandExcelModel;
 import com.example.bec.model.command.store.StoreCommandModel;
-import com.example.bec.utils.FileUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.springframework.stereotype.Service;
@@ -28,9 +27,9 @@ public class ExcelService {
         return wb.getSheet(name);
     }
 
-    public void generatorDataExcel(List<Map<String, Object>> data, XSSFSheet sheet, int rowIndex, ArrayList<String> columnList){
+    public void generatorDataExcel(List<Map<String, Object>> data, Sheet sheet, int rowIndex, ArrayList<String> columnList){
         for (Map<String , Object> elem : data){
-            XSSFRow row = sheet.createRow(rowIndex);
+            Row row = sheet.createRow(rowIndex);
             int indexCell = 0;
 
             for (String columnName : columnList) {
@@ -49,14 +48,9 @@ public class ExcelService {
     }
 
 
-    public void configExcel(StoreCommandModel storeCommandModel, CommandFileModel commandFileModel) throws IOException, InvalidFormatException {
-        FileUtils fileUtils = new FileUtils(
-                storeCommandModel.storeGetData(commandFileModel.getCatalog()).toString(),
-                storeCommandModel.storeGetData(commandFileModel.getName()).toString()
-        );
-        fileUtils.createFile();
-        Workbook workbook = WorkbookFactory.create(fileUtils.readInputStream());
-        commandFileModel.getOperation().forEach(commandFileOperationModel -> {
+    public void configExcel(StoreCommandModel storeCommandModel, CommandExcelModel commandExcelModel) throws IOException, InvalidFormatException {
+         Workbook workbook = new HSSFWorkbook();
+        commandExcelModel.getOperation().forEach(commandFileOperationModel -> {
             try {
                 Map<String , Object> data = new HashMap<>();
                 if (commandFileOperationModel.getParams() != null){
@@ -81,14 +75,10 @@ public class ExcelService {
                 else if (commandFileOperationModel.getType().equals(CommandExcelType.generatorDataExcel.getTitle())){
                     this.generatorDataExcel(
                             (List<Map<String, Object>>) data.get("data"),
-                            (XSSFSheet) data.get("sheet"),
+                            (Sheet) data.get("sheet"),
                             (Integer) data.get("row"),
                             (ArrayList<String>) data.get("column")
                     );
-                }
-                /* заполнить данными excel */
-                else if (commandFileOperationModel.getType().equals(CommandExcelType.setExcel.getTitle())){
-                    this.setExcel(workbook, fileUtils.getFileOutputSteam());
                 }
                 /* заполнить данными excel ячейку */
                 else if (commandFileOperationModel.getType().equals(CommandExcelType.createCell.getTitle())){
