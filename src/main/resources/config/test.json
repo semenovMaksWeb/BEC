@@ -10,7 +10,7 @@
     "key": ["excel"],
     "type": "excel",
     "excel":  {
-      "typeExcel": "xls",
+      "typeExcel": "xlsx",
       "operation": [
         {
           "key": ["sheet"],
@@ -67,7 +67,7 @@
           "params": {
             "name": {
               "type": "value",
-              "value": "Отчет_по_пользователям.xls"
+              "value": "Отчет_по_пользователям.xlsx"
             }
           }
         }

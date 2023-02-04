@@ -65,15 +65,16 @@ public class ExcelService {
                 .contentLength(bytes.length)
                 .body(bytes);
     }
-    public void configExcel(StoreCommandModel storeCommandModel, CommandExcelModel commandExcelModel) {
-        Workbook workbookDefault = new HSSFWorkbook();
-        if (commandExcelModel.getTypeExcel().equals("xls")){
-            workbookDefault = new HSSFWorkbook();
-        }else if (commandExcelModel.getTypeExcel().equals("xlsx")){
-            workbookDefault = new XSSFWorkbook();
+    private Workbook generatorWorkbook(String type){
+        if (type.equals("xls")){
+            return new HSSFWorkbook();
+        }else if (type.equals("xlsx")){
+            return new  XSSFWorkbook();
         }
-        Workbook workbook = workbookDefault;
-
+        return new HSSFWorkbook();
+    }
+    public void configExcel(StoreCommandModel storeCommandModel, CommandExcelModel commandExcelModel) {
+        Workbook workbook = this.generatorWorkbook(commandExcelModel.getTypeExcel());
         commandExcelModel.getOperation().forEach(commandFileOperationModel -> {
             try {
                 Map<String , Object> data = new HashMap<>();
