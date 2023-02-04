@@ -1,5 +1,44 @@
 [
   {
+    "key": ["url_catalog"],
+    "type": "convert",
+    "convert": {
+      "type": "constValue",
+      "params": {
+        "const_value": {
+          "type": "properties",
+          "properties": "url.static"
+        }
+      }
+    }
+  },
+  {
+    "key": ["url_catalog"],
+    "type": "convert",
+    "convert": {
+      "type": "afterAdd",
+      "params": {
+        "value": {
+          "type": "value",
+          "value": "\\files\\\\"
+        }
+      }
+    }
+  },
+  {
+    "key": ["file_name"],
+    "type": "convert",
+    "convert": {
+      "type": "constValue",
+      "params": {
+        "const_value": {
+          "type": "value",
+          "value": "1.xlsx"
+        }
+      }
+    }
+  },
+  {
     "key": ["sql"],
     "type": "postgresql",
     "sql": {
@@ -68,6 +107,19 @@
             "name": {
               "type": "value",
               "value": "Отчет_по_пользователям.xlsx"
+            }
+          }
+        },
+        {
+          "type": "saveExcelFile",
+          "params": {
+            "url": {
+              "type": "dataset",
+              "key": ["url_catalog"]
+            },
+            "name": {
+              "type": "dataset",
+              "key": ["file_name"]
             }
           }
         }

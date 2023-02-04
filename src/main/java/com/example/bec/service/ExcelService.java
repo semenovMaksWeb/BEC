@@ -3,6 +3,7 @@ package com.example.bec.service;
 import com.example.bec.enums.CommandExcelType;
 import com.example.bec.model.command.CommandExcelModel;
 import com.example.bec.model.command.store.StoreCommandModel;
+import com.example.bec.utils.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
@@ -25,54 +26,17 @@ import java.util.*;
 
 @Service
 public class ExcelService {
-
-    public void createSheet(Workbook wb, String name){
-        wb.createSheet(name);
-    }
-
-    public Sheet getSheet(Workbook wb, String name){
-        return wb.getSheet(name);
-    }
-
-    public void generatorDataExcel(List<Map<String, Object>> data, Sheet sheet, int rowIndex, ArrayList<String> columnList){
-        for (Map<String , Object> elem : data){
-            Row row = sheet.createRow(rowIndex);
-            int indexCell = 0;
-
-            for (String columnName : columnList) {
-                createCell(row, elem.get(columnName), indexCell);
-                indexCell++;
-            }
-            rowIndex++;
-        }
-        for(int index = 0; index < columnList.size(); index++) {
-            sheet.autoSizeColumn(index);
-        }
-    }
-    public ResponseEntity<byte[]> saveExcelResponse(Workbook workbook, String name) throws IOException {
+    public byte[] getByteExcel(Workbook workbook){
         byte[] bytes = null;
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             workbook.write(out);
             bytes = out.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add("content-disposition", "attachment; filename=" +
-                URLEncoder.encode(name, StandardCharsets.UTF_8));
+        return  bytes;
+    }
 
-        return ResponseEntity.ok()
-                .headers(responseHeaders)
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .contentLength(bytes.length)
-                .body(bytes);
-    }
-    private Workbook generatorWorkbook(String type){
-        if (type.equals("xls")){
-            return new HSSFWorkbook();
-        }else if (type.equals("xlsx")){
-            return new  XSSFWorkbook();
-        }
-        return new HSSFWorkbook();
-    }
     public void configExcel(StoreCommandModel storeCommandModel, CommandExcelModel commandExcelModel) {
         Workbook workbook = this.generatorWorkbook(commandExcelModel.getTypeExcel());
         commandExcelModel.getOperation().forEach(commandFileOperationModel -> {
@@ -95,10 +59,10 @@ public class ExcelService {
                 }
                 /* получить страницу excel */
                 else if (commandFileOperationModel.getType().equals(CommandExcelType.getSheet.getTitle())){
-                   storeCommandModel.updateValue(
-                           commandFileOperationModel.getKey(),
-                           this.getSheet(workbook, data.get("name").toString())
-                   );
+                    storeCommandModel.updateValue(
+                            commandFileOperationModel.getKey(),
+                            this.getSheet(workbook, data.get("name").toString())
+                    );
                 }
                 /* заполнить данными excel */
                 else if (commandFileOperationModel.getType().equals(CommandExcelType.generatorDataExcel.getTitle())){
@@ -115,6 +79,9 @@ public class ExcelService {
                             commandFileOperationModel.getKey(),
                             this.saveExcelResponse(workbook, data.get("name").toString())
                     );
+                }
+                else if (commandFileOperationModel.getType().equals(CommandExcelType.saveExcelFile.getTitle())){
+                    this.saveExcelFile(workbook, data.get("url").toString(), data.get("name").toString());
                 }
                 /* заполнить данными excel ячейку */
                 else if (commandFileOperationModel.getType().equals(CommandExcelType.createCell.getTitle())){
@@ -139,6 +106,59 @@ public class ExcelService {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    public void saveExcelFile(Workbook workbook, String url, String name) throws IOException {
+        byte[] bytes = getByteExcel(workbook);
+        FileUtils fileUtils = new FileUtils(url, name);
+        fileUtils.createFile();
+        fileUtils.outputStream(bytes);
+    }
+
+    public ResponseEntity<byte[]> saveExcelResponse(Workbook workbook, String name) throws IOException {
+        byte[] bytes = getByteExcel(workbook);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("content-disposition", "attachment; filename=" +
+                URLEncoder.encode(name, StandardCharsets.UTF_8));
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(bytes.length)
+                .body(bytes);
+    }
+    public void createSheet(Workbook wb, String name){
+        wb.createSheet(name);
+    }
+
+    public Sheet getSheet(Workbook wb, String name){
+        return wb.getSheet(name);
+    }
+
+    public void generatorDataExcel(List<Map<String, Object>> data, Sheet sheet, int rowIndex, ArrayList<String> columnList){
+        for (Map<String , Object> elem : data){
+            Row row = sheet.createRow(rowIndex);
+            int indexCell = 0;
+
+            for (String columnName : columnList) {
+                createCell(row, elem.get(columnName), indexCell);
+                indexCell++;
+            }
+            rowIndex++;
+        }
+        for(int index = 0; index < columnList.size(); index++) {
+            sheet.autoSizeColumn(index);
+        }
+    }
+
+
+
+    private Workbook generatorWorkbook(String type){
+        if (type.equals("xls")){
+            return new HSSFWorkbook();
+        }else if (type.equals("xlsx")){
+            return new  XSSFWorkbook();
+        }
+        return new HSSFWorkbook();
     }
 
     public void saveCell(Sheet sheet, int row, int cell, Object value){

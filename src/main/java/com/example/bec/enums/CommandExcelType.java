@@ -8,8 +8,8 @@ import lombok.Getter;
 public enum CommandExcelType {
     createSheet("createSheet"),
     getSheet("getSheet"),
-    setExcel("setExcel"),
     saveExcelResponse("saveExcelResponse"),
+    saveExcelFile("saveExcelFile"),
     createCell("createCell"),
     createRowArrayCell("createRowArrayCell"),
     generatorDataExcel("generatorDataExcel");

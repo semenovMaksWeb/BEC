@@ -85,6 +85,11 @@ public class FileUtils {
     public FileOutputStream getFileOutputSteam() throws FileNotFoundException {
         return new FileOutputStream(this.file) ;
     }
+    public void outputStream(byte[] bytes) throws IOException {
+        FileOutputStream fileOutputStream = new FileOutputStream(this.file);
+        fileOutputStream.write(bytes);
+        fileOutputStream.close();
+    }
 
     public void outputStream(ReadableByteChannel readableByteChannel) throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(this.file);
