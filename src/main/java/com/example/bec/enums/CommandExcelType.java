@@ -9,6 +9,7 @@ public enum CommandExcelType {
     createSheet("createSheet"),
     getSheet("getSheet"),
     setExcel("setExcel"),
+    saveExcelResponse("saveExcelResponse"),
     createCell("createCell"),
     createRowArrayCell("createRowArrayCell"),
     generatorDataExcel("generatorDataExcel");

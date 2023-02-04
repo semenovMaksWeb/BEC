@@ -10,9 +10,10 @@
     "key": ["excel"],
     "type": "excel",
     "excel":  {
+      "typeExcel": "xls",
       "operation": [
         {
-          "key": ["excel_workbook"],
+          "key": ["sheet"],
           "type": "createSheet",
           "params": {
             "name": {
@@ -27,7 +28,7 @@
           "params": {
             "sheet": {
               "type": "dataset",
-              "key": ["excel_workbook"]
+              "key": ["sheet"]
             },
             "row": {
               "type": "value",
@@ -44,7 +45,7 @@
           "params": {
             "sheet": {
               "type": "dataset",
-              "key": ["excel_workbook"]
+              "key": ["sheet"]
             },
             "column": {
               "type": "value",
@@ -59,8 +60,22 @@
               "key": ["sql"]
             }
           }
+        },
+        {
+          "type": "saveExcelResponse",
+          "key": ["result_excel"],
+          "params": {
+            "name": {
+              "type": "value",
+              "value": "Отчет_по_пользователям.xls"
+            }
+          }
         }
       ]
     }
+  },
+  {
+    "type": "return",
+    "key": ["result_excel"]
   }
 ]

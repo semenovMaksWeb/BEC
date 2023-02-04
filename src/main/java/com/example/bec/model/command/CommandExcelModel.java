@@ -14,4 +14,5 @@ import java.util.List;
 @NoArgsConstructor
 public class CommandExcelModel {
     private List<CommandFileOperationModel> operation;
+    private  String typeExcel;
 }

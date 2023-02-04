@@ -5,15 +5,22 @@ import com.example.bec.model.command.CommandExcelModel;
 import com.example.bec.model.command.store.StoreCommandModel;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+
+import org.springframework.http.HttpHeaders;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
@@ -42,19 +49,40 @@ public class ExcelService {
             sheet.autoSizeColumn(index);
         }
     }
-    public void setExcel(Workbook workbook, FileOutputStream fos) throws IOException {
-        workbook.write(fos);
-        fos.close();
+    public ResponseEntity<byte[]> saveExcelResponse(Workbook workbook, String name) throws IOException {
+        byte[] bytes = null;
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            workbook.write(out);
+            bytes = out.toByteArray();
+        }
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("content-disposition", "attachment; filename=" +
+                URLEncoder.encode(name, StandardCharsets.UTF_8));
+
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .contentLength(bytes.length)
+                .body(bytes);
     }
+    public void configExcel(StoreCommandModel storeCommandModel, CommandExcelModel commandExcelModel) {
+        Workbook workbookDefault = new HSSFWorkbook();
+        if (commandExcelModel.getTypeExcel().equals("xls")){
+            workbookDefault = new HSSFWorkbook();
+        }else if (commandExcelModel.getTypeExcel().equals("xlsx")){
+            workbookDefault = new XSSFWorkbook();
+        }
+        Workbook workbook = workbookDefault;
 
-
-    public void configExcel(StoreCommandModel storeCommandModel, CommandExcelModel commandExcelModel) throws IOException, InvalidFormatException {
-         Workbook workbook = new HSSFWorkbook();
         commandExcelModel.getOperation().forEach(commandFileOperationModel -> {
             try {
                 Map<String , Object> data = new HashMap<>();
                 if (commandFileOperationModel.getParams() != null){
-                     data = storeCommandModel.storeGetData(commandFileOperationModel.getParams());
+                    try {
+                        data = storeCommandModel.storeGetData(commandFileOperationModel.getParams());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
                 /* создать страницу excel */
                 if (commandFileOperationModel.getType().equals(CommandExcelType.createSheet.getTitle())){
@@ -80,6 +108,13 @@ public class ExcelService {
                             (ArrayList<String>) data.get("column")
                     );
                 }
+                /* сохранить excel в Response */
+                else if (commandFileOperationModel.getType().equals(CommandExcelType.saveExcelResponse.getTitle())){
+                    storeCommandModel.updateValue(
+                            commandFileOperationModel.getKey(),
+                            this.saveExcelResponse(workbook, data.get("name").toString())
+                    );
+                }
                 /* заполнить данными excel ячейку */
                 else if (commandFileOperationModel.getType().equals(CommandExcelType.createCell.getTitle())){
                     data.get("row");
@@ -99,7 +134,7 @@ public class ExcelService {
                             (ArrayList<String>) data.get("value")
                     );
                 }
-            } catch (IOException e) {
+            } catch (RuntimeException | IOException e) {
                 throw new RuntimeException(e);
             }
         });
