@@ -25,48 +25,56 @@ public class FileService {
             if (commandFileOperationModel.getParams() != null){
                 data = storeCommandModel.storeGetData(commandFileOperationModel.getParams());
             }
+
             /* создание файла */
-           else if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.createFile.getTitle())){
+           if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.createFile.getTitle())){
                 fileUtils.createFile();
             }
+
             /* скачать файл по url */
-            if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.downloadFileUrl.getTitle())){
+           else if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.downloadFileUrl.getTitle())){
                 storeCommandModel.updateValue(
                         commandFileOperationModel.getKey(),
                         fileUtils.downloadFileUrl((String) data.get("url"))
                 );
             }
-            /* запись файл по byte */
-            if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.outputStream.getTitle())){
+
+            /* запись файл по ReadableByteChannel */
+           else if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.outputStream.getTitle())){
                 fileUtils.outputStream((ReadableByteChannel) data.get("byte"));
             }
+
             /* запись файл по строку */
-            if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.outputString.getTitle())){
+           else if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.outputString.getTitle())){
                 fileUtils.updateTextFile(data.get("string").toString());
             }
+
             /* чтения файла строкой */
-            if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.loaderString.getTitle())){
+           else if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.loaderString.getTitle())){
                 storeCommandModel.updateValue(
                         commandFileOperationModel.getKey(),
                         fileUtils.readFile()
                 );
             }
+
             /* возращение имен файлов в каталоге [{id,name}] */
-            if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.fileNameCatalog.getTitle())){
+           else if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.fileNameCatalog.getTitle())){
                 storeCommandModel.updateValue(
                         commandFileOperationModel.getKey(),
                         fileUtils.catalogFileNames()
                 );
             }
+
             /* возращение имен файлов в каталоге [String] */
-            if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.catalogFileNamesString.getTitle())){
+           else if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.catalogFileNamesString.getTitle())){
                 storeCommandModel.updateValue(
                         commandFileOperationModel.getKey(),
                         fileUtils.catalogFileNamesString()
                 );
             }
-            /* возращение имен файлов в каталоге [String] */
-            if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.outputJson.getTitle())){
+
+            /* возвращение файла json */
+           else if (commandFileOperationModel.getType().equals(CommandTypeFileOperationEnums.outputJson.getTitle())){
                 storeCommandModel.updateValue(
                         commandFileOperationModel.getKey(),
                         fileUtils.getJsonFile()

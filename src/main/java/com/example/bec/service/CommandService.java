@@ -54,7 +54,7 @@ public class CommandService {
         return objectMapper.readValue(fileUtils.readFile(), new TypeReference<List<CommandModel>>(){});
     }
 
-    /* config и store */
+    /* config и params */
     public Object run(List<CommandModel> config, Map<String, Object> params) throws SQLException, MessagingException, IOException, InvalidFormatException {
         StoreCommandModel storeCommandModel = new StoreCommandModel(propertiesConfig);
         storeCommandModel.updateData(params);
@@ -67,7 +67,7 @@ public class CommandService {
         return this.run(config, storeCommandModel);
     }
 
-    /* url file и store */
+    /* url file и params */
     public Object run(String  url, Map<String, Object> params) throws IOException, SQLException, MessagingException, InvalidFormatException {
         List<CommandModel> config = this.getConfigFileName(url);
         StoreCommandModel storeCommandModel = new StoreCommandModel(propertiesConfig);
