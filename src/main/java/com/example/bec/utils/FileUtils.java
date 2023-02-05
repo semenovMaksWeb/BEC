@@ -83,7 +83,7 @@ public class FileUtils {
         return namesFiles;
     }
     public FileOutputStream getFileOutputSteam() throws FileNotFoundException {
-        return new FileOutputStream(this.file) ;
+        return new FileOutputStream(this.file);
     }
     public void outputStream(byte[] bytes) throws IOException {
         FileOutputStream fileOutputStream = new FileOutputStream(this.file);

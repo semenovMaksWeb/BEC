@@ -33,7 +33,7 @@
       "params": {
         "const_value": {
           "type": "value",
-          "value": "1.xlsx"
+          "value": "1.xls"
         }
       }
     }
@@ -49,7 +49,7 @@
     "key": ["excel"],
     "type": "excel",
     "excel":  {
-      "typeExcel": "xlsx",
+      "typeExcel": "xls",
       "operation": [
         {
           "key": ["sheet"],
@@ -106,7 +106,7 @@
           "params": {
             "name": {
               "type": "value",
-              "value": "Отчет_по_пользователям.xlsx"
+              "value": "Отчет_по_пользователям.xls"
             }
           }
         },

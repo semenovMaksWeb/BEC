@@ -5,27 +5,27 @@ import com.example.bec.model.command.CommandExcelModel;
 import com.example.bec.model.command.store.StoreCommandModel;
 import com.example.bec.utils.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-
-import org.springframework.http.HttpHeaders;
-
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
 public class ExcelService {
+    /**
+     * получения из excel byte[]
+     * */
     public byte[] getByteExcel(Workbook workbook){
         byte[] bytes = null;
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
@@ -37,6 +37,9 @@ public class ExcelService {
         return  bytes;
     }
 
+    /**
+     * обработка конфига excel
+     * */
     public void configExcel(StoreCommandModel storeCommandModel, CommandExcelModel commandExcelModel) {
         Workbook workbook = this.generatorWorkbook(commandExcelModel.getTypeExcel());
         commandExcelModel.getOperation().forEach(commandFileOperationModel -> {
@@ -108,13 +111,25 @@ public class ExcelService {
         });
     }
 
+    /**
+     * сохранить file excel в систему
+     * */
     public void saveExcelFile(Workbook workbook, String url, String name) throws IOException {
-        byte[] bytes = getByteExcel(workbook);
         FileUtils fileUtils = new FileUtils(url, name);
         fileUtils.createFile();
-        fileUtils.outputStream(bytes);
+        try {
+            FileOutputStream fos = fileUtils.getFileOutputSteam();
+            workbook.write(fos);
+            fos.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
+    /**
+     * вернуть файл с api
+     * */
     public ResponseEntity<byte[]> saveExcelResponse(Workbook workbook, String name) throws IOException {
         byte[] bytes = getByteExcel(workbook);
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -126,14 +141,24 @@ public class ExcelService {
                 .contentLength(bytes.length)
                 .body(bytes);
     }
+
+    /**
+     * создать лист в excel
+     * */
     public void createSheet(Workbook wb, String name){
         wb.createSheet(name);
     }
 
+    /**
+     * получить лист в excel
+     * */
     public Sheet getSheet(Workbook wb, String name){
         return wb.getSheet(name);
     }
 
+    /**
+     * из List<Map> сгенерировать данные в excel
+     * */
     public void generatorDataExcel(List<Map<String, Object>> data, Sheet sheet, int rowIndex, ArrayList<String> columnList){
         for (Map<String , Object> elem : data){
             Row row = sheet.createRow(rowIndex);
@@ -151,21 +176,24 @@ public class ExcelService {
     }
 
 
-
+    /**
+     * из строки type определить формат файла excel
+     * */
     private Workbook generatorWorkbook(String type){
-        if (type.equals("xls")){
-            return new HSSFWorkbook();
-        }else if (type.equals("xlsx")){
-            return new  XSSFWorkbook();
-        }
         return new HSSFWorkbook();
     }
 
+    /**
+     * сохранить определенную ячейку значением
+     * */
     public void saveCell(Sheet sheet, int row, int cell, Object value){
         sheet.createRow(row);
         this.createCell(sheet.getRow(row), value, cell);
     }
 
+    /**
+     * сохранить в определенной строке набор ячейк по переданному массиву
+     * */
     public void createRowArrayCell(Sheet sheet, int rowIndex, ArrayList<String> value){
         Row row = sheet.createRow(rowIndex);
         int index = -1;
@@ -175,6 +203,9 @@ public class ExcelService {
         }
     }
 
+    /**
+     * сохранить ячейку определяю её type
+     * */
     private void createCell(Row row, Object elem, int index){
         if (elem instanceof String){
             row.createCell(index).setCellValue((String) elem);
