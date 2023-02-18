@@ -12,6 +12,8 @@ import java.util.Properties;
 @Configuration
 public class ConnectionBd {
     private final PropertiesConfig propertiesConfig;
+    private final static String USER = "user";
+    private final static String PASSWORD = "password";
 
     public ConnectionBd(PropertiesConfig propertiesConfig) {
         this.propertiesConfig = propertiesConfig;
@@ -21,8 +23,8 @@ public class ConnectionBd {
     public Connection postgresqlConnection() throws IOException, SQLException {
         String url = "jdbc:postgresql://" + propertiesConfig.getProperties().getProperty("db.host");
         Properties props = new Properties();
-        props.setProperty("user", propertiesConfig.getProperties().getProperty("db.user"));
-        props.setProperty("password", propertiesConfig.getProperties().getProperty("db.password"));
+        props.setProperty(USER, propertiesConfig.getProperties().getProperty("db.user"));
+        props.setProperty(PASSWORD, propertiesConfig.getProperties().getProperty("db.password"));
         return DriverManager.getConnection(url, props);
     }
 }
