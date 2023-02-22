@@ -1,6 +1,5 @@
 package com.example.bec.service;
 
-import com.example.bec.configuration.PropertiesConfig;
 import com.example.bec.enums.CommandTypeEnum;
 import com.example.bec.model.command.CommandModel;
 import com.example.bec.model.command.store.StoreCommandModel;
@@ -11,6 +10,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -22,7 +22,7 @@ import java.util.Objects;
 
 @Service
 public class CommandService {
-    private final PropertiesConfig propertiesConfig;
+    private final Environment env;
     private final PostgresqlService postgresqlService;
     private final EmailCustomService emailCustomService;
     private final ConvertService convertService;
@@ -31,7 +31,7 @@ public class CommandService {
 
     private final ExcelService excelService;
     public CommandService(
-            PropertiesConfig propertiesConfig,
+            Environment env,
             @Lazy PostgresqlService postgresqlService,
             @Lazy EmailCustomService emailCustomService,
             @Lazy ConvertService convertService,
@@ -39,7 +39,7 @@ public class CommandService {
             @Lazy FileService fileService,
             @Lazy ExcelService excelService
     ){
-        this.propertiesConfig = propertiesConfig;
+        this.env = env;
         this.postgresqlService = postgresqlService;
         this.emailCustomService = emailCustomService;
         this.convertService = convertService;
@@ -49,14 +49,14 @@ public class CommandService {
     }
 
     private List<CommandModel> getConfigFileName(String url) throws IOException {
-        FileUtils fileUtils = new FileUtils(this.propertiesConfig.getProperties().getProperty("url.config.back") + "\\" + url);
+        FileUtils fileUtils = new FileUtils(this.env.getProperty("url.config.back") + "\\" + url);
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(fileUtils.readFile(), new TypeReference<List<CommandModel>>(){});
     }
 
     /* config и params */
     public Object run(List<CommandModel> config, Map<String, Object> params) throws SQLException, MessagingException, IOException, InvalidFormatException {
-        StoreCommandModel storeCommandModel = new StoreCommandModel(propertiesConfig);
+        StoreCommandModel storeCommandModel = new StoreCommandModel(this.env);
         storeCommandModel.updateData(params);
         return this.run(config, storeCommandModel);
     }
@@ -70,7 +70,7 @@ public class CommandService {
     /* url file и params */
     public Object run(String  url, Map<String, Object> params) throws IOException, SQLException, MessagingException, InvalidFormatException {
         List<CommandModel> config = this.getConfigFileName(url);
-        StoreCommandModel storeCommandModel = new StoreCommandModel(propertiesConfig);
+        StoreCommandModel storeCommandModel = new StoreCommandModel(this.env);
         storeCommandModel.updateData(params);
         return this.run(config, storeCommandModel);
     }

@@ -1,9 +1,9 @@
 package com.example.bec.model.command.store;
 
-import com.example.bec.configuration.PropertiesConfig;
 import com.example.bec.enums.StoreCommandTypeEnums;
 import com.example.bec.enums.StoreFindCommandTecEnum;
 import lombok.Getter;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
@@ -14,10 +14,10 @@ import java.util.Map;
 @Getter
 public class StoreCommandModel {
     private final Map<String, Object> data = new HashMap<>();
-    private final PropertiesConfig propertiesConfig;
+    private final Environment env;
 
-    public StoreCommandModel(PropertiesConfig propertiesConfig) {
-        this.propertiesConfig = propertiesConfig;
+    public StoreCommandModel(Environment env) {
+        this.env = env;
     }
 
     public Object storeGetData(StoreFindCommandModel storeFindCommandModel) throws IOException {
@@ -32,7 +32,7 @@ public class StoreCommandModel {
             return res;
         }
         else if (storeFindCommandModel.getType().equals(StoreCommandTypeEnums.properties.getTitle())){
-            return this.propertiesConfig.getProperties().getProperty(storeFindCommandModel.getProperties());
+            return this.env.getProperty(storeFindCommandModel.getProperties());
         }
         return null;
     }

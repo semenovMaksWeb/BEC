@@ -2,12 +2,11 @@ package com.example.bec.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.bec.configuration.PropertiesConfig;
 import com.example.bec.enums.ConvertTypeEnum;
 import com.example.bec.model.command.CommandConvertModel;
 import com.example.bec.model.command.store.StoreCommandModel;
-import com.example.bec.model.command.store.StoreFindCommandModel;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,10 +14,10 @@ import java.util.*;
 
 @Service
 public class ConvertService {
-    private final PropertiesConfig propertiesConfig;
+    private final Environment env;
 
-    public ConvertService(PropertiesConfig propertiesConfig) {
-        this.propertiesConfig = propertiesConfig;
+    public ConvertService(Environment env) {
+        this.env = env;
     }
 
     /**
@@ -44,7 +43,7 @@ public class ConvertService {
                 .withClaim("email",email)
                 .withClaim("nik", nik)
                 .withIssuedAt(new Date())
-                .sign(Algorithm.HMAC256(this.propertiesConfig.getProperties().getProperty("token.secret")));
+                .sign(Algorithm.HMAC256(Objects.requireNonNull(this.env.getProperty("token.secret"))));
     }
 
     /**
