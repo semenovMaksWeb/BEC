@@ -15,7 +15,7 @@
   {
     "key": null,
     "type": "config_link",
-    "link": "check_right.json"
+    "link": "_tec/check_right.json"
   },
   {
     "key": ["url_catalog"],

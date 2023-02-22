@@ -15,7 +15,7 @@
   {
     "key": null,
     "type": "config_link",
-    "link": "check_right.json"
+    "link": "_tec/check_right.json"
   },
   {
     "type": "block",
@@ -42,7 +42,7 @@
         "type": "postgresql",
         "sql": {
           "convert": "array",
-          "text": "select * from tec.roles_user_not_get_name_id(_id => ?)",
+          "text": "select * from tec.roles_user_get_name_id(_id => ?)",
           "params": [
             {
               "type": "Integer",
