@@ -1,0 +1,28 @@
+[
+    {
+        "key": ["log_result"],
+        "type": "postgresql",
+        "sql": {
+            "convert": "object",
+            "text": "select * from tec.log_insert(_id_user => ?, _text => ?)",
+            "params": [
+                {
+                    "type": "Integer",
+                    "data": {
+                        "type": "dataset",
+                        "key": [ "id_user"]
+                    },
+                    "index": 1
+                },
+                {
+                    "type": "String",
+                    "data": {
+                        "type": "dataset",
+                        "key": ["text"]
+                    },
+                    "index": 2
+                }
+            ]
+        }
+    }
+]
